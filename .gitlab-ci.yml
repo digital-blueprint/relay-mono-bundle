@@ -45,20 +45,6 @@ test-php8.1:
     PHP: "php8.1"
   <<: *test_defaults
 
-test-rename:
-  stage: test
-  script:
-    - sudo update-alternatives --set php "/usr/bin/php7.4"
-    - composer install
-    # remove the cache, otherwise the rename will break it
-    - rm -rf _composer_cache
-    - ./.bundle-rename --unique-name=greenlight --friendly-name="Electronic Covid Access Permits" --example-entity=Permit
-    - composer update --lock
-    - composer validate
-    - composer install
-    - composer test
-    - composer lint
-
 linting:
   stage: test
   script:
