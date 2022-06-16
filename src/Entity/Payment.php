@@ -88,7 +88,7 @@ class Payment
      * @ApiProperty(iri="https://schema.org/URL")
      * @Groups({"MonoPayment:input"})
      */
-    private $notfiyUrl;
+    private $notifyUrl;
 
     /**
      * @var string
@@ -248,14 +248,14 @@ class Payment
         return $this;
     }
 
-    public function getNotfiyUrl(): string
+    public function getNotifyUrl(): string
     {
-        return $this->notfiyUrl;
+        return $this->notifyUrl;
     }
 
-    public function setNotfiyUrl(string $notfiyUrl): self
+    public function setNotifyUrl(string $notifyUrl): self
     {
-        $this->notfiyUrl = $notfiyUrl;
+        $this->notifyUrl = $notifyUrl;
 
         return $this;
     }
