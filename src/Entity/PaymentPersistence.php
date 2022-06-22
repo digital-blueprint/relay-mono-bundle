@@ -4,192 +4,140 @@ declare(strict_types=1);
 
 namespace Dbp\Relay\MonoBundle\Entity;
 
-use ApiPlatform\Core\Annotation\ApiProperty;
-use ApiPlatform\Core\Annotation\ApiResource;
-use Symfony\Component\Serializer\Annotation\Groups;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ApiResource(
- *     collectionOperations={
- *         "post" = {
- *             "path" = "/mono/payment",
- *             "openapi_context" = {
- *                 "tags" = {"ElectronicPayment"},
- *             },
- *         }
- *     },
- *     itemOperations={
- *         "get" = {
- *             "path" = "/mono/payment/{identifier}",
- *             "openapi_context" = {
- *                 "tags" = {"ElectronicPayment"},
- *             },
- *         },
- *     },
- *     iri="https://schema.digital-blueprint.org/Payment",
- *     shortName="MonoPayment",
- *     normalizationContext={
- *         "groups" = {"MonoPayment:output"},
- *         "jsonld_embed_context" = true
- *     },
- *     denormalizationContext={
- *         "groups" = {"MonoPayment:input"},
- *         "jsonld_embed_context" = true
- *     }
- * )
+ * @ORM\Entity
+ * @ORM\Table(name="mono_payments")
  */
-class Payment
+class PaymentPersistence
 {
-    public const PAYMENT_STATUS_PREPARED = 'prepared';
-    public const PAYMENT_STATUS_STARTED = 'started';
-    public const PAYMENT_STATUS_COMPLETED = 'completed';
-    public const PAYMENT_STATUS_CANCELLED = 'cancelled';
-    public const PAYMENT_STATUS_PENDING = 'pending';
-    public const PAYMENT_STATUS_FAILED = 'failed';
+    public const ACTION_STATUS_PREPARED = 'prepared';
+    public const ACTION_STATUS_STARTED = 'started';
+    public const ACTION_STATUS_COMPLETED = 'completed';
+    public const ACTION_STATUS_CANCELLED = 'cancelled';
+    public const ACTION_STATUS_PENDING = 'pending';
+    public const ACTION_STATUS_FAILED = 'failed';
 
     public const PRICE_CURRENCY = 'EUR';
 
-    public function __construct()
-    {
-        $this->paymentMethod = [];
-    }
-
     /**
-     * @ApiProperty(identifier=true)
-     * @Groups({"MonoPayment:output"})
+     * @ORM\Id()
+     * @ORM\Column(type="string", length=36, unique=true)
      */
     private $identifier;
 
     /**
      * @var string
-     * @ApiProperty(iri="https://schema.org/Text")
-     * @Groups({"MonoPayment:input"})
+     * @ORM\Column(type="string")
      */
     private $type;
 
     /**
      * @var string
-     * @ApiProperty(iri="https://schema.org/Text")
-     * @Groups({"MonoPayment:input"})
+     * @ORM\Column(type="text")
      */
     private $data;
 
     /**
      * @var string|null
-     * @ApiProperty(iri="https://schema.org/Text")
-     * @Groups({"MonoPayment:input"})
+     * @ORM\Column(type="string", length=45, nullable=true)
      */
     private $clientIp;
 
     /**
      * @var string|null
-     * @ApiProperty(iri="https://schema.org/URL")
-     * @Groups({"MonoPayment:input"})
+     * @ORM\Column(type="string", nullable=true)
      */
     private $returnUrl;
 
     /**
      * @var string|null
-     * @ApiProperty(iri="https://schema.org/URL")
-     * @Groups({"MonoPayment:input"})
+     * @ORM\Column(type="string", nullable=true)
      */
     private $notifyUrl;
 
     /**
      * @var string|null
-     * @ApiProperty(iri="https://schema.org/Text")
-     * @Groups({"MonoPayment:output", "MonoPayment:input"})
+     * @ORM\Column(type="string", nullable=true)
      */
     private $localIdentifier;
 
     /**
      * @var string
-     * @ApiProperty(iri="https://schema.org/PaymentStatusType")
-     * @Groups({"MonoPayment:output"})
+     * @ORM\Column(type="string")
      */
     private $paymentStatus;
 
     /**
      * @var string|null
-     * @ApiProperty(iri="https://schema.org/Text")
-     * @Groups({"MonoPayment:output"})
+     * @ORM\Column(type="string", nullable=true)
      */
     private $paymentReference;
 
     /**
      * @var string|null
-     * @ApiProperty(iri="https://schema.org/Text")
-     * @Groups({"MonoPayment:output"})
+     * @ORM\Column(type="string", length=8, nullable=true)
      */
     private $amount;
 
     /**
      * @var string|null
-     * @ApiProperty(iri="https://schema.org/Text")
-     * @Groups({"MonoPayment:output"})
+     * @ORM\Column(type="string", length=3, nullable=true)
      */
     private $currency;
 
     /**
      * @var string|null
-     * @ApiProperty(iri="https://schema.org/Text")
-     * @Groups({"MonoPayment:output"})
+     * @ORM\Column(type="string", length=3, nullable=true)
      */
     private $alternateName;
 
     /**
      * @var string|null
-     * @ApiProperty(iri="https://schema.org/Text")
-     * @Groups({"MonoPayment:output"})
+     * @ORM\Column(type="string", nullable=true)
      */
     private $honorificPrefix;
 
     /**
      * @var string|null
-     * @ApiProperty(iri="https://schema.org/Text")
-     * @Groups({"MonoPayment:output"})
+     * @ORM\Column(type="string", nullable=true)
      */
     private $givenName;
 
     /**
      * @var string|null
-     * @ApiProperty(iri="https://schema.org/Text")
-     * @Groups({"MonoPayment:output"})
+     * @ORM\Column(type="string", nullable=true)
      */
     private $familyName;
 
     /**
      * @var string|null
-     * @ApiProperty(iri="https://schema.org/Text")
-     * @Groups({"MonoPayment:output"})
+     * @ORM\Column(type="string", nullable=true)
      */
     private $companyName;
 
     /**
      * @var string|null
-     * @ApiProperty(iri="https://schema.org/Text")
-     * @Groups({"MonoPayment:output"})
+     * @ORM\Column(type="string", nullable=true)
      */
     private $honorificSuffix;
 
     /**
      * @var string|null
-     * @ApiProperty(iri="https://schema.org/Text")
-     * @Groups({"MonoPayment:output"})
+     * @ORM\Column(type="string", nullable=true)
      */
     private $recipient;
 
     /**
-     * @var array<PaymentMethod>
-     * @ApiProperty(iri="https://schema.org/ItemList")
-     * @Groups({"MonoPayment:output"})
+     * @var string|null
+     * @ORM\Column(type="string", nullable=true)
      */
     private $paymentMethod;
 
     /**
      * @var string|null
-     * @ApiProperty(iri="https://schema.org/URL")
-     * @Groups({"MonoPayment:output"})
+     * @ORM\Column(type="string", nullable=true)
      */
     private $dataProtectionDeclarationUrl;
 
@@ -409,12 +357,12 @@ class Payment
         return $this;
     }
 
-    public function getPaymentMethod(): ?array
+    public function getPaymentMethod(): ?string
     {
         return $this->paymentMethod;
     }
 
-    public function setPaymentMethod(?array $paymentMethod): self
+    public function setPaymentMethod(?string $paymentMethod): self
     {
         $this->paymentMethod = $paymentMethod;
 
@@ -434,14 +382,21 @@ class Payment
     }
 
     /**
-     * @param PaymentPersistence $paymentPersistence
-     * @return Payment
+     * @param Payment $payment
+     * @return PaymentPersistence
      */
-    public static function fromPaymentPersistence(PaymentPersistence $paymentPersistence): Payment
+    public static function fromPayment(Payment $payment): PaymentPersistence
     {
-        $payment = new Payment();
-        $payment->setIdentifier((string)$paymentPersistence->getIdentifier());
+        $paymentPersistence = new PaymentPersistence();
+        $paymentPersistence->setIdentifier($payment->getIdentifier());
+        $paymentPersistence->setType($payment->getType());
+        $paymentPersistence->setData($payment->getData());
+        $paymentPersistence->setClientIp($payment->getClientIp());
+        $paymentPersistence->setReturnUrl($payment->getReturnUrl());
+        $paymentPersistence->setNotifyUrl($payment->getNotifyUrl());
+        $paymentPersistence->setLocalIdentifier($payment->getLocalIdentifier());
+        $paymentPersistence->setPaymentStatus($payment->getPaymentStatus());
 
-        return $payment;
+        return $paymentPersistence;
     }
 }
