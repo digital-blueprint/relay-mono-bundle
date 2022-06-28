@@ -47,7 +47,7 @@ class Payment
     public const PAYMENT_STATUS_PENDING = 'pending';
     public const PAYMENT_STATUS_FAILED = 'failed';
 
-    public const PRICE_CURRENCY = 'EUR';
+    public const PRICE_CURRENCY_EUR = 'EUR';
 
     public function __construct()
     {
@@ -180,8 +180,8 @@ class Payment
     private $recipient;
 
     /**
-     * @var array<PaymentMethod>
-     * @ApiProperty(iri="https://schema.org/ItemList")
+     * @var string
+     * @ApiProperty(iri="https://schema.org/Text")
      * @Groups({"MonoPayment:output"})
      */
     private $paymentMethod;
@@ -409,12 +409,12 @@ class Payment
         return $this;
     }
 
-    public function getPaymentMethod(): ?array
+    public function getPaymentMethod(): ?string
     {
         return $this->paymentMethod;
     }
 
-    public function setPaymentMethod(?array $paymentMethod): self
+    public function setPaymentMethod(?string $paymentMethod): self
     {
         $this->paymentMethod = $paymentMethod;
 

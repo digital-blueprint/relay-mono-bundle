@@ -15,17 +15,41 @@ use Symfony\Component\Uid\Uuid;
 class PaymentService
 {
     /**
+     * @var BackendService
+     */
+    private $backendService;
+
+    /**
+     * @var ConfigurationService
+     */
+    private $configurationService;
+
+    /**
      * @var EntityManagerInterface
      */
     private $em;
 
-    public function __construct(ManagerRegistry $managerRegistry)
+    /**
+     * @var PaymentServiceProviderService
+     */
+    private $paymentServiceProviderService;
+
+    public function __construct(
+        BackendService $backendService,
+        ConfigurationService $configurationService,
+        ManagerRegistry $managerRegistry,
+        PaymentServiceProviderService $paymentServiceProviderService
+    )
     {
+        $this->backendService = $backendService;
+        $this->configurationService = $configurationService;
+
         $manager = $managerRegistry->getManager('dbp_relay_mono_bundle');
         assert($manager instanceof EntityManagerInterface);
         $this->em = $manager;
-    }
 
+        $this->paymentServiceProviderService = $paymentServiceProviderService;
+    }
 
     /**
      * @param Payment $payment
@@ -33,10 +57,13 @@ class PaymentService
      */
     public function createPayment(Payment $payment): Payment
     {
-        $payment->setIdentifier((string)Uuid::v4());
+        $identifier = (string)Uuid::v4();
+        $payment->setIdentifier($identifier);
         $payment->setPaymentStatus(Payment::PAYMENT_STATUS_PREPARED);
 
         $paymentPersistence = PaymentPersistence::fromPayment($payment);
+        $createdAt = new \DateTime();
+        $paymentPersistence->setCreatedAt($createdAt);
 
         try {
             $this->em->persist($paymentPersistence);
@@ -50,12 +77,9 @@ class PaymentService
         return $payment;
     }
 
-    /**
-     * @param Payment $payment
-     * @return Payment
-     */
-    public function getPaymentByIdentifier(string $identifier): Payment
+    private function getPaymentPersistenceByIdentifier(string $identifier): PaymentPersistence
     {
+        /** @var PaymentPersistence $paymentPersistence */
         $paymentPersistence = $this->em
             ->getRepository(PaymentPersistence::class)
             ->find($identifier);
@@ -64,8 +88,60 @@ class PaymentService
             throw ApiError::withDetails(Response::HTTP_NOT_FOUND, 'Payment was not found!', 'mono:payment-not-found');
         }
 
+        return $paymentPersistence;
+    }
+
+    /**
+     * @param Payment $payment
+     * @return Payment
+     */
+    public function getPaymentByIdentifier(string $identifier): Payment
+    {
+        $paymentPersistence = $this->getPaymentPersistenceByIdentifier($identifier);
+        $type = $paymentPersistence->getType();
+        $paymentType = $this->configurationService->getPaymentTypeByType($type);
+
+        try {
+            $backendService = $this->backendService->getByPaymentType($paymentType);
+            $isDataUpdated = $backendService->updateData($paymentPersistence);
+            if ($isDataUpdated) {
+                $dataUpdatedAt = new \DateTime();
+                $paymentPersistence->setDataUpdatedAt($dataUpdatedAt);
+            }
+            $this->em->persist($paymentPersistence);
+            $this->em->flush();
+        } catch (\Exception $e) {
+            throw ApiError::withDetails(Response::HTTP_INTERNAL_SERVER_ERROR, 'Payment could not be updated!', 'mono:payment-not-updated', ['message' => $e->getMessage()]);
+        }
+
         $payment = Payment::fromPaymentPersistence($paymentPersistence);
+        $paymentMethods = $this->configurationService->getPaymentMethodsByType($type);
+        $paymentMethod = json_encode($paymentMethods);
+        $payment->setPaymentMethod($paymentMethod);
 
         return $payment;
+    }
+
+    public function startPayAction(
+        string $identifier,
+        string $paymentMethod
+    )
+    {
+        $paymentPersistence = $this->getPaymentPersistenceByIdentifier($identifier);
+        $paymentPersistence->setPaymentMethod($paymentMethod);
+
+        $type = $paymentPersistence->getType();
+        $paymentContract = $this->configurationService->getPaymentContractByTypeAndPaymentMethod($type, $paymentMethod);
+        $paymentPersistence->setPaymentContract((string)$paymentContract);
+
+        try {
+            $this->em->persist($paymentPersistence);
+            $this->em->flush();
+        } catch (\Exception $e) {
+            throw ApiError::withDetails(Response::HTTP_INTERNAL_SERVER_ERROR, 'Payment could not be updated!', 'mono:payment-not-updated', ['message' => $e->getMessage()]);
+        }
+
+        $paymentServiceProvider = $this->paymentServiceProviderService->getByPaymentContract($paymentContract);
+        $paymentServiceProvider->start($paymentPersistence);
     }
 }

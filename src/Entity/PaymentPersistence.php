@@ -139,7 +139,25 @@ class PaymentPersistence
      * @var string|null
      * @ORM\Column(type="string", nullable=true)
      */
+    private $paymentContract;
+
+    /**
+     * @var string|null
+     * @ORM\Column(type="string", nullable=true)
+     */
     private $dataProtectionDeclarationUrl;
+
+    /**
+     * @var \DateTime
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $createdAt;
+
+    /**
+     * @var \DateTime|null
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $dataUpdatedAt;
 
     public function getIdentifier(): string
     {
@@ -369,6 +387,18 @@ class PaymentPersistence
         return $this;
     }
 
+    public function getPaymentContract(): ?string
+    {
+        return $this->paymentContract;
+    }
+
+    public function setPaymentContract(?string $paymentContract): self
+    {
+        $this->paymentContract = $paymentContract;
+
+        return $this;
+    }
+
     public function getDataProtectionDeclarationUrl(): ?string
     {
         return $this->dataProtectionDeclarationUrl;
@@ -377,6 +407,30 @@ class PaymentPersistence
     public function setDataProtectionDeclarationUrl(?string $dataProtectionDeclarationUrl): self
     {
         $this->dataProtectionDeclarationUrl = $dataProtectionDeclarationUrl;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): \DateTime
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTime $createdAt): self
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getDataUpdatedAt(): ?\DateTime
+    {
+        return $this->dataUpdatedAt;
+    }
+
+    public function setDataUpdatedAt(?\DateTime $dataUpdatedAt): self
+    {
+        $this->dataUpdatedAt = $dataUpdatedAt;
 
         return $this;
     }
