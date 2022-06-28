@@ -75,14 +75,14 @@ class StartPayAction
     private $widgetUrl;
 
     /**
-     * @var string
+     * @var string|null
      * @ApiProperty(iri="https://schema.org/Text")
      * @Groups({"MonoPayment:output"})
      */
     private $pspData;
 
     /**
-     * @var string
+     * @var string|null
      * @ApiProperty(iri="https://schema.org/Text")
      * @Groups({"MonoPayment:output"})
      */
@@ -148,24 +148,24 @@ class StartPayAction
         return $this;
     }
 
-    public function getPspData(): string
+    public function getPspData(): ?string
     {
         return $this->pspData;
     }
 
-    public function setPspData(string $pspData): self
+    public function setPspData(?string $pspData): self
     {
         $this->pspData = $pspData;
 
         return $this;
     }
 
-    public function getPspError(): string
+    public function getPspError(): ?string
     {
         return $this->pspError;
     }
 
-    public function setPspError(string $pspError): self
+    public function setPspError(?string $pspError): self
     {
         $this->pspError = $pspError;
 

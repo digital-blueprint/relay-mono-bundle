@@ -76,9 +76,10 @@ class ConfigurationService
             foreach ($paymentContractsConfig as $paymentContractIdentifier => $paymentContractConfig) {
                 $paymentMethodsConfig = $paymentContractConfig['payment_methods'];
                 foreach ($paymentMethodsConfig as $paymentMethodConfig) {
-                    $paymentMethod = PaymentMethod::fromConfig($paymentMethodConfig);
-                    if ($paymentMethod->getIdentifier() === $paymentMethod) {
+                    $paymentMethodObject = PaymentMethod::fromConfig($paymentMethodConfig);
+                    if ($paymentMethodObject->getIdentifier() === $paymentMethod) {
                         $paymentContract = PaymentContract::fromConfig($paymentContractIdentifier, $paymentContractConfig);
+                        break(2);
                     }
                 }
             }

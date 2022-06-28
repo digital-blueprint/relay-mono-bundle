@@ -7,6 +7,7 @@ namespace Dbp\Relay\MonoBundle\Service;
 use Dbp\Relay\CoreBundle\Exception\ApiError;
 use Dbp\Relay\MonoBundle\Entity\Payment;
 use Dbp\Relay\MonoBundle\Entity\PaymentPersistence;
+use Dbp\Relay\MonoBundle\PaymentServiceProvider\StartResponseInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Response;
@@ -125,7 +126,7 @@ class PaymentService
     public function startPayAction(
         string $identifier,
         string $paymentMethod
-    )
+    ): StartResponseInterface
     {
         $paymentPersistence = $this->getPaymentPersistenceByIdentifier($identifier);
         $paymentPersistence->setPaymentMethod($paymentMethod);
@@ -142,6 +143,8 @@ class PaymentService
         }
 
         $paymentServiceProvider = $this->paymentServiceProviderService->getByPaymentContract($paymentContract);
-        $paymentServiceProvider->start($paymentPersistence);
+        $startResponse = $paymentServiceProvider->start($paymentPersistence);
+
+        return $startResponse;
     }
 }
