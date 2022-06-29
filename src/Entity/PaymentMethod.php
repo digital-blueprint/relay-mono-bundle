@@ -4,43 +4,20 @@ declare(strict_types=1);
 
 namespace Dbp\Relay\MonoBundle\Entity;
 
-use ApiPlatform\Core\Annotation\ApiProperty;
-use ApiPlatform\Core\Annotation\ApiResource;
-use Symfony\Component\Serializer\Annotation\Groups;
-
-/**
- * @ApiResource(
- *     collectionOperations={
- *     },
- *     itemOperations={
- *     },
- *     iri="https://schema.digital-blueprint.org/PaymentMethod",
- *     shortName="MonoPaymentMethod",
- *     normalizationContext={
- *         "groups" = {"MonoPaymentMethod:output"},
- *         "jsonld_embed_context" = true
- *     }
- * )
- */
-class PaymentMethod
+class PaymentMethod implements \JsonSerializable
 {
     /**
-     * @ApiProperty(identifier=true)
-     * @Groups({"MonoPaymentMethod:output"})
+     * @var string
      */
     private $identifier;
 
     /**
      * @var string
-     * @ApiProperty(iri="https://schema.org/Text")
-     * @Groups({"MonoPaymentMethod:output"})
      */
     private $name;
 
     /**
      * @var string
-     * @ApiProperty(iri="https://schema.org/URL")
-     * @Groups({"MonoPaymentMethod:output"})
      */
     private $image;
 
@@ -78,5 +55,39 @@ class PaymentMethod
         $this->image = $image;
 
         return $this;
+    }
+
+    /**
+     * @param array $config
+     * @return PaymentMethod
+     */
+    public static function fromConfig(array $config): PaymentMethod
+    {
+        $paymentMethod = new PaymentMethod();
+        $paymentMethod->setIdentifier((string)$config['identifier']);
+        $paymentMethod->setName((string)$config['name']);
+        $paymentMethod->setImage((string)$config['image']);
+
+        return $paymentMethod;
+    }
+
+    /**
+     * @return array
+     */
+    public function jsonSerialize(): array
+    {
+        return [
+            'identifier' => $this->identifier,
+            'name' => $this->name,
+            'image' => $this->image,
+        ];
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->identifier;
     }
 }

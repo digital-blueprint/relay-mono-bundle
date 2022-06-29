@@ -1,1 +1,26 @@
 services:
+  Dbp\Relay\MonoBundle\DataPersister\:
+    resource: '../../DataPersister'
+    autowire: true
+    autoconfigure: true
+
+  Dbp\Relay\MonoBundle\DataProvider\:
+    resource: '../../DataProvider'
+    autowire: true
+    autoconfigure: true
+
+  Dbp\Relay\MonoBundle\Service\BackendService:
+    autowire: true
+    autoconfigure: true
+
+  Dbp\Relay\MonoBundle\Service\ConfigurationService:
+    autowire: true
+    autoconfigure: true
+
+  Dbp\Relay\MonoBundle\Service\PaymentService:
+    autowire: true
+    autoconfigure: true
+
+  Dbp\Relay\MonoBundle\Service\PaymentServiceProviderService:
+    autowire: true
+    autoconfigure: true

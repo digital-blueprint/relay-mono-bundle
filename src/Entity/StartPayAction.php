@@ -19,6 +19,12 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *         }
  *     },
  *     itemOperations={
+ *         "get" = {
+ *             "path" = "/mono/start-pay-actions/{identifier}",
+ *             "openapi_context" = {
+ *                 "tags" = {"ElectronicPayment"},
+ *             },
+ *         },
  *     },
  *     iri="https://schema.digital-blueprint.org/StartPayAction",
  *     shortName="MonoStartPayAction",
@@ -41,8 +47,8 @@ class StartPayAction
     private $identifier;
 
     /**
-     * @var PaymentMethod
-     * @ApiProperty(iri="https://schema.digital-blueprint.org/PaymentMethod")
+     * @var string
+     * @ApiProperty(iri="https://schema.org/Text")
      * @Groups({"MonoPayment:input"})
      */
     private $paymentMethod;
@@ -69,14 +75,14 @@ class StartPayAction
     private $widgetUrl;
 
     /**
-     * @var string
+     * @var string|null
      * @ApiProperty(iri="https://schema.org/Text")
      * @Groups({"MonoPayment:output"})
      */
     private $pspData;
 
     /**
-     * @var string
+     * @var string|null
      * @ApiProperty(iri="https://schema.org/Text")
      * @Groups({"MonoPayment:output"})
      */
@@ -94,12 +100,12 @@ class StartPayAction
         return $this;
     }
 
-    public function getPaymentMethod(): PaymentMethod
+    public function getPaymentMethod(): string
     {
         return $this->paymentMethod;
     }
 
-    public function setPaymentMethod(PaymentMethod $paymentMethod): self
+    public function setPaymentMethod(string $paymentMethod): self
     {
         $this->paymentMethod = $paymentMethod;
 
@@ -142,24 +148,24 @@ class StartPayAction
         return $this;
     }
 
-    public function getPspData(): string
+    public function getPspData(): ?string
     {
         return $this->pspData;
     }
 
-    public function setPspData(string $pspData): self
+    public function setPspData(?string $pspData): self
     {
         $this->pspData = $pspData;
 
         return $this;
     }
 
-    public function getPspError(): string
+    public function getPspError(): ?string
     {
         return $this->pspError;
     }
 
-    public function setPspError(string $pspError): self
+    public function setPspError(?string $pspError): self
     {
         $this->pspError = $pspError;
 
