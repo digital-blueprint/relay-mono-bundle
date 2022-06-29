@@ -433,14 +433,10 @@ class Payment
         return $this;
     }
 
-    /**
-     * @param PaymentPersistence $paymentPersistence
-     * @return Payment
-     */
     public static function fromPaymentPersistence(PaymentPersistence $paymentPersistence): Payment
     {
         $payment = new Payment();
-        $payment->setIdentifier((string)$paymentPersistence->getIdentifier());
+        $payment->setIdentifier((string) $paymentPersistence->getIdentifier());
 
         return $payment;
     }

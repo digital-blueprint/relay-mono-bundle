@@ -25,8 +25,7 @@ class StartResponse implements StartResponseInterface
         string $widgetUrl,
         string $data = null,
         string $error = null
-    )
-    {
+    ) {
         $this->widgetUrl = $widgetUrl;
         $this->data = $data;
         $this->error = $error;

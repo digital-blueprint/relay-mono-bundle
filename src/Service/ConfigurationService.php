@@ -16,7 +16,6 @@ class ConfigurationService
     private $config = [];
 
     /**
-     * @param array $config
      * @return void
      */
     public function setConfig(array $config)
@@ -24,10 +23,6 @@ class ConfigurationService
         $this->config = $config;
     }
 
-    /**
-     * @param string $type
-     * @return PaymentType|null
-     */
     public function getPaymentTypeByType(string $type): ?PaymentType
     {
         $paymentType = null;
@@ -41,7 +36,6 @@ class ConfigurationService
     }
 
     /**
-     * @param string $type
      * @return PaymentMethod[]
      */
     public function getPaymentMethodsByType(string $type): array
@@ -62,11 +56,6 @@ class ConfigurationService
         return $paymentMethods;
     }
 
-    /**
-     * @param string $type
-     * @param string $paymentMethod
-     * @return PaymentContract|null
-     */
     public function getPaymentContractByTypeAndPaymentMethod(string $type, string $paymentMethod): ?PaymentContract
     {
         $paymentContract = null;
@@ -79,7 +68,7 @@ class ConfigurationService
                     $paymentMethodObject = PaymentMethod::fromConfig($paymentMethodConfig);
                     if ($paymentMethodObject->getIdentifier() === $paymentMethod) {
                         $paymentContract = PaymentContract::fromConfig($paymentContractIdentifier, $paymentContractConfig);
-                        break(2);
+                        break 2;
                     }
                 }
             }

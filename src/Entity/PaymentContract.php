@@ -40,16 +40,11 @@ class PaymentContract
         return $this;
     }
 
-    /**
-     * @param string $identifier
-     * @param array $config
-     * @return PaymentContract
-     */
     public static function fromConfig(string $identifier, array $config): PaymentContract
     {
         $paymentContract = new PaymentContract();
-        $paymentContract->setIdentifier((string)$identifier);
-        $paymentContract->setService((string)$config['service']);
+        $paymentContract->setIdentifier((string) $identifier);
+        $paymentContract->setService((string) $config['service']);
 
         return $paymentContract;
     }

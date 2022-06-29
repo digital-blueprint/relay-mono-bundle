@@ -57,23 +57,16 @@ class PaymentMethod implements \JsonSerializable
         return $this;
     }
 
-    /**
-     * @param array $config
-     * @return PaymentMethod
-     */
     public static function fromConfig(array $config): PaymentMethod
     {
         $paymentMethod = new PaymentMethod();
-        $paymentMethod->setIdentifier((string)$config['identifier']);
-        $paymentMethod->setName((string)$config['name']);
-        $paymentMethod->setImage((string)$config['image']);
+        $paymentMethod->setIdentifier((string) $config['identifier']);
+        $paymentMethod->setName((string) $config['name']);
+        $paymentMethod->setImage((string) $config['image']);
 
         return $paymentMethod;
     }
 
-    /**
-     * @return array
-     */
     public function jsonSerialize(): array
     {
         return [

@@ -40,8 +40,7 @@ class PaymentService
         ConfigurationService $configurationService,
         ManagerRegistry $managerRegistry,
         PaymentServiceProviderService $paymentServiceProviderService
-    )
-    {
+    ) {
         $this->backendService = $backendService;
         $this->configurationService = $configurationService;
 
@@ -52,13 +51,9 @@ class PaymentService
         $this->paymentServiceProviderService = $paymentServiceProviderService;
     }
 
-    /**
-     * @param Payment $payment
-     * @return Payment
-     */
     public function createPayment(Payment $payment): Payment
     {
-        $identifier = (string)Uuid::v4();
+        $identifier = (string) Uuid::v4();
         $payment->setIdentifier($identifier);
         $payment->setPaymentStatus(Payment::PAYMENT_STATUS_PREPARED);
 
@@ -94,7 +89,6 @@ class PaymentService
 
     /**
      * @param Payment $payment
-     * @return Payment
      */
     public function getPaymentByIdentifier(string $identifier): Payment
     {
@@ -126,14 +120,13 @@ class PaymentService
     public function startPayAction(
         string $identifier,
         string $paymentMethod
-    ): StartResponseInterface
-    {
+    ): StartResponseInterface {
         $paymentPersistence = $this->getPaymentPersistenceByIdentifier($identifier);
         $paymentPersistence->setPaymentMethod($paymentMethod);
 
         $type = $paymentPersistence->getType();
         $paymentContract = $this->configurationService->getPaymentContractByTypeAndPaymentMethod($type, $paymentMethod);
-        $paymentPersistence->setPaymentContract((string)$paymentContract);
+        $paymentPersistence->setPaymentContract((string) $paymentContract);
 
         try {
             $this->em->persist($paymentPersistence);

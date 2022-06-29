@@ -40,16 +40,11 @@ class PaymentType
         return $this;
     }
 
-    /**
-     * @param string $identifier
-     * @param array $config
-     * @return PaymentType
-     */
     public static function fromConfig(string $identifier, array $config): PaymentType
     {
         $paymentType = new PaymentType();
-        $paymentType->setIdentifier((string)$identifier);
-        $paymentType->setService((string)$config['service']);
+        $paymentType->setIdentifier((string) $identifier);
+        $paymentType->setService((string) $config['service']);
 
         return $paymentType;
     }

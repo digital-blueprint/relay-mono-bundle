@@ -16,15 +16,10 @@ class BackendService
 
     public function __construct(
         ContainerInterface $container
-    )
-    {
+    ) {
         $this->container = $container;
     }
 
-    /**
-     * @param PaymentType $paymentType
-     * @return BackendServiceInterface
-     */
     public function getByPaymentType(PaymentType $paymentType): BackendServiceInterface
     {
         $service = $paymentType->getService();

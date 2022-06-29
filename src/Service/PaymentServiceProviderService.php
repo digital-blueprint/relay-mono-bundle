@@ -16,15 +16,10 @@ class PaymentServiceProviderService
 
     public function __construct(
         ContainerInterface $container
-    )
-    {
+    ) {
         $this->container = $container;
     }
 
-    /**
-     * @param PaymentContract $paymentContract
-     * @return PaymentServiceProviderServiceInterface
-     */
     public function getByPaymentContract(PaymentContract $paymentContract): PaymentServiceProviderServiceInterface
     {
         $service = $paymentContract->getService();

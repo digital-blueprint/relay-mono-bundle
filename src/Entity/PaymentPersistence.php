@@ -22,7 +22,7 @@ class PaymentPersistence
     public const PRICE_CURRENCY = 'EUR';
 
     /**
-     * @ORM\Id()
+     * @ORM\Id
      * @ORM\Column(type="string", length=36, unique=true)
      */
     private $identifier;
@@ -435,10 +435,6 @@ class PaymentPersistence
         return $this;
     }
 
-    /**
-     * @param Payment $payment
-     * @return PaymentPersistence
-     */
     public static function fromPayment(Payment $payment): PaymentPersistence
     {
         $paymentPersistence = new PaymentPersistence();
