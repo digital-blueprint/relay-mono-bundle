@@ -31,9 +31,6 @@ class StartResponse implements StartResponseInterface
         $this->error = $error;
     }
 
-    /**
-     * @return string|null
-     */
     public function getWidgetUrl(): string
     {
         return $this->widgetUrl;

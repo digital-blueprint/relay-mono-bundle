@@ -87,9 +87,6 @@ class PaymentService
         return $paymentPersistence;
     }
 
-    /**
-     * @param Payment $payment
-     */
     public function getPaymentByIdentifier(string $identifier): Payment
     {
         $paymentPersistence = $this->getPaymentPersistenceByIdentifier($identifier);

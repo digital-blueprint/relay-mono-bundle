@@ -27,7 +27,7 @@ class DbpRelayMonoExtension extends ConfigurableExtension implements PrependExte
         $loader->load('services.yaml');
 
         $definition = $container->getDefinition(ConfigurationService::class);
-        $definition->addMethodCall('setConfig', [$mergedConfig ?? []]);
+        $definition->addMethodCall('setConfig', [$mergedConfig]);
     }
 
     public function prepend(ContainerBuilder $container)

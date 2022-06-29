@@ -49,11 +49,6 @@ class Payment
 
     public const PRICE_CURRENCY_EUR = 'EUR';
 
-    public function __construct()
-    {
-        $this->paymentMethod = [];
-    }
-
     /**
      * @ApiProperty(identifier=true)
      * @Groups({"MonoPayment:output"})
@@ -192,6 +187,11 @@ class Payment
      * @Groups({"MonoPayment:output"})
      */
     private $dataProtectionDeclarationUrl;
+
+    public function __construct()
+    {
+        $this->paymentMethod = '';
+    }
 
     public function getIdentifier(): string
     {
