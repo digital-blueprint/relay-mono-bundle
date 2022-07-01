@@ -7,6 +7,7 @@ namespace Dbp\Relay\MonoBundle\Service;
 use Dbp\Relay\CoreBundle\Exception\ApiError;
 use Dbp\Relay\MonoBundle\Entity\Payment;
 use Dbp\Relay\MonoBundle\Entity\PaymentPersistence;
+use Dbp\Relay\MonoBundle\PaymentServiceProvider\CompleteResponseInterface;
 use Dbp\Relay\MonoBundle\PaymentServiceProvider\StartResponseInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
@@ -136,5 +137,35 @@ class PaymentService
         $startResponse = $paymentServiceProvider->start($paymentPersistence);
 
         return $startResponse;
+    }
+
+    public function completePayAction(
+        string $identifier,
+        string $pspData
+    ): CompleteResponseInterface {
+        $paymentPersistence = $this->getPaymentPersistenceByIdentifier($identifier);
+        $type = $paymentPersistence->getType();
+        $paymentType = $this->configurationService->getPaymentTypeByType($type);
+
+        $paymentMethod = $paymentPersistence->getPaymentMethod();
+        $paymentContract = $this->configurationService->getPaymentContractByTypeAndPaymentMethod($type, $paymentMethod);
+
+        $paymentServiceProvider = $this->paymentServiceProviderService->getByPaymentContract($paymentContract);
+        $completeResponse = $paymentServiceProvider->complete($paymentPersistence, $pspData);
+
+        try {
+            $backendService = $this->backendService->getByPaymentType($paymentType);
+            $isNotified = $backendService->notify($paymentPersistence);
+            if ($isNotified) {
+                $notifiedAt = new \DateTime();
+                $paymentPersistence->setNotifiedAt($notifiedAt);
+            }
+            $this->em->persist($paymentPersistence);
+            $this->em->flush();
+        } catch (\Exception $e) {
+            throw ApiError::withDetails(Response::HTTP_INTERNAL_SERVER_ERROR, 'Payment could not be updated!', 'mono:payment-not-updated', ['message' => $e->getMessage()]);
+        }
+
+        return $completeResponse;
     }
 }

@@ -19,6 +19,12 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *         }
  *     },
  *     itemOperations={
+ *         "get" = {
+ *             "path" = "/mono/complete-pay-actions/{identifier}",
+ *             "openapi_context" = {
+ *                 "tags" = {"ElectronicPayment"},
+ *             },
+ *         },
  *     },
  *     iri="https://schema.digital-blueprint.org/CompletePayAction",
  *     shortName="MonoCompletePayAction",

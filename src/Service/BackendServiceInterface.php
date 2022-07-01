@@ -9,4 +9,6 @@ use Dbp\Relay\MonoBundle\Entity\PaymentPersistence;
 interface BackendServiceInterface
 {
     public function updateData(PaymentPersistence &$payment): bool;
+
+    public function notify(PaymentPersistence &$payment): bool;
 }

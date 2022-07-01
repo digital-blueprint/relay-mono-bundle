@@ -159,6 +159,12 @@ class PaymentPersistence
      */
     private $dataUpdatedAt;
 
+    /**
+     * @var \DateTime|null
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $notifiedAt;
+
     public function getIdentifier(): string
     {
         return $this->identifier;
@@ -431,6 +437,18 @@ class PaymentPersistence
     public function setDataUpdatedAt(?\DateTime $dataUpdatedAt): self
     {
         $this->dataUpdatedAt = $dataUpdatedAt;
+
+        return $this;
+    }
+
+    public function getNotifiedAt(): ?\DateTime
+    {
+        return $this->notifiedAt;
+    }
+
+    public function setNotifiedAt(?\DateTime $notifiedAt): self
+    {
+        $this->notifiedAt = $notifiedAt;
 
         return $this;
     }
