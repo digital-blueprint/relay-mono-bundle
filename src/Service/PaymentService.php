@@ -94,13 +94,14 @@ class PaymentService
         $type = $paymentPersistence->getType();
         $paymentType = $this->configurationService->getPaymentTypeByType($type);
 
+        $backendService = $this->backendService->getByPaymentType($paymentType);
+        $isDataUpdated = $backendService->updateData($paymentPersistence);
+        if ($isDataUpdated) {
+            $dataUpdatedAt = new \DateTime();
+            $paymentPersistence->setDataUpdatedAt($dataUpdatedAt);
+        }
+
         try {
-            $backendService = $this->backendService->getByPaymentType($paymentType);
-            $isDataUpdated = $backendService->updateData($paymentPersistence);
-            if ($isDataUpdated) {
-                $dataUpdatedAt = new \DateTime();
-                $paymentPersistence->setDataUpdatedAt($dataUpdatedAt);
-            }
             $this->em->persist($paymentPersistence);
             $this->em->flush();
         } catch (\Exception $e) {
