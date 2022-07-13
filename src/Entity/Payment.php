@@ -437,6 +437,20 @@ class Payment
     {
         $payment = new Payment();
         $payment->setIdentifier((string) $paymentPersistence->getIdentifier());
+        $payment->setReturnUrl($paymentPersistence->getReturnUrl());
+        $payment->setLocalIdentifier($paymentPersistence->getLocalIdentifier());
+        $payment->setPaymentStatus($paymentPersistence->getPaymentStatus());
+        $payment->setPaymentReference($paymentPersistence->getPaymentReference());
+        $payment->setAmount($paymentPersistence->getAmount());
+        $payment->setCurrency($paymentPersistence->getCurrency());
+        $payment->setAlternateName($paymentPersistence->getAlternateName());
+        $payment->setHonorificPrefix($paymentPersistence->getHonorificPrefix());
+        $payment->setGivenName($paymentPersistence->getGivenName());
+        $payment->setFamilyName($paymentPersistence->getFamilyName());
+        $payment->setCompanyName($paymentPersistence->getCompanyName());
+        $payment->setHonorificSuffix($paymentPersistence->getHonorificSuffix());
+        $payment->setRecipient($paymentPersistence->getRecipient());
+        $payment->setDataProtectionDeclarationUrl($paymentPersistence->getDataProtectionDeclarationUrl());
 
         return $payment;
     }
