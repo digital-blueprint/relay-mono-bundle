@@ -16,6 +16,21 @@ class PaymentType
      */
     private $service;
 
+    /**
+     * @var bool
+     */
+    private $authRequired;
+
+    /**
+     * @var string
+     */
+    private $returnUrlExpression;
+
+    /**
+     * @var string
+     */
+    private $notifyUrlExpression;
+
     public function getIdentifier(): string
     {
         return $this->identifier;
@@ -40,11 +55,50 @@ class PaymentType
         return $this;
     }
 
+    public function isAuthRequired(): bool
+    {
+        return $this->authRequired;
+    }
+
+    public function setAuthRequired(bool $authRequired): self
+    {
+        $this->authRequired = $authRequired;
+
+        return $this;
+    }
+
+    public function getReturnUrlExpression(): string
+    {
+        return $this->returnUrlExpression;
+    }
+
+    public function setReturnUrlExpression(string $returnUrlExpression): self
+    {
+        $this->returnUrlExpression = $returnUrlExpression;
+
+        return $this;
+    }
+
+    public function getNotifyUrlExpression(): string
+    {
+        return $this->notifyUrlExpression;
+    }
+
+    public function setNotifyUrlExpression(string $notifyUrlExpression): self
+    {
+        $this->notifyUrlExpression = $notifyUrlExpression;
+
+        return $this;
+    }
+
     public static function fromConfig(string $identifier, array $config): PaymentType
     {
         $paymentType = new PaymentType();
         $paymentType->setIdentifier((string) $identifier);
         $paymentType->setService((string) $config['service']);
+        $paymentType->setAuthRequired((bool) $config['auth_required']);
+        $paymentType->setReturnUrlExpression((string) $config['return_url_expression']);
+        $paymentType->setNotifyUrlExpression((string) $config['notify_url_expression']);
 
         return $paymentType;
     }

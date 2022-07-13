@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Dbp\Relay\MonoBundle\Service;
 
+use Dbp\Relay\CoreBundle\API\UserSessionInterface;
 use Dbp\Relay\CoreBundle\Exception\ApiError;
 use Dbp\Relay\MonoBundle\Entity\Payment;
 use Dbp\Relay\MonoBundle\Entity\PaymentPersistence;
@@ -11,6 +12,7 @@ use Dbp\Relay\MonoBundle\PaymentServiceProvider\CompleteResponseInterface;
 use Dbp\Relay\MonoBundle\PaymentServiceProvider\StartResponseInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Uid\Uuid;
 
@@ -36,11 +38,17 @@ class PaymentService
      */
     private $paymentServiceProviderService;
 
+    /**
+     * @var UserSessionInterface
+     */
+    private $userSession;
+
     public function __construct(
         BackendService $backendService,
         ConfigurationService $configurationService,
         ManagerRegistry $managerRegistry,
-        PaymentServiceProviderService $paymentServiceProviderService
+        PaymentServiceProviderService $paymentServiceProviderService,
+        UserSessionInterface $userSession
     ) {
         $this->backendService = $backendService;
         $this->configurationService = $configurationService;
@@ -50,10 +58,27 @@ class PaymentService
         $this->em = $manager;
 
         $this->paymentServiceProviderService = $paymentServiceProviderService;
+        $this->userSession = $userSession;
     }
 
     public function createPayment(Payment $payment): Payment
     {
+        $type = $payment->getType();
+        $paymentType = $this->configurationService->getPaymentTypeByType($type);
+
+        if ($paymentType->isAuthRequired() && !$this->userSession->getUserIdentifier()) {
+            throw ApiError::withDetails(Response::HTTP_UNAUTHORIZED, 'Authorization required!', 'mono:authorization-required');
+        }
+
+        $expressionLanguage = new ExpressionLanguage();
+        if ($paymentType->getNotifyUrlExpression() && !$expressionLanguage->evaluate($paymentType->getNotifyUrlExpression(), ['payment' => $payment])) {
+            throw ApiError::withDetails(Response::HTTP_BAD_REQUEST, 'Notify URL not allowed!', 'mono:notify-url-not-allowed');
+        }
+
+        if ($paymentType->getReturnUrlExpression() && !$expressionLanguage->evaluate($paymentType->getReturnUrlExpression(), ['payment' => $payment])) {
+            throw ApiError::withDetails(Response::HTTP_BAD_REQUEST, 'Return URL not allowed!', 'mono:return-url-not-allowed');
+        }
+
         $identifier = (string) Uuid::v4();
         $payment->setIdentifier($identifier);
         $payment->setPaymentStatus(Payment::PAYMENT_STATUS_PREPARED);
