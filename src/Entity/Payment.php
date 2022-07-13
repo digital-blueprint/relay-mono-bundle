@@ -79,7 +79,7 @@ class Payment
     /**
      * @var string|null
      * @ApiProperty(iri="https://schema.org/URL")
-     * @Groups({"MonoPayment:input"})
+     * @Groups({"MonoPayment:input", "MonoPayment:output"})
      */
     private $returnUrl;
 

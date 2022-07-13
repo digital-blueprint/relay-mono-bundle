@@ -7,7 +7,7 @@ namespace Dbp\Relay\MonoBundle\PaymentServiceProvider;
 class CompleteResponse implements CompleteResponseInterface
 {
     /**
-     * @var string
+     * @var string|null
      */
     private $returnUrl;
 
@@ -22,7 +22,7 @@ class CompleteResponse implements CompleteResponseInterface
     private $error;
 
     public function __construct(
-        string $returnUrl,
+        ?string $returnUrl,
         string $data = null,
         string $error = null
     ) {
@@ -31,7 +31,7 @@ class CompleteResponse implements CompleteResponseInterface
         $this->error = $error;
     }
 
-    public function getReturnUrl(): string
+    public function getReturnUrl(): ?string
     {
         return $this->returnUrl;
     }

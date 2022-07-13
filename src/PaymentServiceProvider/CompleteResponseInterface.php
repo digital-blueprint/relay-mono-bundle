@@ -6,7 +6,7 @@ namespace Dbp\Relay\MonoBundle\PaymentServiceProvider;
 
 interface CompleteResponseInterface
 {
-    public function getReturnUrl(): string;
+    public function getReturnUrl(): ?string;
 
     public function getData(): ?string;
 

@@ -61,7 +61,7 @@ class CompletePayAction
     private $pspData;
 
     /**
-     * @var string
+     * @var string|null
      * @ApiProperty(iri="https://schema.org/URL")
      * @Groups({"MonoPayment:output"})
      */
@@ -101,12 +101,12 @@ class CompletePayAction
         return $this;
     }
 
-    public function getReturnUrl(): string
+    public function getReturnUrl(): ?string
     {
         return $this->returnUrl;
     }
 
-    public function setReturnUrl(string $returnUrl): self
+    public function setReturnUrl(?string $returnUrl): self
     {
         $this->returnUrl = $returnUrl;
 
