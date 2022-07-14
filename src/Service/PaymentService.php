@@ -159,7 +159,7 @@ class PaymentService
         $now = new \DateTime();
         $timeoutAt = clone $paymentPersistence->getCreatedAt();
         $timeout = $config['payment_session_timeout'];
-        $timeoutAt->modify('+' . (int)$timeout . ' seconds');
+        $timeoutAt->modify('+'.(int) $timeout.' seconds');
         if ($now >= $timeoutAt) {
             throw ApiError::withDetails(Response::HTTP_GONE, 'Payment timeout exceeded!', 'mono:payment-timeout-exceeded');
         }

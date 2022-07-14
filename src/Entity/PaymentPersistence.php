@@ -173,7 +173,7 @@ class PaymentPersistence
 
     /**
      * @var int
-     * @ORM\Column(type="smallint", options={"default" : 0})
+     * @ORM\Column(type="smallint", options={"default" = 0})
      */
     private $numberOfUses;
 
