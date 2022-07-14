@@ -109,6 +109,7 @@ class PaymentService
             }
             $createdAt = new \DateTime();
             $paymentPersistence->setCreatedAt($createdAt);
+            $paymentPersistence->setNumberOfUses(0);
             if ($paymentType->isAuthRequired()) {
                 $paymentPersistence->setUserIdentifier($userIdentifier);
             }
