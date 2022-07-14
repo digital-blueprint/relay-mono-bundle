@@ -41,6 +41,12 @@ class PaymentPersistence
 
     /**
      * @var string|null
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $userIdentifier;
+
+    /**
+     * @var string|null
      * @ORM\Column(type="string", length=45, nullable=true)
      */
     private $clientIp;
@@ -197,6 +203,18 @@ class PaymentPersistence
     public function setData(string $data): self
     {
         $this->data = $data;
+
+        return $this;
+    }
+
+    public function getUserIdentifier(): ?string
+    {
+        return $this->userIdentifier;
+    }
+
+    public function setUserIdentifier(?string $userIdentifier): self
+    {
+        $this->userIdentifier = $userIdentifier;
 
         return $this;
     }
