@@ -23,6 +23,14 @@ class ConfigurationService
         $this->config = $config;
     }
 
+    /**
+     * @return array
+     */
+    public function getConfig()
+    {
+        return $this->config;
+    }
+
     public function getPaymentTypeByType(string $type): ?PaymentType
     {
         $paymentType = null;
