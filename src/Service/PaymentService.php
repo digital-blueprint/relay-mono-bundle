@@ -194,11 +194,36 @@ class PaymentService
         string $paymentMethod
     ): StartResponseInterface {
         $paymentPersistence = $this->getPaymentPersistenceByIdentifier($identifier);
+
+        $request = Request::createFromGlobals();
+        $clientIp = $request->getClientIp();
+        if ($paymentPersistence->getClientIp() !== $clientIp) {
+            throw ApiError::withDetails(Response::HTTP_FORBIDDEN, 'Start payment client IP not allowed!', 'mono:start-payment-client-ip-not-allowed');
+        }
+
+        if ($paymentPersistence->getStartedAt()) {
+            throw ApiError::withDetails(Response::HTTP_TOO_MANY_REQUESTS, 'Start payment too many requests!', 'mono:start-payment-too-many-requests');
+        }
+
+        $now = new \DateTime();
+        $timeoutAt = clone $paymentPersistence->getCreatedAt();
+        $config = $this->configurationService->getConfig();
+        $timeout = $config['payment_session_timeout'];
+        $timeoutAt->modify('+'.(int) $timeout.' seconds');
+        if ($now >= $timeoutAt) {
+            throw ApiError::withDetails(Response::HTTP_GONE, 'Start payment timeout exceeded!', 'mono:start-payment-timeout-exceeded');
+        }
+
         $paymentPersistence->setPaymentMethod($paymentMethod);
 
         $type = $paymentPersistence->getType();
         $paymentContract = $this->configurationService->getPaymentContractByTypeAndPaymentMethod($type, $paymentMethod);
         $paymentPersistence->setPaymentContract((string) $paymentContract);
+
+        $paymentPersistence->setPaymentStatus(Payment::PAYMENT_STATUS_STARTED);
+
+        $startedAt = new \DateTime();
+        $paymentPersistence->setStartedAt($startedAt);
 
         try {
             $this->em->persist($paymentPersistence);
