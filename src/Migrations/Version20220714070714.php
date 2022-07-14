@@ -5,12 +5,11 @@ declare(strict_types=1);
 namespace Dbp\Relay\MonoBundle\Migrations;
 
 use Doctrine\DBAL\Schema\Schema;
-use Doctrine\Migrations\AbstractMigration;
 
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20220714070714 extends AbstractMigration
+final class Version20220714070714 extends EntityManagerMigration
 {
     public function getDescription(): string
     {
