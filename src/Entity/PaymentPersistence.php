@@ -175,6 +175,12 @@ class PaymentPersistence
      * @var \DateTime|null
      * @ORM\Column(type="datetime", nullable=true)
      */
+    private $completedAt;
+
+    /**
+     * @var \DateTime|null
+     * @ORM\Column(type="datetime", nullable=true)
+     */
     private $notifiedAt;
 
     /**
@@ -479,6 +485,18 @@ class PaymentPersistence
     public function setStartedAt(?\DateTime $startedAt): self
     {
         $this->startedAt = $startedAt;
+
+        return $this;
+    }
+
+    public function getCompletedAt(): ?\DateTime
+    {
+        return $this->completedAt;
+    }
+
+    public function setCompletedAt(?\DateTime $completedAt): self
+    {
+        $this->completedAt = $completedAt;
 
         return $this;
     }
