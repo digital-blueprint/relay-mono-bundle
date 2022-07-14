@@ -66,7 +66,8 @@ class PaymentService
         $type = $payment->getType();
         $paymentType = $this->configurationService->getPaymentTypeByType($type);
 
-        if ($paymentType->isAuthRequired() && !$this->userSession->getUserIdentifier()) {
+        $userIdentifier = $this->userSession->getUserIdentifier();
+        if ($paymentType->isAuthRequired() && !$userIdentifier) {
             throw ApiError::withDetails(Response::HTTP_UNAUTHORIZED, 'Authorization required!', 'mono:authorization-required');
         }
 
@@ -79,19 +80,39 @@ class PaymentService
             throw ApiError::withDetails(Response::HTTP_BAD_REQUEST, 'Return URL not allowed!', 'mono:return-url-not-allowed');
         }
 
-        $identifier = (string) Uuid::v4();
-        $payment->setIdentifier($identifier);
-        $payment->setPaymentStatus(Payment::PAYMENT_STATUS_PREPARED);
+        $data = $payment->getData();
+        $paymentPersistence = null;
+        if (!empty($data)) {
+            $criteria = [
+                'type' => $type,
+                'data' => $data,
+            ];
+            if ($paymentType->isAuthRequired()) {
+                $criteria['userIdentifier'] = $userIdentifier;
+            }
+            $paymentPersistence = $this->em
+                ->getRepository(PaymentPersistence::class)
+                ->findOneBy($criteria);
+        }
 
-        $paymentPersistence = PaymentPersistence::fromPayment($payment);
-        $createdAt = new \DateTime();
-        $paymentPersistence->setCreatedAt($createdAt);
+        if ($paymentPersistence === null) {
+            $identifier = (string) Uuid::v4();
+            $payment->setIdentifier($identifier);
+            $payment->setPaymentStatus(Payment::PAYMENT_STATUS_PREPARED);
 
-        try {
-            $this->em->persist($paymentPersistence);
-            $this->em->flush();
-        } catch (\Exception $e) {
-            throw ApiError::withDetails(Response::HTTP_INTERNAL_SERVER_ERROR, 'Payment could not be created!', 'mono:payment-not-created', ['message' => $e->getMessage()]);
+            $paymentPersistence = PaymentPersistence::fromPayment($payment);
+            $createdAt = new \DateTime();
+            $paymentPersistence->setCreatedAt($createdAt);
+            if ($paymentType->isAuthRequired()) {
+                $paymentPersistence->setUserIdentifier($userIdentifier);
+            }
+
+            try {
+                $this->em->persist($paymentPersistence);
+                $this->em->flush();
+            } catch (\Exception $e) {
+                throw ApiError::withDetails(Response::HTTP_INTERNAL_SERVER_ERROR, 'Payment could not be created!', 'mono:payment-not-created', ['message' => $e->getMessage()]);
+            }
         }
 
         $payment = Payment::fromPaymentPersistence($paymentPersistence);
