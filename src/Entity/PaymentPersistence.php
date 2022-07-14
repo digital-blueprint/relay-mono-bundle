@@ -171,6 +171,12 @@ class PaymentPersistence
      */
     private $notifiedAt;
 
+    /**
+     * @var int
+     * @ORM\Column(type="smallint", options={"default" : 0})
+     */
+    private $numberOfUses;
+
     public function getIdentifier(): string
     {
         return $this->identifier;
@@ -467,6 +473,18 @@ class PaymentPersistence
     public function setNotifiedAt(?\DateTime $notifiedAt): self
     {
         $this->notifiedAt = $notifiedAt;
+
+        return $this;
+    }
+
+    public function getNumberOfUses(): int
+    {
+        return $this->numberOfUses;
+    }
+
+    public function setNumberOfUses(int $numberOfUses): self
+    {
+        $this->numberOfUses = $numberOfUses;
 
         return $this;
     }
