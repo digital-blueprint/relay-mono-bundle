@@ -13,6 +13,7 @@ use Dbp\Relay\MonoBundle\PaymentServiceProvider\StartResponseInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Uid\Uuid;
 
@@ -101,6 +102,11 @@ class PaymentService
             $payment->setPaymentStatus(Payment::PAYMENT_STATUS_PREPARED);
 
             $paymentPersistence = PaymentPersistence::fromPayment($payment);
+            $request = Request::createFromGlobals();
+            $clientIp = $request->getClientIp();
+            if (empty($paymentPersistence->getClientIp())) {
+                $paymentPersistence->setClientIp($clientIp);
+            }
             $createdAt = new \DateTime();
             $paymentPersistence->setCreatedAt($createdAt);
             if ($paymentType->isAuthRequired()) {
@@ -137,6 +143,27 @@ class PaymentService
     public function getPaymentByIdentifier(string $identifier): Payment
     {
         $paymentPersistence = $this->getPaymentPersistenceByIdentifier($identifier);
+
+        $request = Request::createFromGlobals();
+        $clientIp = $request->getClientIp();
+        if ($paymentPersistence->getClientIp() !== $clientIp) {
+            throw ApiError::withDetails(Response::HTTP_FORBIDDEN, 'Payment client IP not allowed!', 'mono:payment-client-ip-not-allowed');
+        }
+
+        $config = $this->configurationService->getConfig();
+        $numberOfUses = $config['payment_session_number_of_uses'];
+        if ($paymentPersistence->getNumberOfUses() >= $numberOfUses) {
+            throw ApiError::withDetails(Response::HTTP_TOO_MANY_REQUESTS, 'Payment too many requests!', 'mono:payment-too-many-requests');
+        }
+
+        $now = new \DateTime();
+        $timeoutAt = clone $paymentPersistence->getCreatedAt();
+        $timeout = $config['payment_session_timeout'];
+        $timeoutAt->modify('+' . (int)$timeout . ' seconds');
+        if ($now >= $timeoutAt) {
+            throw ApiError::withDetails(Response::HTTP_GONE, 'Payment timeout exceeded!', 'mono:payment-timeout-exceeded');
+        }
+
         $type = $paymentPersistence->getType();
         $paymentType = $this->configurationService->getPaymentTypeByType($type);
 
