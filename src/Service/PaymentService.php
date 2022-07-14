@@ -254,12 +254,20 @@ class PaymentService
         $completeResponse = $paymentServiceProvider->complete($paymentPersistence, $pspData);
 
         try {
-            $backendService = $this->backendService->getByPaymentType($paymentType);
-            $isNotified = $backendService->notify($paymentPersistence);
-            if ($isNotified) {
-                $notifiedAt = new \DateTime();
-                $paymentPersistence->setNotifiedAt($notifiedAt);
-            }
+            $this->em->persist($paymentPersistence);
+            $this->em->flush();
+        } catch (\Exception $e) {
+            throw ApiError::withDetails(Response::HTTP_INTERNAL_SERVER_ERROR, 'Payment could not be updated!', 'mono:payment-not-updated', ['message' => $e->getMessage()]);
+        }
+
+        $backendService = $this->backendService->getByPaymentType($paymentType);
+        $isNotified = $backendService->notify($paymentPersistence);
+        if ($isNotified) {
+            $notifiedAt = new \DateTime();
+            $paymentPersistence->setNotifiedAt($notifiedAt);
+        }
+
+        try {
             $this->em->persist($paymentPersistence);
             $this->em->flush();
         } catch (\Exception $e) {
