@@ -3,57 +3,22 @@
 [GitLab](https://gitlab.tugraz.at/dbp/relay/dbp-relay-mono-bundle) |
 [Packagist](https://packagist.org/packages/dbp/relay-mono-bundle)
 
-This Symfony bundle can be used as a template for creating new bundles for the
-DBP Relay project.
+## Bundle installation
 
-When including this bundle into your API server it will gain the following
-features:
+You can install the bundle directly from [packagist.org](https://packagist.org/packages/dbp/relay-mono-bundle).
 
-* A custom `./bin/console` command
-* An example entity
-* Various HTTP methods implemented for that entity
-
-## TL;DR
-
-The quickest way to make use of this template bundle is to feed your desired names
-to one command and generate a ready-to-use bundle with the correct naming.
-
-See [Generate DBP Symfony bundle](https://dbp-demo.tugraz.at/dev-guide/relay/naming/#generate-dbp-symfony-bundle) for more information.
-
-## Using the Bundle as a Template
-
-* Copy the repo contents
-* Adjust the package name in `composer.json`, in this example we'll pretend you named your bundle `dbp/relay-your-bundle`
-* Invent a new PHP namespace and adjust it in all PHP files
-* Rename `src/DbpRelayMonoBundle` and `DependencyInjection/DbpRelayMonoExtension` to match the new project name
+```bash
+composer require dbp/relay-mono-bundle
+```
 
 ## Integration into the API Server
 
-* Push your bundle on a git server, in this example we'll use `git@gitlab.tugraz.at:dbp/relay/dbp-relay-your-bundle.git`
-* Add the repository to your composer.json (as soon as you published your bundle to [Packagist](https://packagist.org/)
-  you can remove that block again):
-
-```json
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "git@gitlab.tugraz.at:dbp/relay/dbp-relay-your-bundle.git"
-        }
-    ],
-```
-
-* Add the bundle package as a dependency:
-
-```bash
-composer require dbp/relay-your-bundle=dev-main
-```
-
-* Add the bundle to your `config/bundles.php`:
+* Add the necessary bundles to your `config/bundles.php`:
 
 ```php
 ...
-Dbp\Relay\YourBundle\DbpRelayYourBundle::class => ['all' => true],
-DBP\API\CoreBundle\DbpCoreBundle::class => ['all' => true],
+Dbp\Relay\MonoConnectorGenericBundle\DbpRelayMonoConnectorGenericBundle::class => ['all' => true],
+Dbp\Relay\CoreBundle\DbpRelayCoreBundle::class => ['all' => true],
 ];
 ```
 
@@ -61,20 +26,32 @@ DBP\API\CoreBundle\DbpCoreBundle::class => ['all' => true],
 
 ## Configuration
 
-The bundle has a `example_config` (add your config here) configuration value that you can specify in your
-app, either by hard-coding it, or by referencing an environment variable.
-
 For this create `config/packages/dbp_relay_mono.yaml` in the app with the following
 content:
 
 ```yaml
 dbp_relay_mono:
-  example_config: 42
-  # example_config: '%env(EXAMPLE_CONFIG)%'
+  database_url: '%env(resolve:DATABASE_URL)%'
+  payment_session_timeout: 1800
+  payment_session_number_of_uses: 3
+  payment_types:
+    tuition_fee:
+      service: 'Dbp\Relay\MonoConnectorCampusonlineBundle\Service\TuitionFeeService'
+      auth_required: true
+      payment_contracts:
+        payunity_flex_studienservice:
+          service: 'Dbp\Relay\MonoConnectorPayunityBundle\Service\PayunityFlexService'
+          payment_methods:
+            - identifier: payunity_creditcard
+              name: Kreditkarte
+              image: '/bundles/dbprelaymonoconnectorpayunity/svg/credit-cards.svg'
+            - identifier: payunity_applepay
+              name: Apple Pay
+              image: '/bundles/dbprelaymonoconnectorpayunity/svg/apple-pay.svg'
+            - identifier: payunity_googlepay
+              name: Google Pay
+              image: '/bundles/dbprelaymonoconnectorpayunity/svg/google-pay.svg'
 ```
-
-The value gets read in `DbpRelayMonoExtension` (your extension will be named differently)
-and passed when creating the `MyCustomService` service.
 
 For more info on bundle configuration see [Symfony bundles configuration](https://symfony.com/doc/current/bundles/configuration.html).
 
@@ -91,5 +68,5 @@ Don't forget you need to pull down your dependencies in your main application if
 
 ```bash
 # updates and installs dependencies from dbp/relay-your-bundle
-composer update dbp/relay-your-bundle
+composer update dbp/relay-mono-bundle
 ```
