@@ -70,3 +70,12 @@ Don't forget you need to pull down your dependencies in your main application if
 # updates and installs dependencies from dbp/relay-your-bundle
 composer update dbp/relay-mono-bundle
 ```
+
+### Database migration
+
+Run this script to migrate the database. Run this script after installation of the bundle and
+after every update to adapt the database to the new source code.
+
+```bash
+php bin/console doctrine:migrations:migrate --em=dbp_relay_mono_bundle
+```
