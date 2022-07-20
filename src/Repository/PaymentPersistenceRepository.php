@@ -32,7 +32,7 @@ class PaymentPersistenceRepository extends EntityRepository
     {
         $now = new \DateTime();
         $parameters = array_merge($criteria, [
-            'timeoutAt' => $now
+            'timeoutAt' => $now,
         ]);
         $qb = $this->createQueryBuilder('p')
             ->where('p.type = :type')

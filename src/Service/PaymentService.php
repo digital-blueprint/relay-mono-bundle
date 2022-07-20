@@ -10,6 +10,7 @@ use Dbp\Relay\MonoBundle\Entity\Payment;
 use Dbp\Relay\MonoBundle\Entity\PaymentPersistence;
 use Dbp\Relay\MonoBundle\PaymentServiceProvider\CompleteResponseInterface;
 use Dbp\Relay\MonoBundle\PaymentServiceProvider\StartResponseInterface;
+use Dbp\Relay\MonoBundle\Repository\PaymentPersistenceRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
@@ -91,9 +92,11 @@ class PaymentService
             if ($paymentType->isAuthRequired()) {
                 $criteria['userIdentifier'] = $userIdentifier;
             }
-            $paymentPersistence = $this->em
-                ->getRepository(PaymentPersistence::class)
-                ->findOneActiveBy($criteria);
+            $repo = $paymentPersistence = $this->em
+                ->getRepository(PaymentPersistence::class);
+            assert($repo instanceof PaymentPersistenceRepository);
+            /** @var PaymentPersistence $paymentPersistence */
+            $paymentPersistence = $repo->findOneActiveBy($criteria);
         }
 
         if ($paymentPersistence === null) {
@@ -135,10 +138,11 @@ class PaymentService
 
     private function getPaymentPersistenceByIdentifier(string $identifier): PaymentPersistence
     {
+        $repo = $paymentPersistence = $this->em
+            ->getRepository(PaymentPersistence::class);
+        assert($repo instanceof PaymentPersistenceRepository);
         /** @var PaymentPersistence $paymentPersistence */
-        $paymentPersistence = $this->em
-            ->getRepository(PaymentPersistence::class)
-            ->findOneActive($identifier);
+        $paymentPersistence = $repo->findOneActive($identifier);
 
         if (!$paymentPersistence) {
             throw ApiError::withDetails(Response::HTTP_NOT_FOUND, 'Payment was not found!', 'mono:payment-not-found');
