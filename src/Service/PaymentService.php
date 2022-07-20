@@ -67,6 +67,9 @@ class PaymentService
     {
         $type = $payment->getType();
         $paymentType = $this->configurationService->getPaymentTypeByType($type);
+        if ($paymentType === null) {
+            throw ApiError::withDetails(Response::HTTP_BAD_REQUEST, 'Unknown payment type', 'mono:unknown-payment-type');
+        }
 
         $userIdentifier = $this->userSession->getUserIdentifier();
         if ($paymentType->isAuthRequired() && !$userIdentifier) {
