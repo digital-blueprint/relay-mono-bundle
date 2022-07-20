@@ -160,6 +160,12 @@ class PaymentPersistence
     private $createdAt;
 
     /**
+     * @var \DateTime
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $timeoutAt;
+
+    /**
      * @var \DateTime|null
      * @ORM\Column(type="datetime", nullable=true)
      */
@@ -461,6 +467,18 @@ class PaymentPersistence
     public function setCreatedAt(\DateTime $createdAt): self
     {
         $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getTimeoutAt(): \DateTime
+    {
+        return $this->timeoutAt;
+    }
+
+    public function setTimeoutAt(\DateTime $timeoutAt): self
+    {
+        $this->timeoutAt = $timeoutAt;
 
         return $this;
     }
