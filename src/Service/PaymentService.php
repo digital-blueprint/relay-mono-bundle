@@ -93,7 +93,7 @@ class PaymentService
             }
             $paymentPersistence = $this->em
                 ->getRepository(PaymentPersistence::class)
-                ->findOneBy($criteria);
+                ->findOneActiveBy($criteria);
         }
 
         if ($paymentPersistence === null) {
@@ -113,13 +113,19 @@ class PaymentService
             if ($paymentType->isAuthRequired()) {
                 $paymentPersistence->setUserIdentifier($userIdentifier);
             }
+        }
 
-            try {
-                $this->em->persist($paymentPersistence);
-                $this->em->flush();
-            } catch (\Exception $e) {
-                throw ApiError::withDetails(Response::HTTP_INTERNAL_SERVER_ERROR, 'Payment could not be created!', 'mono:payment-not-created', ['message' => $e->getMessage()]);
-            }
+        $config = $this->configurationService->getConfig();
+        $timeoutAt = new \DateTime();
+        $timeout = $config['payment_session_timeout'];
+        $timeoutAt->modify('+'.(int) $timeout.' seconds');
+        $paymentPersistence->setTimeoutAt($timeoutAt);
+
+        try {
+            $this->em->persist($paymentPersistence);
+            $this->em->flush();
+        } catch (\Exception $e) {
+            throw ApiError::withDetails(Response::HTTP_INTERNAL_SERVER_ERROR, 'Payment could not be created!', 'mono:payment-not-created', ['message' => $e->getMessage()]);
         }
 
         $payment = Payment::fromPaymentPersistence($paymentPersistence);
@@ -132,7 +138,7 @@ class PaymentService
         /** @var PaymentPersistence $paymentPersistence */
         $paymentPersistence = $this->em
             ->getRepository(PaymentPersistence::class)
-            ->find($identifier);
+            ->findOneActive($identifier);
 
         if (!$paymentPersistence) {
             throw ApiError::withDetails(Response::HTTP_NOT_FOUND, 'Payment was not found!', 'mono:payment-not-found');
@@ -158,10 +164,7 @@ class PaymentService
         }
 
         $now = new \DateTime();
-        $timeoutAt = clone $paymentPersistence->getCreatedAt();
-        $timeout = $config['payment_session_timeout'];
-        $timeoutAt->modify('+'.(int) $timeout.' seconds');
-        if ($now >= $timeoutAt) {
+        if ($now >= $paymentPersistence->getTimeoutAt()) {
             throw ApiError::withDetails(Response::HTTP_GONE, 'Payment timeout exceeded!', 'mono:payment-timeout-exceeded');
         }
 
@@ -207,11 +210,7 @@ class PaymentService
         }
 
         $now = new \DateTime();
-        $timeoutAt = clone $paymentPersistence->getCreatedAt();
-        $config = $this->configurationService->getConfig();
-        $timeout = $config['payment_session_timeout'];
-        $timeoutAt->modify('+'.(int) $timeout.' seconds');
-        if ($now >= $timeoutAt) {
+        if ($now >= $paymentPersistence->getTimeoutAt()) {
             throw ApiError::withDetails(Response::HTTP_GONE, 'Start payment timeout exceeded!', 'mono:start-payment-timeout-exceeded');
         }
 
@@ -222,6 +221,12 @@ class PaymentService
         $paymentPersistence->setPaymentContract((string) $paymentContract);
 
         $paymentPersistence->setPaymentStatus(Payment::PAYMENT_STATUS_STARTED);
+
+        $config = $this->configurationService->getConfig();
+        $timeoutAt = new \DateTime();
+        $timeout = $config['payment_session_timeout'];
+        $timeoutAt->modify('+'.(int) $timeout.' seconds');
+        $paymentPersistence->setTimeoutAt($timeoutAt);
 
         $startedAt = new \DateTime();
         $paymentPersistence->setStartedAt($startedAt);

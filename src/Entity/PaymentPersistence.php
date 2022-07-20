@@ -7,7 +7,7 @@ namespace Dbp\Relay\MonoBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Dbp\Relay\MonoBundle\Repository\PaymentPersistenceRepository")
  * @ORM\Table(name="mono_payments")
  */
 class PaymentPersistence
