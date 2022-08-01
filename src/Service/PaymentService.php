@@ -140,7 +140,7 @@ class PaymentService
         return $payment;
     }
 
-    private function getPaymentPersistenceByIdentifier(string $identifier): PaymentPersistence
+    public function getPaymentPersistenceByIdentifier(string $identifier): PaymentPersistence
     {
         $repo = $paymentPersistence = $this->em
             ->getRepository(PaymentPersistence::class);
