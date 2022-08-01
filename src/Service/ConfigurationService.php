@@ -7,6 +7,7 @@ namespace Dbp\Relay\MonoBundle\Service;
 use Dbp\Relay\MonoBundle\Entity\PaymentContract;
 use Dbp\Relay\MonoBundle\Entity\PaymentMethod;
 use Dbp\Relay\MonoBundle\Entity\PaymentType;
+use Symfony\Component\HttpFoundation\UrlHelper;
 
 class ConfigurationService
 {
@@ -14,6 +15,18 @@ class ConfigurationService
      * @var array
      */
     private $config = [];
+
+    /**
+     * @var UrlHelper
+     */
+    private $urlHelper;
+
+    public function __construct(
+        UrlHelper $urlHelper
+    )
+    {
+        $this->urlHelper = $urlHelper;
+    }
 
     /**
      * @return void
@@ -55,6 +68,9 @@ class ConfigurationService
             foreach ($paymentContractsConfig as $paymentContractConfig) {
                 $paymentMethodsConfig = $paymentContractConfig['payment_methods'];
                 foreach ($paymentMethodsConfig as $paymentMethodConfig) {
+                    if (array_key_exists('image', $paymentMethodConfig)) {
+                        $paymentMethodConfig['image'] = $this->urlHelper->getAbsoluteUrl($paymentMethodConfig['image']);
+                    }
                     $paymentMethod = PaymentMethod::fromConfig($paymentMethodConfig);
                     $paymentMethods[] = $paymentMethod;
                 }
