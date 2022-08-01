@@ -23,8 +23,7 @@ class ConfigurationService
 
     public function __construct(
         UrlHelper $urlHelper
-    )
-    {
+    ) {
         $this->urlHelper = $urlHelper;
     }
 

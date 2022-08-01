@@ -201,7 +201,8 @@ class PaymentService
         return $payment;
     }
 
-    public function startPayAction(StartPayAction $startPayAction): StartResponseInterface {
+    public function startPayAction(StartPayAction $startPayAction): StartResponseInterface
+    {
         $identifier = $startPayAction->getIdentifier();
         $paymentPersistence = $this->getPaymentPersistenceByIdentifier($identifier);
 
