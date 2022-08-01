@@ -38,6 +38,7 @@ dbp_relay_mono:
     tuition_fee:
       service: 'Dbp\Relay\MonoConnectorCampusonlineBundle\Service\TuitionFeeService'
       auth_required: true
+      psp_return_url_expression: 'pspReturnUrl matches "/^https:\\/\\/0\\.0\\.0\\.0:8001\\//"'
       payment_contracts:
         payunity_flex_studienservice:
           service: 'Dbp\Relay\MonoConnectorPayunityBundle\Service\PayunityFlexService'
