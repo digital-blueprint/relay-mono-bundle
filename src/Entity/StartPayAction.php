@@ -58,7 +58,7 @@ class StartPayAction
      * @ApiProperty(iri="https://schema.org/URL")
      * @Groups({"MonoPayment:input"})
      */
-    private $returnBaseUrl;
+    private $pspReturnUrl;
 
     /**
      * @var bool
@@ -119,14 +119,14 @@ class StartPayAction
         return $this;
     }
 
-    public function getReturnBaseUrl(): string
+    public function getPspReturnUrl(): string
     {
-        return $this->returnBaseUrl;
+        return $this->pspReturnUrl;
     }
 
-    public function setReturnBaseUrl(string $returnBaseUrl): self
+    public function setPspReturnUrl(string $pspReturnUrl): self
     {
-        $this->returnBaseUrl = $returnBaseUrl;
+        $this->pspReturnUrl = $pspReturnUrl;
 
         return $this;
     }

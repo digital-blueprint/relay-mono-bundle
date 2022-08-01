@@ -67,6 +67,12 @@ class PaymentPersistence
      * @var string|null
      * @ORM\Column(type="string", nullable=true)
      */
+    private $pspReturnUrl;
+
+    /**
+     * @var string|null
+     * @ORM\Column(type="string", nullable=true)
+     */
     private $localIdentifier;
 
     /**
@@ -275,6 +281,18 @@ class PaymentPersistence
     public function setNotifyUrl(?string $notifyUrl): self
     {
         $this->notifyUrl = $notifyUrl;
+
+        return $this;
+    }
+
+    public function getPspReturnUrl(): ?string
+    {
+        return $this->pspReturnUrl;
+    }
+
+    public function setPspReturnUrl(?string $pspReturnUrl): self
+    {
+        $this->pspReturnUrl = $pspReturnUrl;
 
         return $this;
     }

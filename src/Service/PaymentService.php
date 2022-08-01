@@ -220,10 +220,22 @@ class PaymentService
             throw ApiError::withDetails(Response::HTTP_GONE, 'Start payment timeout exceeded!', 'mono:start-payment-timeout-exceeded');
         }
 
+        $type = $paymentPersistence->getType();
+        $paymentType = $this->configurationService->getPaymentTypeByType($type);
+        if ($paymentType === null) {
+            throw ApiError::withDetails(Response::HTTP_BAD_REQUEST, 'Unknown payment type', 'mono:start-payment-unknown-payment-type');
+        }
+
+        $pspReturnUrl = $startPayAction->getPspReturnUrl();
+        $expressionLanguage = new ExpressionLanguage();
+        if ($paymentType->getPspReturnUrlExpression() && !$expressionLanguage->evaluate($paymentType->getPspReturnUrlExpression(), ['payment' => $paymentPersistence, 'pspReturnUrl' => $pspReturnUrl])) {
+            throw ApiError::withDetails(Response::HTTP_BAD_REQUEST, 'PSP return URL not allowed!', 'mono:psp-return-url-not-allowed');
+        }
+        $paymentPersistence->setPspReturnUrl($pspReturnUrl);
+
         $paymentMethod = $startPayAction->getPaymentMethod();
         $paymentPersistence->setPaymentMethod($paymentMethod);
 
-        $type = $paymentPersistence->getType();
         $paymentContract = $this->configurationService->getPaymentContractByTypeAndPaymentMethod($type, $paymentMethod);
         $paymentPersistence->setPaymentContract((string) $paymentContract);
 

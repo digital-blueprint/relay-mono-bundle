@@ -92,6 +92,13 @@ class Payment
 
     /**
      * @var string|null
+     * @ApiProperty(iri="https://schema.org/URL")
+     * @Groups({"MonoPayment:output", "MonoPayment:input"})
+     */
+    private $pspReturnUrl;
+
+    /**
+     * @var string|null
      * @ApiProperty(iri="https://schema.org/Text")
      * @Groups({"MonoPayment:output", "MonoPayment:input"})
      */
@@ -261,6 +268,18 @@ class Payment
     public function setNotifyUrl(?string $notifyUrl): self
     {
         $this->notifyUrl = $notifyUrl;
+
+        return $this;
+    }
+
+    public function getPspReturnUrl(): ?string
+    {
+        return $this->pspReturnUrl;
+    }
+
+    public function setPspReturnUrl(?string $pspReturnUrl): self
+    {
+        $this->pspReturnUrl = $pspReturnUrl;
 
         return $this;
     }
@@ -438,6 +457,7 @@ class Payment
         $payment = new Payment();
         $payment->setIdentifier((string) $paymentPersistence->getIdentifier());
         $payment->setReturnUrl($paymentPersistence->getReturnUrl());
+        $payment->setPspReturnUrl($paymentPersistence->getPspReturnUrl());
         $payment->setLocalIdentifier($paymentPersistence->getLocalIdentifier());
         $payment->setPaymentStatus($paymentPersistence->getPaymentStatus());
         $payment->setPaymentReference($paymentPersistence->getPaymentReference());

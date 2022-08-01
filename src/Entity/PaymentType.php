@@ -31,6 +31,11 @@ class PaymentType
      */
     private $notifyUrlExpression;
 
+    /**
+     * @var string
+     */
+    private $pspReturnUrlExpression;
+
     public function getIdentifier(): string
     {
         return $this->identifier;
@@ -91,6 +96,18 @@ class PaymentType
         return $this;
     }
 
+    public function getPspReturnUrlExpression(): string
+    {
+        return $this->pspReturnUrlExpression;
+    }
+
+    public function setPspReturnUrlExpression(string $pspReturnUrlExpression): self
+    {
+        $this->pspReturnUrlExpression = $pspReturnUrlExpression;
+
+        return $this;
+    }
+
     public static function fromConfig(string $identifier, array $config): PaymentType
     {
         $paymentType = new PaymentType();
@@ -99,6 +116,7 @@ class PaymentType
         $paymentType->setAuthRequired((bool) $config['auth_required']);
         $paymentType->setReturnUrlExpression((string) $config['return_url_expression']);
         $paymentType->setNotifyUrlExpression((string) $config['notify_url_expression']);
+        $paymentType->setPspReturnUrlExpression((string) $config['psp_return_url_expression']);
 
         return $paymentType;
     }
