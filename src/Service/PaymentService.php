@@ -8,6 +8,7 @@ use Dbp\Relay\CoreBundle\API\UserSessionInterface;
 use Dbp\Relay\CoreBundle\Exception\ApiError;
 use Dbp\Relay\MonoBundle\Entity\Payment;
 use Dbp\Relay\MonoBundle\Entity\PaymentPersistence;
+use Dbp\Relay\MonoBundle\Entity\StartPayAction;
 use Dbp\Relay\MonoBundle\PaymentServiceProvider\CompleteResponseInterface;
 use Dbp\Relay\MonoBundle\PaymentServiceProvider\StartResponseInterface;
 use Dbp\Relay\MonoBundle\Repository\PaymentPersistenceRepository;
@@ -200,10 +201,8 @@ class PaymentService
         return $payment;
     }
 
-    public function startPayAction(
-        string $identifier,
-        string $paymentMethod
-    ): StartResponseInterface {
+    public function startPayAction(StartPayAction $startPayAction): StartResponseInterface {
+        $identifier = $startPayAction->getIdentifier();
         $paymentPersistence = $this->getPaymentPersistenceByIdentifier($identifier);
 
         $request = Request::createFromGlobals();
@@ -212,7 +211,7 @@ class PaymentService
             throw ApiError::withDetails(Response::HTTP_FORBIDDEN, 'Start payment client IP not allowed!', 'mono:start-payment-client-ip-not-allowed');
         }
 
-        if ($paymentPersistence->getStartedAt()) {
+        if (!$startPayAction->isRestart() && $paymentPersistence->getStartedAt()) {
             throw ApiError::withDetails(Response::HTTP_TOO_MANY_REQUESTS, 'Start payment too many requests!', 'mono:start-payment-too-many-requests');
         }
 
@@ -221,6 +220,7 @@ class PaymentService
             throw ApiError::withDetails(Response::HTTP_GONE, 'Start payment timeout exceeded!', 'mono:start-payment-timeout-exceeded');
         }
 
+        $paymentMethod = $startPayAction->getPaymentMethod();
         $paymentPersistence->setPaymentMethod($paymentMethod);
 
         $type = $paymentPersistence->getType();

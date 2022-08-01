@@ -68,6 +68,13 @@ class StartPayAction
     private $consent;
 
     /**
+     * @var bool|null
+     * @ApiProperty(iri="https://schema.org/Boolean")
+     * @Groups({"MonoPayment:input"})
+     */
+    private $restart;
+
+    /**
      * @var string
      * @ApiProperty(iri="https://schema.org/URL")
      * @Groups({"MonoPayment:output"})
@@ -132,6 +139,18 @@ class StartPayAction
     public function setConsent(bool $consent): self
     {
         $this->consent = $consent;
+
+        return $this;
+    }
+
+    public function isRestart(): ?bool
+    {
+        return $this->restart;
+    }
+
+    public function setRestart(?bool $restart): self
+    {
+        $this->restart = $restart;
 
         return $this;
     }

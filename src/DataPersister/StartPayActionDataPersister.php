@@ -28,10 +28,7 @@ class StartPayActionDataPersister extends AbstractController implements ContextA
         $startPayAction = $data;
         assert($startPayAction instanceof StartPayAction);
 
-        $startResponse = $this->api->startPayAction(
-            $startPayAction->getIdentifier(),
-            $startPayAction->getPaymentMethod()
-        );
+        $startResponse = $this->api->startPayAction($startPayAction);
 
         $startPayAction->setWidgetUrl($startResponse->getWidgetUrl());
         $startPayAction->setPspData($startResponse->getData());
