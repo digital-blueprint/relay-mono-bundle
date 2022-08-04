@@ -7,12 +7,12 @@ graph TD
     subgraph API Gateway
         api(("API"))
         mono_bundle("Mono Bundle")
-        mono_backend_bundle("Mono Backend Bundle")
+        mono_backend_service_bundle("Mono Backend Service Bundle")
         mono_payment_service_provider_bundle("Mono Payment Service Provider Bundle")
     end
 
     api --> mono_bundle
-    mono_bundle --> mono_backend_bundle
+    mono_bundle --> mono_backend_service_bundle
     mono_bundle --> mono_payment_service_provider_bundle
 ```
 
@@ -24,7 +24,7 @@ graph TD
 
 Created via `./bin/console config:dump-reference DbpRelayMonoBundle | sed '/^$/d'`
 
-```
+```yaml
 # Default configuration for "DbpRelayMonoBundle"
 dbp_relay_mono:
     database_url:         '%env(resolve:DATABASE_URL)%' # Required
@@ -82,7 +82,3 @@ dbp_relay_mono:
             * `identifier` - ???
             * `name` - ???
             * `image` - ???
-
-## Error Codes
-
-* `mono:unknown-payment-type`: The referenced payment type isn't configured
