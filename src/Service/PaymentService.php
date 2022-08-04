@@ -72,6 +72,11 @@ class PaymentService
             throw ApiError::withDetails(Response::HTTP_BAD_REQUEST, 'Unknown payment type', 'mono:unknown-payment-type');
         }
 
+        $returnUrlOverride = $paymentType->getReturnUrlOverride();
+        if ($returnUrlOverride) {
+            $payment->setReturnUrl($returnUrlOverride);
+        }
+
         $userIdentifier = $this->userSession->getUserIdentifier();
         if ($paymentType->isAuthRequired() && !$userIdentifier) {
             throw ApiError::withDetails(Response::HTTP_UNAUTHORIZED, 'Authorization required!', 'mono:authorization-required');

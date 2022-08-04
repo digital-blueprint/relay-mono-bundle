@@ -24,6 +24,11 @@ class PaymentType
     /**
      * @var string
      */
+    private $returnUrlOverride;
+
+    /**
+     * @var string
+     */
     private $returnUrlExpression;
 
     /**
@@ -73,6 +78,18 @@ class PaymentType
     public function setAuthRequired(bool $authRequired): self
     {
         $this->authRequired = $authRequired;
+
+        return $this;
+    }
+
+    public function getReturnUrlOverride(): string
+    {
+        return $this->returnUrlOverride;
+    }
+
+    public function setReturnUrlOverride(string $returnUrlOverride): self
+    {
+        $this->returnUrlOverride = $returnUrlOverride;
 
         return $this;
     }
@@ -131,6 +148,7 @@ class PaymentType
         $paymentType->setIdentifier((string) $identifier);
         $paymentType->setService((string) $config['service']);
         $paymentType->setAuthRequired((bool) $config['auth_required']);
+        $paymentType->setReturnUrlOverride((string) $config['return_url_override']);
         $paymentType->setReturnUrlExpression((string) $config['return_url_expression']);
         $paymentType->setNotifyUrlExpression((string) $config['notify_url_expression']);
         $paymentType->setPspReturnUrlExpression((string) $config['psp_return_url_expression']);
