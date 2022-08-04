@@ -36,6 +36,11 @@ class PaymentType
      */
     private $pspReturnUrlExpression;
 
+    /**
+     * @var string
+     */
+    private $recipient;
+
     public function getIdentifier(): string
     {
         return $this->identifier;
@@ -108,6 +113,18 @@ class PaymentType
         return $this;
     }
 
+    public function getRecipient(): string
+    {
+        return $this->recipient;
+    }
+
+    public function setRecipient(string $recipient): self
+    {
+        $this->recipient = $recipient;
+
+        return $this;
+    }
+
     public static function fromConfig(string $identifier, array $config): PaymentType
     {
         $paymentType = new PaymentType();
@@ -117,6 +134,7 @@ class PaymentType
         $paymentType->setReturnUrlExpression((string) $config['return_url_expression']);
         $paymentType->setNotifyUrlExpression((string) $config['notify_url_expression']);
         $paymentType->setPspReturnUrlExpression((string) $config['psp_return_url_expression']);
+        $paymentType->setRecipient((string) $config['recipient']);
 
         return $paymentType;
     }

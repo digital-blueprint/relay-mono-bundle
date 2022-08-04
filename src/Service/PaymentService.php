@@ -197,6 +197,8 @@ class PaymentService
         $paymentMethods = $this->configurationService->getPaymentMethodsByType($type);
         $paymentMethod = json_encode($paymentMethods);
         $payment->setPaymentMethod($paymentMethod);
+        $recipient = $paymentType->getRecipient();
+        $payment->setRecipient($recipient);
 
         return $payment;
     }

@@ -55,6 +55,8 @@ class Configuration implements ConfigurationInterface
                                 ->end()
                                 ->scalarNode('data_protection_declaration_url')
                                 ->end()
+                                ->scalarNode('recipient')
+                                ->end()
                                 ->arrayNode('payment_contracts')
                                         ->isRequired()
                                         ->cannotBeEmpty()
