@@ -14,13 +14,18 @@ use Dbp\Relay\MonoBundle\PaymentServiceProvider\StartResponseInterface;
 use Dbp\Relay\MonoBundle\Repository\PaymentPersistenceRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerAwareTrait;
+use Psr\Log\NullLogger;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Uid\Uuid;
 
-class PaymentService
+class PaymentService implements LoggerAwareInterface
 {
+    use LoggerAwareTrait;
+
     /**
      * @var BackendService
      */
@@ -62,6 +67,7 @@ class PaymentService
 
         $this->paymentServiceProviderService = $paymentServiceProviderService;
         $this->userSession = $userSession;
+        $this->logger = new NullLogger();
     }
 
     public function createPayment(Payment $payment): Payment
@@ -262,7 +268,8 @@ class PaymentService
             $this->em->persist($paymentPersistence);
             $this->em->flush();
         } catch (\Exception $e) {
-            throw ApiError::withDetails(Response::HTTP_INTERNAL_SERVER_ERROR, 'Payment could not be updated!', 'mono:payment-not-updated', ['message' => $e->getMessage()]);
+            $this->logger->error('Payment could not be updated!', ['exception' => $e]);
+            throw new ApiError(Response::HTTP_INTERNAL_SERVER_ERROR, 'Payment could not be updated!');
         }
 
         $paymentServiceProvider = $this->paymentServiceProviderService->getByPaymentContract($paymentContract);
@@ -289,7 +296,8 @@ class PaymentService
             $this->em->persist($paymentPersistence);
             $this->em->flush();
         } catch (\Exception $e) {
-            throw ApiError::withDetails(Response::HTTP_INTERNAL_SERVER_ERROR, 'Payment could not be updated!', 'mono:payment-not-updated', ['message' => $e->getMessage()]);
+            $this->logger->error('Payment could not be updated!', ['exception' => $e]);
+            throw new ApiError(Response::HTTP_INTERNAL_SERVER_ERROR, 'Payment could not be updated!');
         }
 
         $backendService = $this->backendService->getByPaymentType($paymentType);
@@ -303,7 +311,8 @@ class PaymentService
             $this->em->persist($paymentPersistence);
             $this->em->flush();
         } catch (\Exception $e) {
-            throw ApiError::withDetails(Response::HTTP_INTERNAL_SERVER_ERROR, 'Payment could not be updated!', 'mono:payment-not-updated', ['message' => $e->getMessage()]);
+            $this->logger->error('Payment could not be updated!', ['exception' => $e]);
+            throw new ApiError(Response::HTTP_INTERNAL_SERVER_ERROR, 'Payment could not be updated!');
         }
 
         return $completeResponse;
