@@ -166,6 +166,38 @@ class PaymentService implements LoggerAwareInterface
         return $paymentPersistence;
     }
 
+    /**
+     * @return PaymentPersistence[]
+     */
+    public function getUnnotified(): array
+    {
+        $repo = $this->em->getRepository(PaymentPersistence::class);
+        assert($repo instanceof PaymentPersistenceRepository);
+        $paymentPersistences = $repo->findUnnotified();
+
+        return $paymentPersistences;
+    }
+
+    public function notify(PaymentPersistence $paymentPersistence)
+    {
+        $type = $paymentPersistence->getType();
+        $paymentType = $this->configurationService->getPaymentTypeByType($type);
+
+        $backendService = $this->backendService->getByPaymentType($paymentType);
+        $isNotified = $backendService->notify($paymentPersistence);
+        if ($isNotified) {
+            $notifiedAt = new \DateTime();
+            $paymentPersistence->setNotifiedAt($notifiedAt);
+        }
+
+        try {
+            $this->em->persist($paymentPersistence);
+            $this->em->flush();
+        } catch (\Exception $e) {
+            throw ApiError::withDetails(Response::HTTP_INTERNAL_SERVER_ERROR, 'Payment could not be updated!', 'mono:payment-not-updated', ['message' => $e->getMessage()]);
+        }
+    }
+
     public function getPaymentByIdentifier(string $identifier): Payment
     {
         $paymentPersistence = $this->getPaymentPersistenceByIdentifier($identifier);
@@ -288,7 +320,6 @@ class PaymentService implements LoggerAwareInterface
     ): CompleteResponseInterface {
         $paymentPersistence = $this->getPaymentPersistenceByIdentifier($identifier);
         $type = $paymentPersistence->getType();
-        $paymentType = $this->configurationService->getPaymentTypeByType($type);
 
         $paymentMethod = $paymentPersistence->getPaymentMethod();
         $paymentContract = $this->configurationService->getPaymentContractByTypeAndPaymentMethod($type, $paymentMethod);
@@ -304,20 +335,7 @@ class PaymentService implements LoggerAwareInterface
             throw new ApiError(Response::HTTP_INTERNAL_SERVER_ERROR, 'Payment could not be updated!');
         }
 
-        $backendService = $this->backendService->getByPaymentType($paymentType);
-        $isNotified = $backendService->notify($paymentPersistence);
-        if ($isNotified) {
-            $notifiedAt = new \DateTime();
-            $paymentPersistence->setNotifiedAt($notifiedAt);
-        }
-
-        try {
-            $this->em->persist($paymentPersistence);
-            $this->em->flush();
-        } catch (\Exception $e) {
-            $this->logger->error('Payment could not be updated!', ['exception' => $e]);
-            throw new ApiError(Response::HTTP_INTERNAL_SERVER_ERROR, 'Payment could not be updated!');
-        }
+        $this->notify($paymentPersistence);
 
         return $completeResponse;
     }

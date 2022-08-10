@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Dbp\Relay\MonoBundle\Repository;
 
+use Dbp\Relay\MonoBundle\Entity\Payment;
 use Dbp\Relay\MonoBundle\Entity\PaymentPersistence;
 use Doctrine\ORM\EntityRepository;
 
@@ -50,5 +51,25 @@ class PaymentPersistenceRepository extends EntityRepository
 
         return $query->setMaxResults(1)
             ->getOneOrNullResult();
+    }
+
+    /**
+     * @return PaymentPersistence[]
+     */
+    public function findUnnotified(): array
+    {
+        $parameters = [
+            'paymentStatus' => Payment::PAYMENT_STATUS_COMPLETED,
+        ];
+
+        $qb = $this->createQueryBuilder('p');
+        $qb->where('p.paymentStatus = :paymentStatus')
+            ->andWhere($qb->expr()->isNull('p.notifiedAt'))
+            ->setParameters($parameters);
+
+        $query = $qb->getQuery();
+        $items = $query->getResult();
+
+        return $items;
     }
 }
