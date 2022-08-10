@@ -99,4 +99,9 @@ class ConfigurationService
 
         return $paymentContract;
     }
+
+    public function getCleanupConfiguration(): array
+    {
+        return $this->config['cleanup'];
+    }
 }

@@ -11,4 +11,6 @@ interface BackendServiceInterface
     public function updateData(PaymentPersistence &$payment): bool;
 
     public function notify(PaymentPersistence &$payment): bool;
+
+    public function cleanup(PaymentPersistence &$payment): bool;
 }

@@ -339,4 +339,33 @@ class PaymentService implements LoggerAwareInterface
 
         return $completeResponse;
     }
+
+    public function cleanup()
+    {
+        $repo = $this->em->getRepository(PaymentPersistence::class);
+        assert($repo instanceof PaymentPersistenceRepository);
+
+        $cleanupConfigs = $this->configurationService->getCleanupConfiguration();
+        foreach($cleanupConfigs as $cleanupConfig) {
+            $paymentStatus = $cleanupConfig['payment_status'];
+            $timeoutBefore = new \DateTime($cleanupConfig['timeout_before']);
+            $paymentPersistences = $repo->findByPaymentStatusTimeoutBefore($paymentStatus, $timeoutBefore);
+            foreach ($paymentPersistences as $paymentPersistence) {
+                $type = $paymentPersistence->getType();
+                $paymentType = $this->configurationService->getPaymentTypeByType($type);
+
+                $backendService = $this->backendService->getByPaymentType($paymentType);
+                $backendService->cleanup($paymentPersistence);
+
+                $paymentMethod = $paymentPersistence->getPaymentMethod();
+                $paymentContract = $this->configurationService->getPaymentContractByTypeAndPaymentMethod($type, $paymentMethod);
+
+                $paymentServiceProvider = $this->paymentServiceProviderService->getByPaymentContract($paymentContract);
+                $paymentServiceProvider->cleanup($paymentPersistence);
+
+                $this->em->remove($paymentPersistence);
+            }
+        }
+        $this->em->flush();
+    }
 }

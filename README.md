@@ -55,6 +55,13 @@ dbp_relay_mono:
             - identifier: payunity_googlepay
               name: Google Pay
               image: '/bundles/dbprelaymonoconnectorpayunity/svg/google-pay.svg'
+  cleanup:
+    - payment_status: prepared
+      timeout_before: '-1 day'
+    - payment_status: started
+      timeout_before: '-1 day'
+    - payment_status: cancelled
+      timeout_before: '-1 day'
 ```
 
 For more info on bundle configuration see [Symfony bundles configuration](https://symfony.com/doc/current/bundles/configuration.html).

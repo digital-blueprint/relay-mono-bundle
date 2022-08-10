@@ -72,4 +72,27 @@ class PaymentPersistenceRepository extends EntityRepository
 
         return $items;
     }
+
+    /**
+     * @param string $paymentStatus
+     * @param \DateTime $timeoutBefore
+     * @return PaymentPersistence[]
+     */
+    public function findByPaymentStatusTimeoutBefore(string $paymentStatus, \DateTime $timeoutBefore): array
+    {
+        $parameters = [
+            'paymentStatus' => $paymentStatus,
+            'timeoutBefore' => $timeoutBefore,
+        ];
+
+        $qb = $this->createQueryBuilder('p');
+        $qb->where('p.paymentStatus = :paymentStatus')
+            ->andWhere('p.timeoutAt < :timeoutBefore')
+            ->setParameters($parameters);
+
+        $query = $qb->getQuery();
+        $items = $query->getResult();
+
+        return $items;
+    }
 }
