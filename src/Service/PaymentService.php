@@ -219,6 +219,10 @@ class PaymentService implements LoggerAwareInterface
         $identifier = $startPayAction->getIdentifier();
         $paymentPersistence = $this->getPaymentPersistenceByIdentifier($identifier);
 
+        if ($paymentPersistence->getAmount() <= 0) {
+            throw ApiError::withDetails(Response::HTTP_BAD_REQUEST, 'Amount has to be bigger than 0!', 'mono:start-payment-amount-too-low');
+        }
+
         $request = Request::createFromGlobals();
         $clientIp = $request->getClientIp();
         if ($paymentPersistence->getClientIp() !== $clientIp) {
