@@ -345,7 +345,7 @@ class PaymentService implements LoggerAwareInterface
         assert($repo instanceof PaymentPersistenceRepository);
 
         $cleanupConfigs = $this->configurationService->getCleanupConfiguration();
-        foreach($cleanupConfigs as $cleanupConfig) {
+        foreach ($cleanupConfigs as $cleanupConfig) {
             $paymentStatus = $cleanupConfig['payment_status'];
             $timeoutBefore = new \DateTime($cleanupConfig['timeout_before']);
             $paymentPersistences = $repo->findByPaymentStatusTimeoutBefore($paymentStatus, $timeoutBefore);

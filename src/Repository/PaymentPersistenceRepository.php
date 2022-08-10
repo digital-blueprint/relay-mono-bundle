@@ -74,8 +74,6 @@ class PaymentPersistenceRepository extends EntityRepository
     }
 
     /**
-     * @param string $paymentStatus
-     * @param \DateTime $timeoutBefore
      * @return PaymentPersistence[]
      */
     public function findByPaymentStatusTimeoutBefore(string $paymentStatus, \DateTime $timeoutBefore): array
