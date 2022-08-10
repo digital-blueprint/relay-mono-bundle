@@ -62,6 +62,14 @@ dbp_relay_mono:
       timeout_before: '-1 day'
     - payment_status: cancelled
       timeout_before: '-1 day'
+
+monolog:
+  handlers:
+    dbp_relay_mono_audit:
+      type: rotating_file
+      level: debug
+      path: '%kernel.logs_dir%/dbp_relay_mono_audit.log'
+      channels: ['dbp_relay_mono_audit']
 ```
 
 For more info on bundle configuration see [Symfony bundles configuration](https://symfony.com/doc/current/bundles/configuration.html).
