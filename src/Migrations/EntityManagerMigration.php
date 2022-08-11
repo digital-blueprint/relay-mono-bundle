@@ -13,6 +13,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 abstract class EntityManagerMigration extends AbstractMigration implements ContainerAwareInterface
 {
     private const EM_NAME = 'dbp_relay_mono_bundle';
+    private const DB_PLATFORM_NAME = 'mysql';
 
     /** @var ContainerInterface */
     protected $container;
@@ -44,6 +45,8 @@ abstract class EntityManagerMigration extends AbstractMigration implements Conta
     private function skipInvalidDB()
     {
         $em = self::EM_NAME;
+        $db = self::DB_PLATFORM_NAME;
+        $this->skipIf($this->platform->getName() !== $db, 'Wrong DB platform');
         $this->skipIf($this->connection !== $this->getEntityManager()->getConnection(), "Migration can't be executed on this connection, use --em={$em} to select the right one.'");
     }
 }
