@@ -46,6 +46,11 @@ class PaymentType
      */
     private $recipient;
 
+    /**
+     * @var ?string
+     */
+    private $dataProtectionDeclarationUrl;
+
     public function getIdentifier(): string
     {
         return $this->identifier;
@@ -54,6 +59,18 @@ class PaymentType
     public function setIdentifier(string $identifier): self
     {
         $this->identifier = $identifier;
+
+        return $this;
+    }
+
+    public function getDataProtectionDeclarationUrl(): ?string
+    {
+        return $this->dataProtectionDeclarationUrl;
+    }
+
+    public function setDataProtectionDeclarationUrl(?string $dataProtectionDeclarationUrl): self
+    {
+        $this->dataProtectionDeclarationUrl = $dataProtectionDeclarationUrl;
 
         return $this;
     }
@@ -152,6 +169,7 @@ class PaymentType
         $paymentType->setReturnUrlExpression((string) $config['return_url_expression']);
         $paymentType->setNotifyUrlExpression((string) $config['notify_url_expression']);
         $paymentType->setPspReturnUrlExpression((string) $config['psp_return_url_expression']);
+        $paymentType->setDataProtectionDeclarationUrl($config['data_protection_declaration_url'] ?? null);
         $paymentType->setRecipient((string) $config['recipient']);
 
         return $paymentType;

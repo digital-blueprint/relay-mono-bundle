@@ -131,6 +131,7 @@ class PaymentService implements LoggerAwareInterface
             if ($paymentType->isAuthRequired()) {
                 $paymentPersistence->setUserIdentifier($userIdentifier);
             }
+            $paymentPersistence->setDataProtectionDeclarationUrl($paymentType->getDataProtectionDeclarationUrl());
         }
 
         $config = $this->configurationService->getConfig();
