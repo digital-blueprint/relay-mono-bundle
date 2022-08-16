@@ -54,6 +54,9 @@ dbp_relay_mono:
             - identifier: payunity_googlepay
               name: Google Pay
               image: '/bundles/dbprelaymono/svg/google-pay.svg'
+            - identifier: payunity_sofortueberweisung
+              name: Sofortüberweisung
+              image: '/bundles/dbprelaymono/svg/sofortueberweisung.svg'
   cleanup:
     - payment_status: prepared
       timeout_before: '-1 day'
