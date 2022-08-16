@@ -8,6 +8,7 @@ use Dbp\Relay\MonoBundle\Entity\PaymentContract;
 use Dbp\Relay\MonoBundle\Entity\PaymentMethod;
 use Dbp\Relay\MonoBundle\Entity\PaymentType;
 use Symfony\Component\HttpFoundation\UrlHelper;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ConfigurationService
 {
@@ -21,9 +22,16 @@ class ConfigurationService
      */
     private $urlHelper;
 
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
     public function __construct(
+        TranslatorInterface $translator,
         UrlHelper $urlHelper
     ) {
+        $this->translator = $translator;
         $this->urlHelper = $urlHelper;
     }
 
@@ -67,6 +75,9 @@ class ConfigurationService
             foreach ($paymentContractsConfig as $paymentContractConfig) {
                 $paymentMethodsConfig = $paymentContractConfig['payment_methods'];
                 foreach ($paymentMethodsConfig as $paymentMethodConfig) {
+                    if (array_key_exists('name', $paymentMethodConfig)) {
+                        $paymentMethodConfig['name'] = $this->translator->trans($paymentMethodConfig['name']);
+                    }
                     if (array_key_exists('image', $paymentMethodConfig)) {
                         $paymentMethodConfig['image'] = $this->urlHelper->getAbsoluteUrl($paymentMethodConfig['image']);
                     }

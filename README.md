@@ -46,16 +46,16 @@ dbp_relay_mono:
           service: 'Dbp\Relay\MonoConnectorPayunityBundle\Service\PayunityFlexService'
           payment_methods:
             - identifier: payunity_creditcard
-              name: Kreditkarte
+              name: dbp_relay_mono.credit_card
               image: '/bundles/dbprelaymono/svg/credit-cards.svg'
             - identifier: payunity_applepay
-              name: Apple Pay
+              name: dbp_relay_mono.apple_pay
               image: '/bundles/dbprelaymono/svg/apple-pay.svg'
             - identifier: payunity_googlepay
-              name: Google Pay
+              name: dbp_relay_mono.google_pay
               image: '/bundles/dbprelaymono/svg/google-pay.svg'
             - identifier: payunity_sofortueberweisung
-              name: Sofortüberweisung
+              name: dbp_relay_mono.sofortueberweisung
               image: '/bundles/dbprelaymono/svg/sofortueberweisung.svg'
   cleanup:
     - payment_status: prepared
