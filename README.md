@@ -47,13 +47,13 @@ dbp_relay_mono:
           payment_methods:
             - identifier: payunity_creditcard
               name: Kreditkarte
-              image: '/bundles/dbprelaymonoconnectorpayunity/svg/credit-cards.svg'
+              image: '/bundles/dbprelaymono/svg/credit-cards.svg'
             - identifier: payunity_applepay
               name: Apple Pay
-              image: '/bundles/dbprelaymonoconnectorpayunity/svg/apple-pay.svg'
+              image: '/bundles/dbprelaymono/svg/apple-pay.svg'
             - identifier: payunity_googlepay
               name: Google Pay
-              image: '/bundles/dbprelaymonoconnectorpayunity/svg/google-pay.svg'
+              image: '/bundles/dbprelaymono/svg/google-pay.svg'
   cleanup:
     - payment_status: prepared
       timeout_before: '-1 day'
