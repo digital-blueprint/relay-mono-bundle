@@ -33,7 +33,6 @@ content:
 dbp_relay_mono:
   database_url: '%env(resolve:DATABASE_URL)%'
   payment_session_timeout: 1800
-  payment_session_number_of_uses: 3
   payment_types:
     tuition_fee:
       service: 'Dbp\Relay\MonoConnectorCampusonlineBundle\Service\TuitionFeeService'

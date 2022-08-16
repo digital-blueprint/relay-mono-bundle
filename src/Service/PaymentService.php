@@ -208,12 +208,6 @@ class PaymentService implements LoggerAwareInterface
             throw ApiError::withDetails(Response::HTTP_FORBIDDEN, 'Payment client IP not allowed!', 'mono:payment-client-ip-not-allowed');
         }
 
-        $config = $this->configurationService->getConfig();
-        $numberOfUses = $config['payment_session_number_of_uses'];
-        if ($paymentPersistence->getNumberOfUses() >= $numberOfUses) {
-            throw ApiError::withDetails(Response::HTTP_TOO_MANY_REQUESTS, 'Payment too many requests!', 'mono:payment-too-many-requests');
-        }
-
         $now = new \DateTime();
         if ($now >= $paymentPersistence->getTimeoutAt()) {
             throw ApiError::withDetails(Response::HTTP_GONE, 'Payment timeout exceeded!', 'mono:payment-timeout-exceeded');

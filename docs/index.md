@@ -47,7 +47,6 @@ Created via `./bin/console config:dump-reference DbpRelayMonoBundle | sed '/^$/d
 dbp_relay_mono:
     database_url:         '%env(resolve:DATABASE_URL)%' # Required
     payment_session_timeout: 1800 # Required
-    payment_session_number_of_uses: 3 # Required
     payment_types:        # Required
         # Prototype
         -
@@ -76,7 +75,6 @@ dbp_relay_mono:
   information regarding active payment processes.
 * `payment_session_timeout` - Time in seconds after which a created payment can
   no longer be continued.
-* `payment_session_number_of_uses` - ???
 * `payment_types` - A list of payment type configurations. A payment type is a
   combination of a payment client configuration and a payment service provider
   configuration.
