@@ -216,18 +216,27 @@ class PaymentService implements LoggerAwareInterface
         $type = $paymentPersistence->getType();
         $paymentType = $this->configurationService->getPaymentTypeByType($type);
 
-        $backendService = $this->backendService->getByPaymentType($paymentType);
-        $isDataUpdated = $backendService->updateData($paymentPersistence);
-        if ($isDataUpdated) {
-            $dataUpdatedAt = new \DateTime();
-            $paymentPersistence->setDataUpdatedAt($dataUpdatedAt);
-        }
+        if (in_array(
+            $paymentPersistence->getPaymentStatus(),
+            [
+                Payment::PAYMENT_STATUS_PREPARED,
+                Payment::PAYMENT_STATUS_STARTED,
+            ],
+            true
+        )) {
+            $backendService = $this->backendService->getByPaymentType($paymentType);
+            $isDataUpdated = $backendService->updateData($paymentPersistence);
+            if ($isDataUpdated) {
+                $dataUpdatedAt = new \DateTime();
+                $paymentPersistence->setDataUpdatedAt($dataUpdatedAt);
+            }
 
-        try {
-            $this->em->persist($paymentPersistence);
-            $this->em->flush();
-        } catch (\Exception $e) {
-            throw ApiError::withDetails(Response::HTTP_INTERNAL_SERVER_ERROR, 'Payment could not be updated!', 'mono:payment-not-updated', ['message' => $e->getMessage()]);
+            try {
+                $this->em->persist($paymentPersistence);
+                $this->em->flush();
+            } catch (\Exception $e) {
+                throw ApiError::withDetails(Response::HTTP_INTERNAL_SERVER_ERROR, 'Payment could not be updated!', 'mono:payment-not-updated', ['message' => $e->getMessage()]);
+            }
         }
 
         $payment = Payment::fromPaymentPersistence($paymentPersistence);
