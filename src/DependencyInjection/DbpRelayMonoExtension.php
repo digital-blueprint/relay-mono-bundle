@@ -68,6 +68,8 @@ class DbpRelayMonoExtension extends ConfigurableExtension implements PrependExte
             ],
         ]);
 
+        $this->registerEntityManager($container, 'dbp_relay_mono_bundle');
+
         $container->prependExtensionConfig('doctrine_migrations', [
             'migrations_paths' => [
                 'Dbp\Relay\MonoBundle\Migrations' => __DIR__.'/../Migrations',

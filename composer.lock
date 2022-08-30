@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2624ccdb719162c200e22f294047992c",
+    "content-hash": "2408f680dfa36d770acd4fdecfc1b75f",
     "packages": [
         {
             "name": "api-platform/core",
@@ -169,11 +169,11 @@
         },
         {
             "name": "dbp/relay-core-bundle",
-            "version": "v0.1.38",
+            "version": "v0.1.40",
             "source": {
                 "type": "git",
                 "url": "https://gitlab.tugraz.at/dbp/relay/dbp-relay-core-bundle",
-                "reference": "d4686f81efdec53c082808c1c827c3d2912dabac"
+                "reference": "f9c4542cac5381d931d21163c64f524061991790"
             },
             "require": {
                 "api-platform/core": "^2.6.6",
@@ -191,7 +191,7 @@
                 "symfony/config": "^5.3",
                 "symfony/event-dispatcher": "^5.3",
                 "symfony/expression-language": "^5.3",
-                "symfony/framework-bundle": "^5.3",
+                "symfony/framework-bundle": "^5.4",
                 "symfony/lock": "^5.4",
                 "symfony/messenger": "^5.3",
                 "symfony/mime": "^5.3",
@@ -236,7 +236,7 @@
                 "AGPL-3.0-or-later"
             ],
             "description": "The core bundle of the Relay API gateway",
-            "time": "2022-08-16T08:35:41+00:00"
+            "time": "2022-08-30T13:35:14+00:00"
         },
         {
             "name": "doctrine/annotations",
