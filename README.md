@@ -57,6 +57,20 @@ dbp_relay_mono:
             - identifier: payunity_sofortueberweisung
               name: dbp_relay_mono.sofortueberweisung
               image: '/bundles/dbprelaymono/svg/sofortueberweisung.svg'
+      notify_error:
+        dsn: '%env(MAILER_DSN)%'
+        from: '%env(MAILER_ENVELOPE_SENDER)%'
+        to: notify-errors@digital-blueprint.org
+        subject: 'Mono notify errors'
+        html_template: 'emails/notify-error.html.twig'
+        completed_begin: '-1 hour'
+      reporting:
+        dsn: '%env(MAILER_DSN)%'
+        from: '%env(MAILER_ENVELOPE_SENDER)%'
+        to: reporting@digital-blueprint.org
+        subject: 'Mono reporting'
+        html_template: 'emails/reporting.html.twig'
+        created_begin: '-1 day'
   cleanup:
     - payment_status: prepared
       timeout_before: '-1 day'

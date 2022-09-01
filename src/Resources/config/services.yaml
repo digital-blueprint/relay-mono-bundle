@@ -7,6 +7,14 @@ services:
     autowire: true
     autoconfigure: true
 
+  Dbp\Relay\MonoBundle\Cron\NotifyErrorCronJob:
+    autowire: true
+    autoconfigure: true
+
+  Dbp\Relay\MonoBundle\Cron\ReportingCronJob:
+    autowire: true
+    autoconfigure: true
+
   Dbp\Relay\MonoBundle\DataPersister\:
     resource: '../../DataPersister'
     autowire: true

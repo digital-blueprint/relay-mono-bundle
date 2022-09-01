@@ -1,0 +1,30 @@
+<html>
+<body>
+<table>
+    <tr>
+        <th>Prepared</th>
+        <td>{{ count.prepared|default(0) }}</td>
+    </tr>
+    <tr>
+        <th>Started</th>
+        <td>{{ count.started|default(0) }}</td>
+    </tr>
+    <tr>
+        <th>Completed</th>
+        <td>{{ count.completed|default(0) }}</td>
+    </tr>
+    <tr>
+        <th>Cancelled</th>
+        <td>{{ count.cancelled|default(0) }}</td>
+    </tr>
+    <tr>
+        <th>Pending</th>
+        <td>{{ count.pending|default(0) }}</td>
+    </tr>
+    <tr>
+        <th>Failed</th>
+        <td>{{ count.failed|default(0) }}</td>
+    </tr>
+</table>
+</body>
+</html>

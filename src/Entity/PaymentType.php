@@ -51,6 +51,16 @@ class PaymentType
      */
     private $dataProtectionDeclarationUrl;
 
+    /**
+     * @var ?array
+     */
+    private $notifyErrorConfig;
+
+    /**
+     * @var ?array
+     */
+    private $reportingConfig;
+
     public function getIdentifier(): string
     {
         return $this->identifier;
@@ -159,6 +169,30 @@ class PaymentType
         return $this;
     }
 
+    public function getNotifyErrorConfig(): ?array
+    {
+        return $this->notifyErrorConfig;
+    }
+
+    public function setNotifyErrorConfig(?array $notifyErrorConfig): self
+    {
+        $this->notifyErrorConfig = $notifyErrorConfig;
+
+        return $this;
+    }
+
+    public function getReportingConfig(): ?array
+    {
+        return $this->reportingConfig;
+    }
+
+    public function setReportingConfig(?array $reportingConfig): self
+    {
+        $this->reportingConfig = $reportingConfig;
+
+        return $this;
+    }
+
     public static function fromConfig(string $identifier, array $config): PaymentType
     {
         $paymentType = new PaymentType();
@@ -171,6 +205,30 @@ class PaymentType
         $paymentType->setPspReturnUrlExpression((string) $config['psp_return_url_expression']);
         $paymentType->setDataProtectionDeclarationUrl($config['data_protection_declaration_url'] ?? null);
         $paymentType->setRecipient((string) $config['recipient']);
+        if (
+            array_key_exists('notify_error', $config)
+            && is_array($config['notify_error'])
+            && !empty($config['dsn'])
+            && !empty($config['from'])
+            && !empty($config['to'])
+            && !empty($config['subject'])
+            && !empty($config['html_template'])
+            && !empty($config['completed_begin'])
+        ) {
+            $paymentType->setNotifyErrorConfig($config['notify_error']);
+        }
+        if (
+            array_key_exists('reporting', $config)
+            && is_array($config['reporting'])
+            && !empty($config['dsn'])
+            && !empty($config['from'])
+            && !empty($config['to'])
+            && !empty($config['subject'])
+            && !empty($config['html_template'])
+            && !empty($config['created_begin'])
+        ) {
+            $paymentType->setReportingConfig($config['reporting']);
+        }
 
         return $paymentType;
     }

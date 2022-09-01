@@ -8,6 +8,7 @@ use Dbp\Relay\CoreBundle\API\UserSessionInterface;
 use Dbp\Relay\CoreBundle\Exception\ApiError;
 use Dbp\Relay\MonoBundle\Entity\Payment;
 use Dbp\Relay\MonoBundle\Entity\PaymentPersistence;
+use Dbp\Relay\MonoBundle\Entity\PaymentType;
 use Dbp\Relay\MonoBundle\Entity\StartPayAction;
 use Dbp\Relay\MonoBundle\PaymentServiceProvider\CompleteResponseInterface;
 use Dbp\Relay\MonoBundle\PaymentServiceProvider\StartResponseInterface;
@@ -20,7 +21,12 @@ use Psr\Log\NullLogger;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\Mailer;
+use Symfony\Component\Mailer\Transport;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\Uid\Uuid;
+use Twig\Environment;
+use Twig\Loader\FilesystemLoader;
 
 class PaymentService implements LoggerAwareInterface
 {
@@ -391,5 +397,69 @@ class PaymentService implements LoggerAwareInterface
             }
         }
         $this->em->flush();
+    }
+
+    public function sendNotifyError(PaymentType $paymentType)
+    {
+        $repo = $this->em->getRepository(PaymentPersistence::class);
+        assert($repo instanceof PaymentPersistenceRepository);
+
+        $notifyErrorConfig = $paymentType->getNotifyErrorConfig();
+
+        $type = $paymentType->getIdentifier();
+        $completedSince = new \DateTime($notifyErrorConfig['completed_begin']);
+        $items = $repo->findUnnotifiedByTypeCompletedSince($type, $completedSince);
+        $count = count($items);
+
+        if ($count) {
+            $context = [
+                'paymentType' => $paymentType,
+                'items' => $items,
+                'count' => $count,
+            ];
+
+            $this->sendEmail($notifyErrorConfig, $context);
+        }
+    }
+
+    public function sendReporting(PaymentType $paymentType)
+    {
+        $repo = $this->em->getRepository(PaymentPersistence::class);
+        assert($repo instanceof PaymentPersistenceRepository);
+
+        $reportingConfig = $paymentType->getReportingConfig();
+
+        $type = $paymentType->getIdentifier();
+        $createdSince = new \DateTime($reportingConfig['created_begin']);
+        $count = $repo->countByTypeCreatedSince($type, $createdSince);
+
+        if (count($count)) {
+            $context = [
+                'paymentType' => $paymentType,
+                'count' => $count,
+            ];
+
+            $this->sendEmail($reportingConfig, $context);
+        }
+    }
+
+    private function sendEmail(array $config, array $context)
+    {
+        $loader = new FilesystemLoader(dirname(__FILE__).'/../Resources/views/');
+        $twig = new Environment($loader);
+
+        $template = $twig->load($config['html_template']);
+        $html = $template->render($context);
+
+        $transport = Transport::fromDsn($config['dsn']);
+        $mailer = new Mailer($transport);
+
+        $email = (new Email())
+            ->from($config['from'])
+            ->to($config['to'])
+            ->subject($config['subject'])
+            ->html($html);
+
+        $mailer->send($email);
     }
 }

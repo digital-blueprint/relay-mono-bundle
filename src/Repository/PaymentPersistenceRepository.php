@@ -73,6 +73,27 @@ class PaymentPersistenceRepository extends EntityRepository
         return $items;
     }
 
+    public function findUnnotifiedByTypeCompletedSince($type, \DateTime $completedSince)
+    {
+        $parameters = [
+            'type' => $type,
+            'paymentStatus' => Payment::PAYMENT_STATUS_COMPLETED,
+            'completedSince' => $completedSince,
+        ];
+
+        $qb = $this->createQueryBuilder('p');
+        $qb->where('p.type = :type')
+            ->andWhere('p.paymentStatus = :paymentStatus')
+            ->andWhere('p.completedAt >= :completedSince')
+            ->andWhere($qb->expr()->isNull('p.notifiedAt'))
+            ->setParameters($parameters);
+
+        $query = $qb->getQuery();
+        $items = $query->getResult();
+
+        return $items;
+    }
+
     /**
      * @return PaymentPersistence[]
      */
@@ -92,5 +113,35 @@ class PaymentPersistenceRepository extends EntityRepository
         $items = $query->getResult();
 
         return $items;
+    }
+
+    /**
+     * @param string $type
+     * @param \DateTime $createdSince
+     * @return int[]
+     */
+    public function countByTypeCreatedSince(string $type, \DateTime $createdSince): array
+    {
+        $parameters = [
+            'type' => $type,
+            'createdSince' => $createdSince,
+        ];
+
+        $qb = $this->createQueryBuilder('p');
+        $qb->select('p.paymentStatus', 'count(p.identifier)')
+            ->where('p.type = :type')
+            ->andWhere('p.createdAt >= :createdSince')
+            ->groupBy('p.paymentStatus')
+            ->setParameters($parameters);
+
+        $query = $qb->getQuery();
+        $rows = $query->execute();
+
+        $count = [];
+        foreach ($rows as $row) {
+            $count[$row['paymentStatus']] = $row[1];
+        }
+
+        return $count;
     }
 }

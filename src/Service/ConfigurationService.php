@@ -51,6 +51,22 @@ class ConfigurationService
         return $this->config;
     }
 
+    /**
+     * @return PaymentType[]
+     */
+    public function getPaymentTypes(): array
+    {
+        $paymentTypes = [];
+
+        $paymentTypesConfig = $this->config['payment_types'];
+        foreach ($paymentTypesConfig as $type => $paymentTypeConfig) {
+            $paymentType = PaymentType::fromConfig($type, $paymentTypeConfig);
+            $paymentTypes[] = $paymentType;
+        }
+
+        return $paymentTypes;
+    }
+
     public function getPaymentTypeByType(string $type): ?PaymentType
     {
         $paymentType = null;
