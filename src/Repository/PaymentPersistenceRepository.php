@@ -116,8 +116,6 @@ class PaymentPersistenceRepository extends EntityRepository
     }
 
     /**
-     * @param string $type
-     * @param \DateTime $createdSince
      * @return int[]
      */
     public function countByTypeCreatedSince(string $type, \DateTime $createdSince): array
