@@ -215,6 +215,18 @@ class PaymentService implements LoggerAwareInterface
 
         $type = $paymentPersistence->getType();
         $paymentType = $this->configurationService->getPaymentTypeByType($type);
+        if ($paymentType === null) {
+            throw ApiError::withDetails(Response::HTTP_BAD_REQUEST, 'Unknown payment type', 'mono:start-payment-unknown-payment-type');
+        }
+
+        $userIdentifier = $this->userSession->getUserIdentifier();
+        if ($paymentType->isAuthRequired() && !$userIdentifier) {
+            throw ApiError::withDetails(Response::HTTP_UNAUTHORIZED, 'Authorization required!', 'mono:authorization-required');
+        }
+
+        if ($paymentType->isAuthRequired() && $userIdentifier !== $paymentPersistence->getUserIdentifier()) {
+            throw ApiError::withDetails(Response::HTTP_FORBIDDEN, 'Start payment user identifier not allowed!', 'mono:start-payment-user-identifier-not-allowed');
+        }
 
         if (in_array(
             $paymentPersistence->getPaymentStatus(),
@@ -277,6 +289,15 @@ class PaymentService implements LoggerAwareInterface
         $paymentType = $this->configurationService->getPaymentTypeByType($type);
         if ($paymentType === null) {
             throw ApiError::withDetails(Response::HTTP_BAD_REQUEST, 'Unknown payment type', 'mono:start-payment-unknown-payment-type');
+        }
+
+        $userIdentifier = $this->userSession->getUserIdentifier();
+        if ($paymentType->isAuthRequired() && !$userIdentifier) {
+            throw ApiError::withDetails(Response::HTTP_UNAUTHORIZED, 'Authorization required!', 'mono:authorization-required');
+        }
+
+        if ($paymentType->isAuthRequired() && $userIdentifier !== $paymentPersistence->getUserIdentifier()) {
+            throw ApiError::withDetails(Response::HTTP_FORBIDDEN, 'Start payment user identifier not allowed!', 'mono:start-payment-user-identifier-not-allowed');
         }
 
         $pspReturnUrl = $startPayAction->getPspReturnUrl();
