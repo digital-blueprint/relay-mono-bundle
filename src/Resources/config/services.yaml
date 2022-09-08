@@ -40,3 +40,7 @@ services:
   Dbp\Relay\MonoBundle\Service\PaymentServiceProviderService:
     autowire: true
     autoconfigure: true
+
+  Dbp\Relay\MonoBundle\Service\HealthCheck:
+    autowire: true
+    autoconfigure: true

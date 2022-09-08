@@ -76,6 +76,11 @@ class PaymentService implements LoggerAwareInterface
         $this->logger = new NullLogger();
     }
 
+    public function checkConnection()
+    {
+        $this->em->getConnection()->connect();
+    }
+
     public function createPayment(Payment $payment): Payment
     {
         $type = $payment->getType();
