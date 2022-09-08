@@ -36,6 +36,8 @@ services:
   Dbp\Relay\MonoBundle\Service\PaymentService:
     autowire: true
     autoconfigure: true
+    arguments:
+      $em: '@doctrine.orm.dbp_relay_mono_bundle_entity_manager'
 
   Dbp\Relay\MonoBundle\Service\PaymentServiceProviderService:
     autowire: true

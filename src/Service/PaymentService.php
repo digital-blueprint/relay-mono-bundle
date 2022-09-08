@@ -14,7 +14,6 @@ use Dbp\Relay\MonoBundle\PaymentServiceProvider\CompleteResponseInterface;
 use Dbp\Relay\MonoBundle\PaymentServiceProvider\StartResponseInterface;
 use Dbp\Relay\MonoBundle\Repository\PaymentPersistenceRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\Persistence\ManagerRegistry;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\NullLogger;
@@ -60,16 +59,13 @@ class PaymentService implements LoggerAwareInterface
     public function __construct(
         BackendService $backendService,
         ConfigurationService $configurationService,
-        ManagerRegistry $managerRegistry,
+        EntityManagerInterface $em,
         PaymentServiceProviderService $paymentServiceProviderService,
         UserSessionInterface $userSession
     ) {
         $this->backendService = $backendService;
         $this->configurationService = $configurationService;
-
-        $manager = $managerRegistry->getManager('dbp_relay_mono_bundle');
-        assert($manager instanceof EntityManagerInterface);
-        $this->em = $manager;
+        $this->em = $em;
 
         $this->paymentServiceProviderService = $paymentServiceProviderService;
         $this->userSession = $userSession;
