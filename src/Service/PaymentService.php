@@ -191,7 +191,14 @@ class PaymentService implements LoggerAwareInterface
         $paymentType = $this->configurationService->getPaymentTypeByType($type);
 
         $backendService = $this->backendService->getByPaymentType($paymentType);
-        $isNotified = $backendService->notify($paymentPersistence);
+
+        if ($paymentType->isDemoMode()) {
+            $this->logger->warning('Demo mode active, backend not notified.');
+            $isNotified = true;
+        } else {
+            $isNotified = $backendService->notify($paymentPersistence);
+        }
+
         if ($isNotified) {
             $notifiedAt = new \DateTime();
             $paymentPersistence->setNotifiedAt($notifiedAt);

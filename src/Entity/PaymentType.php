@@ -61,6 +61,11 @@ class PaymentType
      */
     private $reportingConfig;
 
+    /**
+     * @var bool
+     */
+    private $demoMode;
+
     public function getIdentifier(): string
     {
         return $this->identifier;
@@ -193,6 +198,16 @@ class PaymentType
         return $this;
     }
 
+    public function isDemoMode(): bool
+    {
+        return $this->demoMode;
+    }
+
+    public function setDemoMode(bool $demoMode): void
+    {
+        $this->demoMode = $demoMode;
+    }
+
     public static function fromConfig(string $identifier, array $config): PaymentType
     {
         $paymentType = new PaymentType();
@@ -205,6 +220,7 @@ class PaymentType
         $paymentType->setPspReturnUrlExpression((string) $config['psp_return_url_expression']);
         $paymentType->setDataProtectionDeclarationUrl($config['data_protection_declaration_url'] ?? null);
         $paymentType->setRecipient((string) $config['recipient']);
+        $paymentType->setDemoMode((bool) $config['demo_mode']);
         if (
             array_key_exists('notify_error', $config)
             && is_array($config['notify_error'])
