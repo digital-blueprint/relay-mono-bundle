@@ -33,11 +33,19 @@ services:
     autowire: true
     autoconfigure: true
 
+  # XXX: This is the only way I could find to create monolog channels in a bundle
+  Dbp\Relay\MonoBundle\Service\DummyService:
+    autowire: true
+    autoconfigure: true
+    tags:
+      - { name: monolog.logger, channel: 'dbp_relay_mono_audit' }
+
   Dbp\Relay\MonoBundle\Service\PaymentService:
     autowire: true
     autoconfigure: true
     arguments:
       $em: '@doctrine.orm.dbp_relay_mono_bundle_entity_manager'
+      $auditLogger: '@monolog.logger.dbp_relay_mono_audit'
 
   Dbp\Relay\MonoBundle\Service\PaymentServiceProviderService:
     autowire: true

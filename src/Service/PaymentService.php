@@ -16,6 +16,7 @@ use Dbp\Relay\MonoBundle\Repository\PaymentPersistenceRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
+use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 use Symfony\Component\HttpFoundation\Request;
@@ -56,12 +57,18 @@ class PaymentService implements LoggerAwareInterface
      */
     private $userSession;
 
+    /**
+     * @var LoggerInterface
+     */
+    private $auditLogger;
+
     public function __construct(
         BackendService $backendService,
         ConfigurationService $configurationService,
         EntityManagerInterface $em,
         PaymentServiceProviderService $paymentServiceProviderService,
-        UserSessionInterface $userSession
+        UserSessionInterface $userSession,
+        LoggerInterface $auditLogger
     ) {
         $this->backendService = $backendService;
         $this->configurationService = $configurationService;
@@ -70,6 +77,7 @@ class PaymentService implements LoggerAwareInterface
         $this->paymentServiceProviderService = $paymentServiceProviderService;
         $this->userSession = $userSession;
         $this->logger = new NullLogger();
+        $this->auditLogger = $auditLogger;
     }
 
     public function checkConnection()
@@ -192,8 +200,10 @@ class PaymentService implements LoggerAwareInterface
 
         $backendService = $this->backendService->getByPaymentType($paymentType);
 
+        $this->auditLogger->debug('Notifying backend service');
+
         if ($paymentType->isDemoMode()) {
-            $this->logger->warning('Demo mode active, backend not notified.');
+            $this->auditLogger->warning('Demo mode active, backend not notified.');
             $isNotified = true;
         } else {
             $isNotified = $backendService->notify($paymentPersistence);
