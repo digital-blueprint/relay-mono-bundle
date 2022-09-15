@@ -23,7 +23,7 @@ class PaymentDataPersister extends AbstractController implements ContextAwareDat
         return $data instanceof Payment;
     }
 
-    public function persist($data, array $context = [])
+    public function persist($data, array $context = []): Payment
     {
         $payment = $data;
         assert($payment instanceof Payment);

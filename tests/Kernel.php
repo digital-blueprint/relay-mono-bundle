@@ -7,6 +7,8 @@ namespace Dbp\Relay\MonoBundle\Tests;
 use ApiPlatform\Core\Bridge\Symfony\Bundle\ApiPlatformBundle;
 use Dbp\Relay\CoreBundle\DbpRelayCoreBundle;
 use Dbp\Relay\MonoBundle\DbpRelayMonoBundle;
+use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
+use Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle;
 use Nelmio\CorsBundle\NelmioCorsBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
@@ -29,6 +31,8 @@ class Kernel extends BaseKernel
         yield new NelmioCorsBundle();
         yield new MonologBundle();
         yield new ApiPlatformBundle();
+        yield new DoctrineBundle();
+        yield new DoctrineMigrationsBundle();
         yield new DbpRelayMonoBundle();
         yield new DbpRelayCoreBundle();
     }
@@ -44,6 +48,29 @@ class Kernel extends BaseKernel
         $container->extension('framework', [
             'test' => true,
             'secret' => '',
+        ]);
+        $container->extension('dbp_relay_mono', [
+            'database_url' => 'bla',
+            'cleanup' => [
+                [
+                    'payment_status' => 'ada',
+                    'timeout_before' => '123',
+                ],
+            ],
+            'payment_session_timeout' => 1234,
+            'payment_types' => [
+                [
+                    'service' => 'bla',
+                    'payment_contracts' => [
+                        [
+                            'service' => 'bla',
+                            'payment_methods' => [
+                                [],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
         ]);
     }
 }

@@ -23,7 +23,7 @@ class StartPayActionDataPersister extends AbstractController implements ContextA
         return $data instanceof StartPayAction;
     }
 
-    public function persist($data, array $context = [])
+    public function persist($data, array $context = []): StartPayAction
     {
         $startPayAction = $data;
         assert($startPayAction instanceof StartPayAction);

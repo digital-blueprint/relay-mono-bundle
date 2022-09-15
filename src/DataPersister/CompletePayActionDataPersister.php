@@ -23,7 +23,7 @@ class CompletePayActionDataPersister extends AbstractController implements Conte
         return $data instanceof CompletePayAction;
     }
 
-    public function persist($data, array $context = [])
+    public function persist($data, array $context = []): CompletePayAction
     {
         $completePayAction = $data;
         assert($completePayAction instanceof CompletePayAction);

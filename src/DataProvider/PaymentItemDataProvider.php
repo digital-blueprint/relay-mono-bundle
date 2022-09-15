@@ -19,7 +19,7 @@ class PaymentItemDataProvider extends AbstractController implements ItemDataProv
         $this->api = $api;
     }
 
-    public function getItem(string $resourceClass, $id, string $operationName = null, array $context = [])
+    public function getItem(string $resourceClass, $id, string $operationName = null, array $context = []): ?Payment
     {
         $payment = $this->api->getPaymentByIdentifier($id);
 
