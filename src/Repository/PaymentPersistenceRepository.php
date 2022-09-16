@@ -66,7 +66,7 @@ class PaymentPersistenceRepository extends EntityRepository
 
         $query = $qb->getQuery();
 
-        $count = (int)$query->getSingleScalarResult();
+        $count = (int) $query->getSingleScalarResult();
 
         return $count;
     }
@@ -85,7 +85,7 @@ class PaymentPersistenceRepository extends EntityRepository
 
         $query = $qb->getQuery();
 
-        $count = (int)$query->getSingleScalarResult();
+        $count = (int) $query->getSingleScalarResult();
 
         return $count;
     }
@@ -104,7 +104,7 @@ class PaymentPersistenceRepository extends EntityRepository
 
         $query = $qb->getQuery();
 
-        $count = (int)$query->getSingleScalarResult();
+        $count = (int) $query->getSingleScalarResult();
 
         return $count;
     }
