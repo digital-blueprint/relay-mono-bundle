@@ -112,42 +112,23 @@ class PaymentService implements LoggerAwareInterface
             throw ApiError::withDetails(Response::HTTP_BAD_REQUEST, 'Return URL not allowed!', 'mono:return-url-not-allowed');
         }
 
-        $data = $payment->getData();
-        $paymentPersistence = null;
-        if (!empty($data)) {
-            $criteria = [
-                'type' => $type,
-                'data' => $data,
-            ];
-            if ($paymentType->isAuthRequired()) {
-                $criteria['userIdentifier'] = $userIdentifier;
-            }
-            $repo = $paymentPersistence = $this->em
-                ->getRepository(PaymentPersistence::class);
-            assert($repo instanceof PaymentPersistenceRepository);
-            /** @var PaymentPersistence $paymentPersistence */
-            $paymentPersistence = $repo->findOneActiveBy($criteria);
-        }
+        $identifier = (string) Uuid::v4();
+        $payment->setIdentifier($identifier);
+        $payment->setPaymentStatus(Payment::PAYMENT_STATUS_PREPARED);
 
-        if ($paymentPersistence === null) {
-            $identifier = (string) Uuid::v4();
-            $payment->setIdentifier($identifier);
-            $payment->setPaymentStatus(Payment::PAYMENT_STATUS_PREPARED);
-
-            $paymentPersistence = PaymentPersistence::fromPayment($payment);
+        $paymentPersistence = PaymentPersistence::fromPayment($payment);
+        if (empty($payment->getClientIp())) {
             $request = Request::createFromGlobals();
             $clientIp = $request->getClientIp();
-            if (empty($paymentPersistence->getClientIp())) {
-                $paymentPersistence->setClientIp($clientIp);
-            }
-            $createdAt = new \DateTime();
-            $paymentPersistence->setCreatedAt($createdAt);
-            $paymentPersistence->setNumberOfUses(0);
-            if ($paymentType->isAuthRequired()) {
-                $paymentPersistence->setUserIdentifier($userIdentifier);
-            }
-            $paymentPersistence->setDataProtectionDeclarationUrl($paymentType->getDataProtectionDeclarationUrl());
+            $paymentPersistence->setClientIp($clientIp);
         }
+        $createdAt = new \DateTime();
+        $paymentPersistence->setCreatedAt($createdAt);
+        $paymentPersistence->setNumberOfUses(0);
+        if ($paymentType->isAuthRequired()) {
+            $paymentPersistence->setUserIdentifier($userIdentifier);
+        }
+        $paymentPersistence->setDataProtectionDeclarationUrl($paymentType->getDataProtectionDeclarationUrl());
 
         $config = $this->configurationService->getConfig();
         $timeoutAt = new \DateTime();
