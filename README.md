@@ -37,6 +37,9 @@ dbp_relay_mono:
     tuition_fee:
       service: 'Dbp\Relay\MonoConnectorCampusonlineBundle\Service\TuitionFeeService'
       auth_required: true
+      max_concurrent_payments: 100
+      max_concurrent_auth_payments: 100
+      max_concurrent_unauth_payments: 25
       return_url_override: 'https://www.digital-blueprint.org/'
       return_url_expression: 'payment.returnUrl matches "/^https:\\/\\/www\\.digital\\-blueprint\\.org\\//"'
       psp_return_url_expression: 'pspReturnUrl matches "/^https:\\/\\/0\\.0\\.0\\.0:8001\\//"'

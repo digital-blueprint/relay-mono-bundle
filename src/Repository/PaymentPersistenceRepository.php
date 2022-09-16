@@ -53,6 +53,62 @@ class PaymentPersistenceRepository extends EntityRepository
             ->getOneOrNullResult();
     }
 
+    public function countConcurrent(): int
+    {
+        $now = new \DateTime();
+        $qb = $this->createQueryBuilder('p');
+        $qb->select('count(p.identifier)')
+            ->where('p.timeoutAt >= :timeoutAt')
+            ->andWhere('p.completedAt IS NULL')
+            ->setParameters([
+                'timeoutAt' => $now,
+            ]);
+
+        $query = $qb->getQuery();
+
+        $count = (int)$query->getSingleScalarResult();
+
+        return $count;
+    }
+
+    public function countAuthConcurrent(): int
+    {
+        $now = new \DateTime();
+        $qb = $this->createQueryBuilder('p')
+            ->select('count(p.identifier)')
+            ->where('p.timeoutAt >= :timeoutAt')
+            ->andWhere('p.completedAt IS NULL')
+            ->andWhere('p.userIdentifier IS NOT NULL')
+            ->setParameters([
+                'timeoutAt' => $now,
+            ]);
+
+        $query = $qb->getQuery();
+
+        $count = (int)$query->getSingleScalarResult();
+
+        return $count;
+    }
+
+    public function countUnauthConcurrent(): int
+    {
+        $now = new \DateTime();
+        $qb = $this->createQueryBuilder('p')
+            ->select('count(p.identifier)')
+            ->where('p.timeoutAt >= :timeoutAt')
+            ->andWhere('p.completedAt IS NULL')
+            ->andWhere('p.userIdentifier IS NULL')
+            ->setParameters([
+                'timeoutAt' => $now,
+            ]);
+
+        $query = $qb->getQuery();
+
+        $count = (int)$query->getSingleScalarResult();
+
+        return $count;
+    }
+
     /**
      * @return PaymentPersistence[]
      */

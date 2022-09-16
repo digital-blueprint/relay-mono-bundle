@@ -22,6 +22,21 @@ class PaymentType
     private $authRequired;
 
     /**
+     * @var int
+     */
+    private $maxConcurrentPayments;
+
+    /**
+     * @var int
+     */
+    private $maxConcurrentAuthPayments;
+
+    /**
+     * @var int
+     */
+    private $maxConcurrentUnauthPayments;
+
+    /**
      * @var string
      */
     private $returnUrlOverride;
@@ -112,6 +127,36 @@ class PaymentType
         $this->authRequired = $authRequired;
 
         return $this;
+    }
+
+    public function setMaxConcurrentPayments(?int $maxConcurrentPayments): void
+    {
+        $this->maxConcurrentPayments = $maxConcurrentPayments;
+    }
+
+    public function getMaxConcurrentPayments(): ?int
+    {
+        return $this->maxConcurrentPayments;
+    }
+
+    public function setMaxConcurrentAuthPayments(?int $maxConcurrentAuthPayments): void
+    {
+        $this->maxConcurrentAuthPayments = $maxConcurrentAuthPayments;
+    }
+
+    public function getMaxConcurrentAuthPayments(): ?int
+    {
+        return $this->maxConcurrentAuthPayments;
+    }
+
+    public function setMaxConcurrentUnauthPayments(?int $maxConcurrentUnauthPayments): void
+    {
+        $this->maxConcurrentUnauthPayments = $maxConcurrentUnauthPayments;
+    }
+
+    public function getMaxConcurrentUnauthPayments(): ?int
+    {
+        return $this->maxConcurrentUnauthPayments;
     }
 
     public function getReturnUrlOverride(): string
@@ -214,6 +259,9 @@ class PaymentType
         $paymentType->setIdentifier((string) $identifier);
         $paymentType->setService((string) $config['service']);
         $paymentType->setAuthRequired((bool) $config['auth_required']);
+        $paymentType->setMaxConcurrentPayments((int) $config['max_concurrent_payments']);
+        $paymentType->setMaxConcurrentAuthPayments((int) $config['max_concurrent_auth_payments']);
+        $paymentType->setMaxConcurrentUnauthPayments((int) $config['max_concurrent_unauth_payments']);
         $paymentType->setReturnUrlOverride((string) $config['return_url_override']);
         $paymentType->setReturnUrlExpression((string) $config['return_url_expression']);
         $paymentType->setNotifyUrlExpression((string) $config['notify_url_expression']);

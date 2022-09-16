@@ -112,6 +112,27 @@ class PaymentService implements LoggerAwareInterface
             throw ApiError::withDetails(Response::HTTP_BAD_REQUEST, 'Return URL not allowed!', 'mono:return-url-not-allowed');
         }
 
+        $repo = $this->em->getRepository(PaymentPersistence::class);
+        assert($repo instanceof PaymentPersistenceRepository);
+        if (
+            (
+                $paymentType->getMaxConcurrentPayments() >= 0
+                && $repo->countConcurrent() >= $paymentType->getMaxConcurrentPayments()
+            )
+            || (
+                $userIdentifier
+                && $paymentType->getMaxConcurrentAuthPayments() >= 0
+                && $repo->countAuthConcurrent() >= $paymentType->getMaxConcurrentAuthPayments()
+            )
+            || (
+                !$userIdentifier
+                && $paymentType->getMaxConcurrentUnauthPayments() >= 0
+                && $repo->countUnauthConcurrent() >= $paymentType->getMaxConcurrentUnauthPayments()
+            )
+        ) {
+            throw ApiError::withDetails(Response::HTTP_TOO_MANY_REQUESTS, 'Too many requests!', 'mono:too-many-requests');
+        }
+
         $identifier = (string) Uuid::v4();
         $payment->setIdentifier($identifier);
         $payment->setPaymentStatus(Payment::PAYMENT_STATUS_PREPARED);
