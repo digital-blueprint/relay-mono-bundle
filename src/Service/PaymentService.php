@@ -165,8 +165,18 @@ class PaymentService implements LoggerAwareInterface
         }
 
         $payment = Payment::fromPaymentPersistence($paymentPersistence);
+        $this->adjustPaymentForDemoMode($paymentType, $payment);
 
         return $payment;
+    }
+
+    private function adjustPaymentForDemoMode(PaymentType $paymentType, Payment $payment)
+    {
+        // in case the demo mode is active we want to show this in the UI to the user somehow.
+        // the alternate name is usually shown to the user, so attach it there.
+        if ($paymentType->isDemoMode()) {
+            $payment->setAlternateName($payment->getAlternateName().' [DEMO MODE]');
+        }
     }
 
     public function getPaymentPersistenceByIdentifier(string $identifier): PaymentPersistence
@@ -283,6 +293,7 @@ class PaymentService implements LoggerAwareInterface
         $payment->setPaymentMethod($paymentMethod);
         $recipient = $paymentType->getRecipient();
         $payment->setRecipient($recipient);
+        $this->adjustPaymentForDemoMode($paymentType, $payment);
 
         return $payment;
     }
