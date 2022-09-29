@@ -71,17 +71,22 @@ class PaymentPersistenceRepository extends EntityRepository
         return $count;
     }
 
-    public function countAuthConcurrent(): int
+    public function countAuthConcurrent(string $userIdentifier = null): int
     {
         $now = new \DateTime();
         $qb = $this->createQueryBuilder('p')
             ->select('count(p.identifier)')
             ->where('p.timeoutAt >= :timeoutAt')
             ->andWhere('p.completedAt IS NULL')
-            ->andWhere('p.userIdentifier IS NOT NULL')
-            ->setParameters([
-                'timeoutAt' => $now,
-            ]);
+            ->andWhere('p.userIdentifier IS NOT NULL');
+        $parameters = [
+            'timeoutAt' => $now,
+        ];
+        if ($userIdentifier !== null) {
+            $qb->andWhere('p.userIdentifier = :userIdentifier');
+            $parameters['userIdentifier'] = $userIdentifier;
+        }
+        $qb->setParameters($parameters);
 
         $query = $qb->getQuery();
 
@@ -90,17 +95,22 @@ class PaymentPersistenceRepository extends EntityRepository
         return $count;
     }
 
-    public function countUnauthConcurrent(): int
+    public function countUnauthConcurrent(string $clientIp = null): int
     {
         $now = new \DateTime();
         $qb = $this->createQueryBuilder('p')
             ->select('count(p.identifier)')
             ->where('p.timeoutAt >= :timeoutAt')
             ->andWhere('p.completedAt IS NULL')
-            ->andWhere('p.userIdentifier IS NULL')
-            ->setParameters([
-                'timeoutAt' => $now,
-            ]);
+            ->andWhere('p.userIdentifier IS NULL');
+        $parameters = [
+            'timeoutAt' => $now,
+        ];
+        if ($clientIp !== null) {
+            $qb->andWhere('p.clientIp = :clientIp');
+            $parameters['clientIp'] = $clientIp;
+        }
+        $qb->setParameters($parameters);
 
         $query = $qb->getQuery();
 

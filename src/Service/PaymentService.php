@@ -112,6 +112,12 @@ class PaymentService implements LoggerAwareInterface
             throw ApiError::withDetails(Response::HTTP_BAD_REQUEST, 'Return URL not allowed!', 'mono:return-url-not-allowed');
         }
 
+        if (empty($payment->getClientIp())) {
+            $request = Request::createFromGlobals();
+            $clientIp = $request->getClientIp();
+            $payment->setClientIp($clientIp);
+        }
+
         $repo = $this->em->getRepository(PaymentPersistence::class);
         assert($repo instanceof PaymentPersistenceRepository);
         if (
@@ -125,9 +131,19 @@ class PaymentService implements LoggerAwareInterface
                 && $repo->countAuthConcurrent() >= $paymentType->getMaxConcurrentAuthPayments()
             )
             || (
+                $userIdentifier
+                && $paymentType->getMaxConcurrentAuthPaymentsPerUser() >= 0
+                && $repo->countAuthConcurrent($userIdentifier) >= $paymentType->getMaxConcurrentAuthPaymentsPerUser()
+            )
+            || (
                 !$userIdentifier
                 && $paymentType->getMaxConcurrentUnauthPayments() >= 0
                 && $repo->countUnauthConcurrent() >= $paymentType->getMaxConcurrentUnauthPayments()
+            )
+            || (
+                !$userIdentifier
+                && $paymentType->getMaxConcurrentUnauthPaymentsPerIp() >= 0
+                && $repo->countUnauthConcurrent($payment->getClientIp()) >= $paymentType->getMaxConcurrentUnauthPaymentsPerIp()
             )
         ) {
             throw ApiError::withDetails(Response::HTTP_TOO_MANY_REQUESTS, 'Too many requests!', 'mono:too-many-requests');
@@ -138,11 +154,6 @@ class PaymentService implements LoggerAwareInterface
         $payment->setPaymentStatus(Payment::PAYMENT_STATUS_PREPARED);
 
         $paymentPersistence = PaymentPersistence::fromPayment($payment);
-        if (empty($payment->getClientIp())) {
-            $request = Request::createFromGlobals();
-            $clientIp = $request->getClientIp();
-            $paymentPersistence->setClientIp($clientIp);
-        }
         $createdAt = new \DateTime();
         $paymentPersistence->setCreatedAt($createdAt);
         $paymentPersistence->setNumberOfUses(0);

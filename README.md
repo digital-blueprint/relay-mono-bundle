@@ -39,7 +39,9 @@ dbp_relay_mono:
       auth_required: true
       max_concurrent_payments: 100
       max_concurrent_auth_payments: 100
+      max_concurrent_auth_payments_per_user: 5
       max_concurrent_unauth_payments: 25
+      max_concurrent_unauth_payments_per_ip: 5
       return_url_override: 'https://www.digital-blueprint.org/'
       return_url_expression: 'payment.returnUrl matches "/^https:\\/\\/www\\.digital\\-blueprint\\.org\\//"'
       psp_return_url_expression: 'pspReturnUrl matches "/^https:\\/\\/0\\.0\\.0\\.0:8001\\//"'

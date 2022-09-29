@@ -34,7 +34,17 @@ class PaymentType
     /**
      * @var int
      */
+    private $maxConcurrentAuthPaymentsPerUser;
+
+    /**
+     * @var int
+     */
     private $maxConcurrentUnauthPayments;
+
+    /**
+     * @var int
+     */
+    private $maxConcurrentUnauthPaymentsPerIp;
 
     /**
      * @var string
@@ -149,6 +159,16 @@ class PaymentType
         return $this->maxConcurrentAuthPayments;
     }
 
+    public function setMaxConcurrentAuthPaymentsPerUser(?int $maxConcurrentAuthPaymentsPerUser): void
+    {
+        $this->maxConcurrentAuthPaymentsPerUser = $maxConcurrentAuthPaymentsPerUser;
+    }
+
+    public function getMaxConcurrentAuthPaymentsPerUser(): ?int
+    {
+        return $this->maxConcurrentAuthPaymentsPerUser;
+    }
+
     public function setMaxConcurrentUnauthPayments(?int $maxConcurrentUnauthPayments): void
     {
         $this->maxConcurrentUnauthPayments = $maxConcurrentUnauthPayments;
@@ -157,6 +177,16 @@ class PaymentType
     public function getMaxConcurrentUnauthPayments(): ?int
     {
         return $this->maxConcurrentUnauthPayments;
+    }
+
+    public function setMaxConcurrentUnauthPaymentsPerIp(?int $maxConcurrentUnauthPaymentsPerIp): void
+    {
+        $this->maxConcurrentUnauthPaymentsPerIp = $maxConcurrentUnauthPaymentsPerIp;
+    }
+
+    public function getMaxConcurrentUnauthPaymentsPerIp(): ?int
+    {
+        return $this->maxConcurrentUnauthPaymentsPerIp;
     }
 
     public function getReturnUrlOverride(): string
@@ -261,7 +291,9 @@ class PaymentType
         $paymentType->setAuthRequired((bool) $config['auth_required']);
         $paymentType->setMaxConcurrentPayments((int) $config['max_concurrent_payments']);
         $paymentType->setMaxConcurrentAuthPayments((int) $config['max_concurrent_auth_payments']);
+        $paymentType->setMaxConcurrentAuthPaymentsPerUser((int) $config['max_concurrent_auth_payments_per_user']);
         $paymentType->setMaxConcurrentUnauthPayments((int) $config['max_concurrent_unauth_payments']);
+        $paymentType->setMaxConcurrentUnauthPaymentsPerIp((int) $config['max_concurrent_unauth_payments_per_ip']);
         $paymentType->setReturnUrlOverride((string) $config['return_url_override']);
         $paymentType->setReturnUrlExpression((string) $config['return_url_expression']);
         $paymentType->setNotifyUrlExpression((string) $config['notify_url_expression']);
