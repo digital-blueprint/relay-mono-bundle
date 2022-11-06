@@ -169,11 +169,11 @@
         },
         {
             "name": "dbp/relay-core-bundle",
-            "version": "v0.1.48",
+            "version": "v0.1.49",
             "source": {
                 "type": "git",
                 "url": "https://gitlab.tugraz.at/dbp/relay/dbp-relay-core-bundle",
-                "reference": "022cfbb04346c7dbc0b988c61246d9f3ffa53b33"
+                "reference": "227239bebba7645338e4c445ae399ada21b92ee4"
             },
             "require": {
                 "api-platform/core": "^2.6.8 <2.7.0",
@@ -236,7 +236,7 @@
                 "AGPL-3.0-or-later"
             ],
             "description": "The core bundle of the Relay API gateway",
-            "time": "2022-10-27T08:18:30+00:00"
+            "time": "2022-11-02T09:57:39+00:00"
         },
         {
             "name": "doctrine/annotations",
@@ -9615,16 +9615,16 @@
         },
         {
             "name": "phpstan/phpstan-symfony",
-            "version": "1.2.14",
+            "version": "1.2.15",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan-symfony.git",
-                "reference": "f7dd737329504115adaa987697a759a66dd2ee8a"
+                "reference": "7210072b7fd83bf62eb5f889d4da70b80c07f04c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan-symfony/zipball/f7dd737329504115adaa987697a759a66dd2ee8a",
-                "reference": "f7dd737329504115adaa987697a759a66dd2ee8a",
+                "url": "https://api.github.com/repos/phpstan/phpstan-symfony/zipball/7210072b7fd83bf62eb5f889d4da70b80c07f04c",
+                "reference": "7210072b7fd83bf62eb5f889d4da70b80c07f04c",
                 "shasum": ""
             },
             "require": {
@@ -9680,9 +9680,9 @@
             "description": "Symfony Framework extensions and rules for PHPStan",
             "support": {
                 "issues": "https://github.com/phpstan/phpstan-symfony/issues",
-                "source": "https://github.com/phpstan/phpstan-symfony/tree/1.2.14"
+                "source": "https://github.com/phpstan/phpstan-symfony/tree/1.2.15"
             },
-            "time": "2022-10-05T11:19:29+00:00"
+            "time": "2022-11-03T15:03:30+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
