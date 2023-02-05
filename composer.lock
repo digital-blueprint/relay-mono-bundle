@@ -9547,22 +9547,22 @@
         },
         {
             "name": "phpstan/phpstan-symfony",
-            "version": "1.2.20",
+            "version": "1.2.22",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan-symfony.git",
-                "reference": "d89a521e7e31822409bf37f70691f7a12a6e7d76"
+                "reference": "cbf5b9ceadab8365ed46db42dcd23db1a4c26c93"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan-symfony/zipball/d89a521e7e31822409bf37f70691f7a12a6e7d76",
-                "reference": "d89a521e7e31822409bf37f70691f7a12a6e7d76",
+                "url": "https://api.github.com/repos/phpstan/phpstan-symfony/zipball/cbf5b9ceadab8365ed46db42dcd23db1a4c26c93",
+                "reference": "cbf5b9ceadab8365ed46db42dcd23db1a4c26c93",
                 "shasum": ""
             },
             "require": {
                 "ext-simplexml": "*",
                 "php": "^7.2 || ^8.0",
-                "phpstan/phpstan": "^1.9.1"
+                "phpstan/phpstan": "^1.9.4"
             },
             "conflict": {
                 "symfony/framework-bundle": "<3.0"
@@ -9612,9 +9612,9 @@
             "description": "Symfony Framework extensions and rules for PHPStan",
             "support": {
                 "issues": "https://github.com/phpstan/phpstan-symfony/issues",
-                "source": "https://github.com/phpstan/phpstan-symfony/tree/1.2.20"
+                "source": "https://github.com/phpstan/phpstan-symfony/tree/1.2.22"
             },
-            "time": "2023-01-15T12:28:31+00:00"
+            "time": "2023-02-01T13:26:41+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -11149,16 +11149,16 @@
         },
         {
             "name": "symfony/http-client",
-            "version": "v5.4.19",
+            "version": "v5.4.20",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/http-client.git",
-                "reference": "0c22562d0601e19bd01c4480893f5438e6b12db5"
+                "reference": "b4d936b657c7952a41e89efd0ddcea51f8c90f34"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/http-client/zipball/0c22562d0601e19bd01c4480893f5438e6b12db5",
-                "reference": "0c22562d0601e19bd01c4480893f5438e6b12db5",
+                "url": "https://api.github.com/repos/symfony/http-client/zipball/b4d936b657c7952a41e89efd0ddcea51f8c90f34",
+                "reference": "b4d936b657c7952a41e89efd0ddcea51f8c90f34",
                 "shasum": ""
             },
             "require": {
@@ -11216,7 +11216,7 @@
             "description": "Provides powerful methods to fetch HTTP resources synchronously or asynchronously",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/http-client/tree/v5.4.19"
+                "source": "https://github.com/symfony/http-client/tree/v5.4.20"
             },
             "funding": [
                 {
@@ -11232,7 +11232,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-01-12T15:47:53+00:00"
+            "time": "2023-01-25T18:32:18+00:00"
         },
         {
             "name": "symfony/http-client-contracts",
