@@ -304,24 +304,24 @@ class PaymentType
         if (
             array_key_exists('notify_error', $config)
             && is_array($config['notify_error'])
-            && !empty($config['dsn'])
-            && !empty($config['from'])
-            && !empty($config['to'])
-            && !empty($config['subject'])
-            && !empty($config['html_template'])
-            && !empty($config['completed_begin'])
+            && !empty($config['notify_error']['dsn'])
+            && !empty($config['notify_error']['from'])
+            && !empty($config['notify_error']['to'])
+            && !empty($config['notify_error']['subject'])
+            && !empty($config['notify_error']['html_template'])
+            && !empty($config['notify_error']['completed_begin'])
         ) {
             $paymentType->setNotifyErrorConfig($config['notify_error']);
         }
         if (
             array_key_exists('reporting', $config)
             && is_array($config['reporting'])
-            && !empty($config['dsn'])
-            && !empty($config['from'])
-            && !empty($config['to'])
-            && !empty($config['subject'])
-            && !empty($config['html_template'])
-            && !empty($config['created_begin'])
+            && !empty($config['reporting']['dsn'])
+            && !empty($config['reporting']['from'])
+            && !empty($config['reporting']['to'])
+            && !empty($config['reporting']['subject'])
+            && !empty($config['reporting']['html_template'])
+            && !empty($config['reporting']['created_begin'])
         ) {
             $paymentType->setReportingConfig($config['reporting']);
         }
