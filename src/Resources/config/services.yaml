@@ -54,3 +54,8 @@ services:
   Dbp\Relay\MonoBundle\Service\HealthCheck:
     autowire: true
     autoconfigure: true
+
+  Dbp\Relay\MonoBundle\Command\:
+    resource: '../../Command'
+    autowire: true
+    autoconfigure: true
