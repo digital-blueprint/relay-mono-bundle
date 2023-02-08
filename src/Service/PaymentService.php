@@ -475,7 +475,9 @@ class PaymentService implements LoggerAwareInterface
         $createdSince = new \DateTime($reportingConfig['created_begin']);
         $count = $repo->countByTypeCreatedSince($type, $createdSince);
 
-        if (count($count)) {
+//        if (count($count)) {
+        // We want a report every day, even if there are no payments
+        if (true) {
             $context = [
                 'paymentType' => $paymentType,
                 'count' => $count,
