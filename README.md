@@ -1,6 +1,6 @@
 # DbpRelayMonoBundle
 
-[GitLab](https://gitlab.tugraz.at/dbp/relay/dbp-relay-mono-bundle) |
+[GitHub](https://github.com/digital-blueprint/relay-mono-bundle) |
 [Packagist](https://packagist.org/packages/dbp/relay-mono-bundle)
 
 ## Bundle installation

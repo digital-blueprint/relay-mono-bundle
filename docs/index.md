@@ -1,6 +1,6 @@
 # Overview
 
-Source: https://gitlab.tugraz.at/dbp/mono/dbp-relay-mono-bundle
+Source: https://github.com/digital-blueprint/relay-mono-bundle
 
 ```mermaid
 flowchart TB
