@@ -464,7 +464,18 @@ class PaymentService implements LoggerAwareInterface
         }
     }
 
-    public function sendReporting(PaymentType $paymentType)
+    public function sendAllReporting(string $email = '')
+    {
+        $paymentTypes = $this->configurationService->getPaymentTypes();
+
+        foreach ($paymentTypes as $paymentType) {
+            if ($paymentType->getReportingConfig()) {
+                $this->sendReporting($paymentType, $email);
+            }
+        }
+    }
+
+    public function sendReporting(PaymentType $paymentType, string $email = '')
     {
         $repo = $this->em->getRepository(PaymentPersistence::class);
         assert($repo instanceof PaymentPersistenceRepository);
@@ -482,6 +493,10 @@ class PaymentService implements LoggerAwareInterface
                 'paymentType' => $paymentType,
                 'count' => $count,
             ];
+
+            if ($email !== '') {
+                $reportingConfig['to'] = $email;
+            }
 
             $this->sendEmail($reportingConfig, $context);
         }

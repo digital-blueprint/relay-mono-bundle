@@ -6,26 +6,18 @@ namespace Dbp\Relay\MonoBundle\Cron;
 
 use Dbp\Relay\CoreBundle\Cron\CronJobInterface;
 use Dbp\Relay\CoreBundle\Cron\CronOptions;
-use Dbp\Relay\MonoBundle\Service\ConfigurationService;
 use Dbp\Relay\MonoBundle\Service\PaymentService;
 
 class ReportingCronJob implements CronJobInterface
 {
-    /**
-     * @var ConfigurationService
-     */
-    private $configurationService;
-
     /**
      * @var PaymentService
      */
     private $paymentService;
 
     public function __construct(
-        ConfigurationService $configurationService,
         PaymentService $paymentService
     ) {
-        $this->configurationService = $configurationService;
         $this->paymentService = $paymentService;
     }
 
@@ -41,11 +33,6 @@ class ReportingCronJob implements CronJobInterface
 
     public function run(CronOptions $options): void
     {
-        $paymentTypes = $this->configurationService->getPaymentTypes();
-        foreach ($paymentTypes as $paymentType) {
-            if ($paymentType->getReportingConfig()) {
-                $this->paymentService->sendReporting($paymentType);
-            }
-        }
+        $this->paymentService->sendAllReporting();
     }
 }

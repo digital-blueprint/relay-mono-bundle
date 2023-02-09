@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Dbp\Relay\MonoBundle\Command;
 
-use Dbp\Relay\MonoBundle\Service\ConfigurationService;
 use Dbp\Relay\MonoBundle\Service\PaymentService;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class ReportingCommand extends Command
@@ -15,22 +15,15 @@ class ReportingCommand extends Command
     protected static $defaultName = 'dbp:relay-mono:reporting';
 
     /**
-     * @var ConfigurationService
-     */
-    private $configurationService;
-
-    /**
      * @var PaymentService
      */
     private $paymentService;
 
     public function __construct(
-        ConfigurationService $configurationService,
         PaymentService $paymentService
     ) {
         parent::__construct();
 
-        $this->configurationService = $configurationService;
         $this->paymentService = $paymentService;
     }
 
@@ -40,20 +33,21 @@ class ReportingCommand extends Command
     protected function configure()
     {
         $this
-            ->setDescription('Reporting command');
+            ->setDescription('Reporting command')
+            ->addOption('email', null, InputOption::VALUE_OPTIONAL, 'Override email address to send report to', '');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $output->writeln('Send reporting mails...');
+        $email = trim($input->getOption('email'));
 
-        $paymentTypes = $this->configurationService->getPaymentTypes();
-
-        foreach ($paymentTypes as $paymentType) {
-            if ($paymentType->getReportingConfig()) {
-                $this->paymentService->sendReporting($paymentType);
-            }
+        if ($email !== '') {
+            $output->writeln('Override email address: '.$email);
         }
+
+        $output->writeln('Send reporting mail...');
+
+        $this->paymentService->sendAllReporting($email);
 
         return 0;
     }
