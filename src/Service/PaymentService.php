@@ -491,6 +491,8 @@ class PaymentService implements LoggerAwareInterface
         if (true) {
             $context = [
                 'paymentType' => $paymentType,
+                'createdSince' => $createdSince,
+                'createdTo' => new \DateTime(),
                 'count' => $count,
             ];
 
