@@ -5,6 +5,8 @@
 
 [![Test](https://github.com/digital-blueprint/relay-mono-bundle/actions/workflows/test.yml/badge.svg)](https://github.com/digital-blueprint/relay-mono-bundle/actions/workflows/test.yml)
 
+Electronic Payments Symfony Bundle
+
 ## Bundle installation
 
 You can install the bundle directly from [packagist.org](https://packagist.org/packages/dbp/relay-mono-bundle).
