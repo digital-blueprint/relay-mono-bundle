@@ -430,10 +430,21 @@ class PaymentService implements LoggerAwareInterface
                 $backendService->cleanup($paymentPersistence);
 
                 $paymentMethod = $paymentPersistence->getPaymentMethod();
-                $paymentContract = $this->configurationService->getPaymentContractByTypeAndPaymentMethod($type, $paymentMethod);
+                // We only have a payment method once the payment was started
+                assert($paymentMethod !== null || $paymentStatus === PaymentPersistence::ACTION_STATUS_PREPARED);
 
-                $paymentServiceProvider = $this->paymentServiceProviderService->getByPaymentContract($paymentContract);
-                $paymentServiceProvider->cleanup($paymentPersistence);
+                if ($paymentMethod !== null) {
+                    $paymentContract = $this->configurationService->getPaymentContractByTypeAndPaymentMethod($type, $paymentMethod);
+                    if ($paymentContract === null) {
+                        // in case the config is wrong, better not delete the entry from the DB if some related data could
+                        // be still stored somewhere that needs to be cleaned up
+
+                        $this->logger->error("Can't find payment contract for method '$paymentMethod'. Can't clean up entry: ".$paymentPersistence->getIdentifier());
+                        continue;
+                    }
+                    $paymentServiceProvider = $this->paymentServiceProviderService->getByPaymentContract($paymentContract);
+                    $paymentServiceProvider->cleanup($paymentPersistence);
+                }
 
                 $this->em->remove($paymentPersistence);
             }
