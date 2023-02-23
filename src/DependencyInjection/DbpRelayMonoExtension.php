@@ -75,5 +75,7 @@ class DbpRelayMonoExtension extends ConfigurableExtension implements PrependExte
                 'Dbp\Relay\MonoBundle\Migrations' => __DIR__.'/../Migrations',
             ],
         ]);
+
+        $this->registerLoggingChannel($container, 'dbp_relay_mono_audit', false);
     }
 }
