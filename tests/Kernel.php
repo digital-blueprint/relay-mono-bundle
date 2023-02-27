@@ -44,6 +44,8 @@ class Kernel extends BaseKernel
 
     protected function configureContainer(ContainerConfigurator $container)
     {
+        $container->services()->set(DummyBackendService::class)->public();
+
         $container->import('@DbpRelayCoreBundle/Resources/config/services_test.yaml');
         $container->extension('framework', [
             'test' => true,
@@ -59,10 +61,10 @@ class Kernel extends BaseKernel
             ],
             'payment_session_timeout' => 1234,
             'payment_types' => [
-                [
+                'sometype' => [
                     'service' => 'bla',
                     'payment_contracts' => [
-                        [
+                        'somecontract' => [
                             'service' => 'bla',
                             'payment_methods' => [
                                 [],
