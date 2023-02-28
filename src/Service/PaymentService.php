@@ -440,7 +440,11 @@ class PaymentService implements LoggerAwareInterface
                 $paymentType = $this->configurationService->getPaymentTypeByType($type);
 
                 $backendService = $this->backendService->getByPaymentType($paymentType);
-                $backendService->cleanup($paymentPersistence);
+                $cleanupWorked = $backendService->cleanup($paymentPersistence);
+                if ($cleanupWorked !== true) {
+                    $this->logger->error('Backend cleanup failed for '.$paymentPersistence->getIdentifier().', skipping further cleanup');
+                    continue;
+                }
 
                 $paymentMethod = $paymentPersistence->getPaymentMethod();
                 // We only have a payment method once the payment was started
@@ -456,7 +460,11 @@ class PaymentService implements LoggerAwareInterface
                         continue;
                     }
                     $paymentServiceProvider = $this->paymentServiceProviderService->getByPaymentContract($paymentContract);
-                    $paymentServiceProvider->cleanup($paymentPersistence);
+                    $cleanupWorked = $paymentServiceProvider->cleanup($paymentPersistence);
+                    if ($cleanupWorked !== true) {
+                        $this->logger->error('Payment provider cleanup failed for '.$paymentPersistence->getIdentifier().', skipping further cleanup');
+                        continue;
+                    }
                 }
 
                 $this->em->remove($paymentPersistence);
