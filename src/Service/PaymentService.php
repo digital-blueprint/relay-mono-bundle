@@ -417,6 +417,8 @@ class PaymentService implements LoggerAwareInterface
         $repo = $this->em->getRepository(PaymentPersistence::class);
         assert($repo instanceof PaymentPersistenceRepository);
 
+        $this->logger->debug('Running cleanup');
+
         $cleanupConfigs = $this->configurationService->getCleanupConfiguration();
         foreach ($cleanupConfigs as $cleanupConfig) {
             $paymentStatus = $cleanupConfig['payment_status'];
@@ -457,6 +459,8 @@ class PaymentService implements LoggerAwareInterface
         $repo = $this->em->getRepository(PaymentPersistence::class);
         assert($repo instanceof PaymentPersistenceRepository);
 
+        $this->logger->debug('Send notify error for: '.$paymentType->getIdentifier());
+
         $notifyErrorConfig = $paymentType->getNotifyErrorConfig();
 
         $type = $paymentType->getIdentifier();
@@ -490,6 +494,8 @@ class PaymentService implements LoggerAwareInterface
     {
         $repo = $this->em->getRepository(PaymentPersistence::class);
         assert($repo instanceof PaymentPersistenceRepository);
+
+        $this->logger->debug('Send reporting for: '.$paymentType->getIdentifier());
 
         $reportingConfig = $paymentType->getReportingConfig();
 
@@ -532,6 +538,7 @@ class PaymentService implements LoggerAwareInterface
             ->subject($config['subject'])
             ->html($html);
 
+        $this->logger->debug('Sending email to: '.$config['to']);
         $mailer->send($email);
     }
 }
