@@ -85,6 +85,11 @@ class PaymentService implements LoggerAwareInterface
         $this->em->getConnection()->connect();
     }
 
+    private function getLoggingContext(PaymentPersistence $payment): array
+    {
+        return ['relay-mono-payment-id' => $payment->getIdentifier()];
+    }
+
     public function createPayment(Payment $payment): Payment
     {
         $type = $payment->getType();
@@ -223,10 +228,10 @@ class PaymentService implements LoggerAwareInterface
 
         $backendService = $this->backendService->getByPaymentType($paymentType);
 
-        $this->auditLogger->debug('Notifying backend service');
+        $this->auditLogger->debug('Notifying backend service', $this->getLoggingContext($paymentPersistence));
 
         if ($paymentType->isDemoMode()) {
-            $this->auditLogger->warning('Demo mode active, backend not notified.');
+            $this->auditLogger->warning('Demo mode active, backend not notified.', $this->getLoggingContext($paymentPersistence));
             $isNotified = true;
         } else {
             $isNotified = $backendService->notify($paymentPersistence);
@@ -353,6 +358,9 @@ class PaymentService implements LoggerAwareInterface
         if ($paymentType->getPspReturnUrlExpression() && !$expressionLanguage->evaluate($paymentType->getPspReturnUrlExpression(), ['payment' => $paymentPersistence, 'pspReturnUrl' => $pspReturnUrl])) {
             throw ApiError::withDetails(Response::HTTP_BAD_REQUEST, 'PSP return URL not allowed!', 'mono:psp-return-url-not-allowed');
         }
+
+        $this->auditLogger->debug('Starting payment', $this->getLoggingContext($paymentPersistence));
+
         $paymentPersistence->setPspReturnUrl($pspReturnUrl);
 
         $paymentMethod = $startPayAction->getPaymentMethod();
@@ -391,6 +399,9 @@ class PaymentService implements LoggerAwareInterface
         string $pspData
     ): CompleteResponseInterface {
         $paymentPersistence = $this->getPaymentPersistenceByIdentifier($identifier);
+
+        $this->auditLogger->debug('Completing payment', $this->getLoggingContext($paymentPersistence));
+
         $type = $paymentPersistence->getType();
 
         $paymentMethod = $paymentPersistence->getPaymentMethod();
