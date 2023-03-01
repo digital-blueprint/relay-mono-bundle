@@ -97,3 +97,7 @@ dbp_relay_mono:
             * `identifier` - ???
             * `name` - ???
             * `image` - ???
+
+## Documentation
+
+* [Logging](./logging.md)
