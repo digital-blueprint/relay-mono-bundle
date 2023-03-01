@@ -12,15 +12,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class PaymentPersistence
 {
-    public const ACTION_STATUS_PREPARED = 'prepared';
-    public const ACTION_STATUS_STARTED = 'started';
-    public const ACTION_STATUS_COMPLETED = 'completed';
-    public const ACTION_STATUS_CANCELLED = 'cancelled';
-    public const ACTION_STATUS_PENDING = 'pending';
-    public const ACTION_STATUS_FAILED = 'failed';
-
-    public const PRICE_CURRENCY = 'EUR';
-
     /**
      * @ORM\Id
      * @ORM\Column(type="string", length=36, unique=true)
