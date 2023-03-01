@@ -19,9 +19,10 @@ processes.
 Due to the different nature and sensitivity of data logged in this channel you
 will probably want to handle it differently on the application level, in regards
 to where it is logged to, which log levels are forwarded, who can access it, and
-how log it will be stored. The monolog config allows you to specify different
-log handlers for different logging channels. In the following example we log the
-channel to a separate file and exclude it from the general log handler:
+for how long it will be stored. The monolog config allows you to specify
+different log handlers for different logging channels. In the following example
+we log the channel to a separate file and exclude it from the general log
+handler:
 
 ```yaml
 # config/packages/monolog.yaml
