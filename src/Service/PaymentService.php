@@ -223,6 +223,11 @@ class PaymentService implements LoggerAwareInterface
 
     public function notify(PaymentPersistence $paymentPersistence)
     {
+        // Only notify if the payment is completed and already notified
+        if ($paymentPersistence->getPaymentStatus() !== Payment::PAYMENT_STATUS_COMPLETED || $paymentPersistence->getNotifiedAt() !== null) {
+            return;
+        }
+
         $type = $paymentPersistence->getType();
         $paymentType = $this->configurationService->getPaymentTypeByType($type);
 
