@@ -453,7 +453,7 @@ class PaymentService implements LoggerAwareInterface
 
                 $paymentMethod = $paymentPersistence->getPaymentMethod();
                 // We only have a payment method once the payment was started
-                assert($paymentMethod !== null || $paymentStatus === PaymentPersistence::ACTION_STATUS_PREPARED);
+                assert($paymentMethod !== null || $paymentStatus === Payment::PAYMENT_STATUS_PREPARED);
 
                 if ($paymentMethod !== null) {
                     $paymentContract = $this->configurationService->getPaymentContractByTypeAndPaymentMethod($type, $paymentMethod);
