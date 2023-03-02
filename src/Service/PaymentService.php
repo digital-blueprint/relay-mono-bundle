@@ -22,6 +22,8 @@ use Psr\Log\NullLogger;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Lock\LockFactory;
+use Symfony\Component\Lock\LockInterface;
 use Symfony\Component\Mailer\Mailer;
 use Symfony\Component\Mailer\Transport;
 use Symfony\Component\Mime\Email;
@@ -63,13 +65,19 @@ class PaymentService implements LoggerAwareInterface
      */
     private $auditLogger;
 
+    /**
+     * @var LockFactory
+     */
+    private $lockFactory;
+
     public function __construct(
         BackendService $backendService,
         ConfigurationService $configurationService,
         EntityManagerInterface $em,
         PaymentServiceProviderService $paymentServiceProviderService,
         UserSessionInterface $userSession,
-        LoggerInterface $auditLogger
+        LoggerInterface $auditLogger,
+        LockFactory $lockFactory
     ) {
         $this->backendService = $backendService;
         $this->configurationService = $configurationService;
@@ -79,11 +87,22 @@ class PaymentService implements LoggerAwareInterface
         $this->userSession = $userSession;
         $this->logger = new NullLogger();
         $this->auditLogger = $auditLogger;
+        $this->lockFactory = $lockFactory;
     }
 
     public function checkConnection()
     {
         $this->em->getConnection()->connect();
+    }
+
+    private function createPaymentLock(PaymentPersistence $payment): LockInterface
+    {
+        $resourceKey = sprintf(
+            'mono-%s',
+            $payment->getIdentifier()
+        );
+
+        return $this->lockFactory->createLock($resourceKey, 60, true);
     }
 
     private function getLoggingContext(PaymentPersistence $payment): array
@@ -224,35 +243,48 @@ class PaymentService implements LoggerAwareInterface
 
     public function notify(PaymentPersistence $paymentPersistence)
     {
-        // Only notify if the payment is completed and already notified
-        if ($paymentPersistence->getPaymentStatus() !== PaymentStatus::COMPLETED || $paymentPersistence->getNotifiedAt() !== null) {
+        // Only notify if the payment is completed
+        if ($paymentPersistence->getPaymentStatus() !== PaymentStatus::COMPLETED) {
             return;
         }
 
-        $type = $paymentPersistence->getType();
-        $paymentType = $this->configurationService->getPaymentTypeByType($type);
-
-        $backendService = $this->backendService->getByPaymentType($paymentType);
-
-        $this->auditLogger->debug('Notifying backend service', $this->getLoggingContext($paymentPersistence));
-
-        if ($paymentType->isDemoMode()) {
-            $this->auditLogger->warning('Demo mode active, backend not notified.', $this->getLoggingContext($paymentPersistence));
-            $isNotified = true;
-        } else {
-            $isNotified = $backendService->notify($paymentPersistence);
+        $lock = $this->createPaymentLock($paymentPersistence);
+        if (!$lock->acquire()) {
+            return;
         }
-
-        if ($isNotified) {
-            $notifiedAt = new \DateTime();
-            $paymentPersistence->setNotifiedAt($notifiedAt);
-        }
-
         try {
-            $this->em->persist($paymentPersistence);
-            $this->em->flush();
-        } catch (\Exception $e) {
-            throw ApiError::withDetails(Response::HTTP_INTERNAL_SERVER_ERROR, 'Payment could not be updated!', 'mono:payment-not-updated', ['message' => $e->getMessage()]);
+            if ($paymentPersistence->getNotifiedAt() !== null) {
+                return;
+            }
+
+            $type = $paymentPersistence->getType();
+            $paymentType = $this->configurationService->getPaymentTypeByType($type);
+
+            $backendService = $this->backendService->getByPaymentType($paymentType);
+
+            $this->auditLogger->debug('Notifying backend service', $this->getLoggingContext($paymentPersistence));
+
+            if ($paymentType->isDemoMode()) {
+                $this->auditLogger->warning('Demo mode active, backend not notified.', $this->getLoggingContext($paymentPersistence));
+                $isNotified = true;
+            } else {
+                $isNotified = $backendService->notify($paymentPersistence);
+            }
+
+            if ($isNotified) {
+                $notifiedAt = new \DateTime();
+                $paymentPersistence->setNotifiedAt($notifiedAt);
+            }
+
+            $lock->refresh();
+            try {
+                $this->em->persist($paymentPersistence);
+                $this->em->flush();
+            } catch (\Exception $e) {
+                throw ApiError::withDetails(Response::HTTP_INTERNAL_SERVER_ERROR, 'Payment could not be updated!', 'mono:payment-not-updated', ['message' => $e->getMessage()]);
+            }
+        } finally {
+            $lock->release();
         }
     }
 
