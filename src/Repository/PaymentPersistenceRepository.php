@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Dbp\Relay\MonoBundle\Repository;
 
-use Dbp\Relay\MonoBundle\Entity\Payment;
 use Dbp\Relay\MonoBundle\Entity\PaymentPersistence;
+use Dbp\Relay\MonoBundle\Entity\PaymentStatus;
 use Doctrine\ORM\EntityRepository;
 
 class PaymentPersistenceRepository extends EntityRepository
@@ -125,7 +125,7 @@ class PaymentPersistenceRepository extends EntityRepository
     public function findUnnotified(): array
     {
         $parameters = [
-            'paymentStatus' => Payment::PAYMENT_STATUS_COMPLETED,
+            'paymentStatus' => PaymentStatus::COMPLETED,
         ];
 
         $qb = $this->createQueryBuilder('p');
@@ -143,7 +143,7 @@ class PaymentPersistenceRepository extends EntityRepository
     {
         $parameters = [
             'type' => $type,
-            'paymentStatus' => Payment::PAYMENT_STATUS_COMPLETED,
+            'paymentStatus' => PaymentStatus::COMPLETED,
             'completedSince' => $completedSince,
         ];
 

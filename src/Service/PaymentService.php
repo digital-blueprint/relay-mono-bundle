@@ -8,6 +8,7 @@ use Dbp\Relay\CoreBundle\API\UserSessionInterface;
 use Dbp\Relay\CoreBundle\Exception\ApiError;
 use Dbp\Relay\MonoBundle\Entity\Payment;
 use Dbp\Relay\MonoBundle\Entity\PaymentPersistence;
+use Dbp\Relay\MonoBundle\Entity\PaymentStatus;
 use Dbp\Relay\MonoBundle\Entity\PaymentType;
 use Dbp\Relay\MonoBundle\Entity\StartPayAction;
 use Dbp\Relay\MonoBundle\PaymentServiceProvider\CompleteResponseInterface;
@@ -156,7 +157,7 @@ class PaymentService implements LoggerAwareInterface
 
         $identifier = (string) Uuid::v4();
         $payment->setIdentifier($identifier);
-        $payment->setPaymentStatus(Payment::PAYMENT_STATUS_PREPARED);
+        $payment->setPaymentStatus(PaymentStatus::PREPARED);
 
         $paymentPersistence = PaymentPersistence::fromPayment($payment);
         $createdAt = new \DateTime();
@@ -224,7 +225,7 @@ class PaymentService implements LoggerAwareInterface
     public function notify(PaymentPersistence $paymentPersistence)
     {
         // Only notify if the payment is completed and already notified
-        if ($paymentPersistence->getPaymentStatus() !== Payment::PAYMENT_STATUS_COMPLETED || $paymentPersistence->getNotifiedAt() !== null) {
+        if ($paymentPersistence->getPaymentStatus() !== PaymentStatus::COMPLETED || $paymentPersistence->getNotifiedAt() !== null) {
             return;
         }
 
@@ -288,8 +289,8 @@ class PaymentService implements LoggerAwareInterface
         if (in_array(
             $paymentPersistence->getPaymentStatus(),
             [
-                Payment::PAYMENT_STATUS_PREPARED,
-                Payment::PAYMENT_STATUS_STARTED,
+                PaymentStatus::PREPARED,
+                PaymentStatus::STARTED,
             ],
             true
         )) {
@@ -374,7 +375,7 @@ class PaymentService implements LoggerAwareInterface
         $paymentContract = $this->configurationService->getPaymentContractByTypeAndPaymentMethod($type, $paymentMethod);
         $paymentPersistence->setPaymentContract((string) $paymentContract);
 
-        $paymentPersistence->setPaymentStatus(Payment::PAYMENT_STATUS_STARTED);
+        $paymentPersistence->setPaymentStatus(PaymentStatus::STARTED);
 
         $config = $this->configurationService->getConfig();
         $timeoutAt = new \DateTime();
@@ -453,7 +454,7 @@ class PaymentService implements LoggerAwareInterface
 
                 $paymentMethod = $paymentPersistence->getPaymentMethod();
                 // We only have a payment method once the payment was started
-                assert($paymentMethod !== null || $paymentStatus === Payment::PAYMENT_STATUS_PREPARED);
+                assert($paymentMethod !== null || $paymentStatus === PaymentStatus::PREPARED);
 
                 if ($paymentMethod !== null) {
                     $paymentContract = $this->configurationService->getPaymentContractByTypeAndPaymentMethod($type, $paymentMethod);

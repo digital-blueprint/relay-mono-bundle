@@ -40,14 +40,35 @@ use Symfony\Component\Serializer\Annotation\Groups;
  */
 class Payment
 {
-    public const PAYMENT_STATUS_PREPARED = 'prepared';
-    public const PAYMENT_STATUS_STARTED = 'started';
-    public const PAYMENT_STATUS_COMPLETED = 'completed';
-    public const PAYMENT_STATUS_CANCELLED = 'cancelled';
-    public const PAYMENT_STATUS_PENDING = 'pending';
-    public const PAYMENT_STATUS_FAILED = 'failed';
+    /**
+     * @deprecated
+     */
+    public const PAYMENT_STATUS_PREPARED = PaymentStatus::PREPARED;
 
-    public const PRICE_CURRENCY_EUR = 'EUR';
+    /**
+     * @deprecated
+     */
+    public const PAYMENT_STATUS_STARTED = PaymentStatus::STARTED;
+
+    /**
+     * @deprecated
+     */
+    public const PAYMENT_STATUS_PENDING = PaymentStatus::PENDING;
+
+    /**
+     * @deprecated
+     */
+    public const PAYMENT_STATUS_CANCELLED = PaymentStatus::CANCELLED;
+
+    /**
+     * @deprecated
+     */
+    public const PAYMENT_STATUS_FAILED = PaymentStatus::FAILED;
+
+    /**
+     * @deprecated
+     */
+    public const PAYMENT_STATUS_COMPLETED = PaymentStatus::COMPLETED;
 
     /**
      * @ApiProperty(identifier=true)
