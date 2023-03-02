@@ -1,3 +1,10 @@
+# v0.1.9
+
+* Don't require the backend to check for the right payment state when notified
+* composer: add pre-commit hooks for linting
+* Add a new PaymentStatus enum
+* Add locking to the backend notification, so the backend isn't notified for the same payment twice.
+
 # v0.1.8
 
 * logs: More logging and better audit logs
