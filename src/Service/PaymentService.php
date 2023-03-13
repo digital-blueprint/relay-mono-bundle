@@ -318,15 +318,10 @@ class PaymentService implements LoggerAwareInterface
             throw ApiError::withDetails(Response::HTTP_FORBIDDEN, 'Start payment user identifier not allowed!', 'mono:start-payment-user-identifier-not-allowed');
         }
 
-        if (in_array(
-            $paymentPersistence->getPaymentStatus(),
-            [
-                PaymentStatus::PREPARED,
-                PaymentStatus::STARTED,
-            ],
-            true
-        )) {
-            $backendService = $this->backendService->getByPaymentType($paymentType);
+        $backendService = $this->backendService->getByPaymentType($paymentType);
+
+        // We allow the backend to update the payment data as long as we are in the prepared state
+        if ($paymentPersistence->getPaymentStatus() === PaymentStatus::PREPARED) {
             $isDataUpdated = $backendService->updateData($paymentPersistence);
             if ($isDataUpdated) {
                 $dataUpdatedAt = new \DateTime();
@@ -348,6 +343,9 @@ class PaymentService implements LoggerAwareInterface
         $recipient = $paymentType->getRecipient();
         $payment->setRecipient($recipient);
         $this->adjustPaymentForDemoMode($paymentType, $payment);
+
+        // We give the backend service one last chance to change things, for example for translations
+        $backendService->updateEntity($paymentPersistence, $payment);
 
         return $payment;
     }
