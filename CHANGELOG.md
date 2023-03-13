@@ -1,3 +1,9 @@
+# v0.2.0
+
+* BackendServiceInterface::updateData() is now only called in the prepared state
+* Introduce a new BackendServiceInterface::updateEntity() which is called in all states and can for example
+  set the payment translation based on the current locale, independend of the payment state.
+
 # v0.1.9
 
 * Don't require the backend to check for the right payment state when notified
