@@ -26,4 +26,10 @@ interface PaymentServiceProviderServiceInterface
      * Should return true if deleting was successful or if there was nothing to delete.
      */
     public function cleanup(PaymentPersistence $paymentPersistence): bool;
+
+    /**
+     * Given a PSP data string should return a payment ID in case the PSP recognizes the
+     * format. Or NULL in case the pspData isn't handled by this PSP.
+     */
+    public function getPaymentIdForPspData(string $pspData): ?string;
 }

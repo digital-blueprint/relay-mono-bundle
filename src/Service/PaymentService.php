@@ -430,6 +430,25 @@ class PaymentService implements LoggerAwareInterface
         return $startResponse;
     }
 
+    /**
+     * This iterates through all PSP connectors and asks them to handle the PSP data.
+     * The first one that recognizes it will give us a matching payment ID.
+     */
+    public function completeGetPaymentId(string $pspData): string
+    {
+        $this->auditLogger->debug('Completing for PSP data', ['mono-psp-data' => $pspData]);
+        // first map the PSP data to an existing payment entry by asking all PSP connectors
+        foreach ($this->configurationService->getPaymentContracts() as $contract) {
+            $pspService = $this->paymentServiceProviderService->getByPaymentContract($contract);
+            $paymentId = $pspService->getPaymentIdForPspData($pspData);
+            if ($paymentId !== null) {
+                return $paymentId;
+            }
+        }
+        $this->auditLogger->error("PSP data wasn't handled by any connector", ['mono-psp-data' => $pspData]);
+        throw new ApiError(Response::HTTP_BAD_REQUEST, 'PSP data not handled');
+    }
+
     public function completePayAction(
         string $identifier,
         string $pspData

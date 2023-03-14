@@ -127,6 +127,26 @@ class ConfigurationService
         return $paymentContract;
     }
 
+    /**
+     * Returns all configured payment contracts.
+     *
+     * @return array<PaymentContract>
+     */
+    public function getPaymentContracts(): array
+    {
+        $contracts = [];
+        $paymentTypesConfig = $this->config['payment_types'];
+        foreach ($paymentTypesConfig as $type => $paymentTypeConfig) {
+            $paymentContractsConfig = $paymentTypeConfig['payment_contracts'];
+            foreach ($paymentContractsConfig as $paymentContractIdentifier => $paymentContractConfig) {
+                $paymentContract = PaymentContract::fromConfig($paymentContractIdentifier, $paymentContractConfig);
+                $contracts[] = $paymentContract;
+            }
+        }
+
+        return $contracts;
+    }
+
     public function getCleanupConfiguration(): array
     {
         return $this->config['cleanup'];

@@ -47,13 +47,6 @@ class CompletePayAction
     private $identifier;
 
     /**
-     * @var PaymentMethod
-     * @ApiProperty(iri="https://schema.org/Text")
-     * @Groups({"MonoPayment:input"})
-     */
-    private $routing;
-
-    /**
      * @var string
      * @ApiProperty(iri="https://schema.org/Text")
      * @Groups({"MonoPayment:input"})
@@ -75,18 +68,6 @@ class CompletePayAction
     public function setIdentifier(string $identifier): void
     {
         $this->identifier = $identifier;
-    }
-
-    public function getRouting(): PaymentMethod
-    {
-        return $this->routing;
-    }
-
-    public function setRouting(PaymentMethod $routing): self
-    {
-        $this->routing = $routing;
-
-        return $this;
     }
 
     public function getPspData(): string

@@ -28,20 +28,15 @@ class CompletePayActionDataPersister extends AbstractController implements Conte
         $completePayAction = $data;
         assert($completePayAction instanceof CompletePayAction);
 
-        // pspData contains identifier as first path parameter
         $pspData = $completePayAction->getPspData();
-        $pspDataParts = explode('/', $pspData);
-        $identifier = array_shift($pspDataParts);
-        $completePayAction->setIdentifier($identifier);
-        $cleanPspData = implode('/', $pspDataParts);
-        $completePayAction->setPspData($cleanPspData);
+        $identifier = $this->api->completeGetPaymentId($pspData);
 
         $completeResponse = $this->api->completePayAction(
-            $completePayAction->getIdentifier(),
-            $completePayAction->getPspData()
+            $identifier,
+            $pspData
         );
 
-        $completePayAction->setIdentifier($completePayAction->getIdentifier());
+        $completePayAction->setIdentifier($identifier);
         $completePayAction->setReturnUrl($completeResponse->getReturnUrl());
 
         return $completePayAction;
