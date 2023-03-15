@@ -1,3 +1,8 @@
+# v0.3.0
+
+* New PaymentServiceProviderServiceInterface::getPaymentIdForPspData() which each PSP connector needs to implement.
+  This moves the last PSP specific logic into the connector.
+
 # v0.2.0
 
 * BackendServiceInterface::updateData() is now only called in the prepared state
