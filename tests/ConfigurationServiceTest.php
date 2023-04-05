@@ -42,7 +42,6 @@ class ConfigurationServiceTest extends TestCase
                     'notify_url_expression' => '',
                     'psp_return_url_expression' => '',
                     'recipient' => '',
-                    'demo_mode' => false,
                     'payment_contracts' => [
                         'somecontract' => [
                             'service' => 'bla',
@@ -51,6 +50,7 @@ class ConfigurationServiceTest extends TestCase
                                     'identifier' => 'quux',
                                     'name' => 'somename',
                                     'image' => 'bar.svg',
+                                    'demo_mode' => false,
                                 ],
                             ],
                         ],

@@ -94,6 +94,9 @@ class ConfigurationService
                     if (array_key_exists('name', $paymentMethodConfig)) {
                         $paymentMethodConfig['name'] = $this->translator->trans($paymentMethodConfig['name']);
                     }
+                    if ($paymentMethodConfig['demo_mode']) {
+                        $paymentMethodConfig['name'] .= ' (DEMO)';
+                    }
                     if (array_key_exists('image', $paymentMethodConfig)) {
                         $paymentMethodConfig['image'] = $this->urlHelper->getAbsoluteUrl($paymentMethodConfig['image']);
                     }
@@ -104,6 +107,24 @@ class ConfigurationService
         }
 
         return $paymentMethods;
+    }
+
+    public function getPaymentMethodByTypeAndPaymentMethod(string $type, string $paymentMethod): ?PaymentMethod
+    {
+        if (array_key_exists($type, $this->config['payment_types'])) {
+            $paymentContractsConfig = $this->config['payment_types'][$type]['payment_contracts'];
+            foreach ($paymentContractsConfig as $paymentContractIdentifier => $paymentContractConfig) {
+                $paymentMethodsConfig = $paymentContractConfig['payment_methods'];
+                foreach ($paymentMethodsConfig as $paymentMethodConfig) {
+                    $paymentMethodObject = PaymentMethod::fromConfig($paymentMethodConfig);
+                    if ($paymentMethodObject->getIdentifier() === $paymentMethod) {
+                        return $paymentMethodObject;
+                    }
+                }
+            }
+        }
+
+        return null;
     }
 
     public function getPaymentContractByTypeAndPaymentMethod(string $type, string $paymentMethod): ?PaymentContract

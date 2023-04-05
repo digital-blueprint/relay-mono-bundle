@@ -201,18 +201,8 @@ class PaymentService implements LoggerAwareInterface
         }
 
         $payment = Payment::fromPaymentPersistence($paymentPersistence);
-        $this->adjustPaymentForDemoMode($paymentType, $payment);
 
         return $payment;
-    }
-
-    private function adjustPaymentForDemoMode(PaymentType $paymentType, Payment $payment)
-    {
-        // in case the demo mode is active we want to show this in the UI to the user somehow.
-        // the alternate name is usually shown to the user, so attach it there.
-        if ($paymentType->isDemoMode()) {
-            $payment->setAlternateName($payment->getAlternateName().' [DEMO MODE]');
-        }
     }
 
     public function getPaymentPersistenceByIdentifier(string $identifier): PaymentPersistence
@@ -258,13 +248,16 @@ class PaymentService implements LoggerAwareInterface
             }
 
             $type = $paymentPersistence->getType();
+            $method = $paymentPersistence->getPaymentMethod();
             $paymentType = $this->configurationService->getPaymentTypeByType($type);
 
             $backendService = $this->backendService->getByPaymentType($paymentType);
 
             $this->auditLogger->debug('Notifying backend service', $this->getLoggingContext($paymentPersistence));
 
-            if ($paymentType->isDemoMode()) {
+            $paymentMethod = $this->configurationService->getPaymentMethodByTypeAndPaymentMethod($type, $method);
+
+            if ($paymentMethod->isDemoMode()) {
                 $this->auditLogger->warning('Demo mode active, backend not notified.', $this->getLoggingContext($paymentPersistence));
                 $isNotified = true;
             } else {
@@ -342,7 +335,6 @@ class PaymentService implements LoggerAwareInterface
         $payment->setPaymentMethod($paymentMethod);
         $recipient = $paymentType->getRecipient();
         $payment->setRecipient($recipient);
-        $this->adjustPaymentForDemoMode($paymentType, $payment);
 
         // We give the backend service one last chance to change things, for example for translations
         $backendService->updateEntity($paymentPersistence, $payment);
