@@ -1,3 +1,7 @@
+# v0.3.1
+
+* config: demo_mode is now per method instead of per type
+
 # v0.3.0
 
 * New PaymentServiceProviderServiceInterface::getPaymentIdForPspData() which each PSP connector needs to implement.
