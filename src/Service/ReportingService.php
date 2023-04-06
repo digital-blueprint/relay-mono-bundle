@@ -58,7 +58,9 @@ class ReportingService implements LoggerAwareInterface
         $reportingConfig = $paymentType->getReportingConfig();
 
         $type = $paymentType->getIdentifier();
-        $createdSince = new \DateTimeImmutable($reportingConfig['created_begin']);
+        $now = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
+        $createdSince = $now->sub(new \DateInterval($reportingConfig['created_begin']));
+
         $count = $repo->countByTypeCreatedSince($type, $createdSince);
 
 //        if (count($count)) {
@@ -67,7 +69,7 @@ class ReportingService implements LoggerAwareInterface
             $context = [
                 'paymentType' => $paymentType,
                 'createdSince' => $createdSince,
-                'createdTo' => new \DateTimeImmutable(),
+                'createdTo' => $now,
                 'count' => $count,
             ];
 
@@ -89,7 +91,8 @@ class ReportingService implements LoggerAwareInterface
         $notifyErrorConfig = $paymentType->getNotifyErrorConfig();
 
         $type = $paymentType->getIdentifier();
-        $completedSince = new \DateTimeImmutable($notifyErrorConfig['completed_begin']);
+        $now = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
+        $completedSince = $now->sub(new \DateInterval($notifyErrorConfig['completed_begin']));
         $items = $repo->findUnnotifiedByTypeCompletedSince($type, $completedSince);
         $count = count($items);
 

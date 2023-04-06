@@ -60,7 +60,7 @@ class Kernel extends BaseKernel
                     'timeout_before' => '123',
                 ],
             ],
-            'payment_session_timeout' => 1234,
+            'payment_session_timeout' => 'PT1234S',
             'payment_types' => [
                 'sometype' => [
                     'service' => 'bla',

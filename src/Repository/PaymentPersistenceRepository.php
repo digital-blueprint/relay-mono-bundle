@@ -12,7 +12,7 @@ class PaymentPersistenceRepository extends EntityRepository
 {
     public function findOneActive($identifier): ?PaymentPersistence
     {
-        $now = new \DateTimeImmutable();
+        $now = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
         $qb = $this->createQueryBuilder('p')
             ->where('p.identifier = :identifier')
             ->andWhere('p.timeoutAt >= :timeoutAt')
@@ -31,7 +31,7 @@ class PaymentPersistenceRepository extends EntityRepository
 
     public function countConcurrent(): int
     {
-        $now = new \DateTimeImmutable();
+        $now = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
         $qb = $this->createQueryBuilder('p');
         $qb->select('count(p.identifier)')
             ->where('p.timeoutAt >= :timeoutAt')
@@ -49,7 +49,7 @@ class PaymentPersistenceRepository extends EntityRepository
 
     public function countAuthConcurrent(string $userIdentifier = null): int
     {
-        $now = new \DateTimeImmutable();
+        $now = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
         $qb = $this->createQueryBuilder('p')
             ->select('count(p.identifier)')
             ->where('p.timeoutAt >= :timeoutAt')
@@ -73,7 +73,7 @@ class PaymentPersistenceRepository extends EntityRepository
 
     public function countUnauthConcurrent(string $clientIp = null): int
     {
-        $now = new \DateTimeImmutable();
+        $now = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
         $qb = $this->createQueryBuilder('p')
             ->select('count(p.identifier)')
             ->where('p.timeoutAt >= :timeoutAt')

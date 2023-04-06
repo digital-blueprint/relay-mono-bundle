@@ -6,7 +6,7 @@ Created via `./bin/console config:dump-reference DbpRelayMonoBundle | sed '/^$/d
 # Default configuration for "DbpRelayMonoBundle"
 dbp_relay_mono:
   database_url:         '%env(resolve:DATABASE_URL)%' # Required
-  payment_session_timeout: 1800 # Required
+  payment_session_timeout: PT1800S # Required
   payment_types:        # Required
     # Prototype
     -
@@ -42,14 +42,14 @@ dbp_relay_mono:
         to:                   ~
         subject:              ~
         html_template:        emails/reporting.html.twig
-        completed_begin:      '-1 hour'
+        completed_begin:      P1D
       reporting:
         dsn:                  ~
         from:                 ~
         to:                   ~
         subject:              ~
         html_template:        emails/reporting.html.twig
-        created_begin:        '-1 day'
+        created_begin:        P1D
   cleanup:              # Required
     # Prototype
     -
@@ -59,7 +59,7 @@ dbp_relay_mono:
 
 * `database_url` - A DSN for a database. The database is used to store
   information regarding active payment processes.
-* `payment_session_timeout` - Time in seconds after which a created payment can
+* `payment_session_timeout` - Time after which a created payment can
   no longer be continued.
 * `payment_types` - A list of payment type configurations. A payment type is a
   combination of a payment client configuration and a payment service provider

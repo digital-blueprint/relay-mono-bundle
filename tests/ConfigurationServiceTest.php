@@ -23,10 +23,10 @@ class ConfigurationServiceTest extends TestCase
             'cleanup' => [
                 [
                     'payment_status' => 'started',
-                    'timeout_before' => '123',
+                    'timeout_before' => 'P1D',
                 ],
             ],
-            'payment_session_timeout' => 1234,
+            'payment_session_timeout' => 'PT1234S',
             'payment_types' => [
                 'sometype' => [
                     'identifier' => 'foo',
