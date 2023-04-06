@@ -151,37 +151,37 @@ class PaymentPersistence
     private $dataProtectionDeclarationUrl;
 
     /**
-     * @var \DateTime
+     * @var \DateTimeInterface
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $createdAt;
 
     /**
-     * @var \DateTime
+     * @var \DateTimeInterface
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $timeoutAt;
 
     /**
-     * @var \DateTime|null
+     * @var \DateTimeInterface|null
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $dataUpdatedAt;
 
     /**
-     * @var \DateTime|null
+     * @var \DateTimeInterface|null
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $startedAt;
 
     /**
-     * @var \DateTime|null
+     * @var \DateTimeInterface|null
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $completedAt;
 
     /**
-     * @var \DateTime|null
+     * @var \DateTimeInterface|null
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $notifiedAt;
@@ -468,72 +468,72 @@ class PaymentPersistence
         return $this;
     }
 
-    public function getCreatedAt(): \DateTime
+    public function getCreatedAt(): \DateTimeInterface
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTime $createdAt): self
+    public function setCreatedAt(\DateTimeInterface $createdAt): self
     {
         $this->createdAt = $createdAt;
 
         return $this;
     }
 
-    public function getTimeoutAt(): \DateTime
+    public function getTimeoutAt(): \DateTimeInterface
     {
         return $this->timeoutAt;
     }
 
-    public function setTimeoutAt(\DateTime $timeoutAt): self
+    public function setTimeoutAt(\DateTimeInterface $timeoutAt): self
     {
         $this->timeoutAt = $timeoutAt;
 
         return $this;
     }
 
-    public function getDataUpdatedAt(): ?\DateTime
+    public function getDataUpdatedAt(): ?\DateTimeInterface
     {
         return $this->dataUpdatedAt;
     }
 
-    public function setDataUpdatedAt(?\DateTime $dataUpdatedAt): self
+    public function setDataUpdatedAt(?\DateTimeInterface $dataUpdatedAt): self
     {
         $this->dataUpdatedAt = $dataUpdatedAt;
 
         return $this;
     }
 
-    public function getStartedAt(): ?\DateTime
+    public function getStartedAt(): ?\DateTimeInterface
     {
         return $this->startedAt;
     }
 
-    public function setStartedAt(?\DateTime $startedAt): self
+    public function setStartedAt(?\DateTimeInterface $startedAt): self
     {
         $this->startedAt = $startedAt;
 
         return $this;
     }
 
-    public function getCompletedAt(): ?\DateTime
+    public function getCompletedAt(): ?\DateTimeInterface
     {
         return $this->completedAt;
     }
 
-    public function setCompletedAt(?\DateTime $completedAt): self
+    public function setCompletedAt(?\DateTimeInterface $completedAt): self
     {
         $this->completedAt = $completedAt;
 
         return $this;
     }
 
-    public function getNotifiedAt(): ?\DateTime
+    public function getNotifiedAt(): ?\DateTimeInterface
     {
         return $this->notifiedAt;
     }
 
-    public function setNotifiedAt(?\DateTime $notifiedAt): self
+    public function setNotifiedAt(?\DateTimeInterface $notifiedAt): self
     {
         $this->notifiedAt = $notifiedAt;
 

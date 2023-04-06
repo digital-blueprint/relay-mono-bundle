@@ -179,7 +179,7 @@ class PaymentService implements LoggerAwareInterface
         $payment->setPaymentStatus(PaymentStatus::PREPARED);
 
         $paymentPersistence = PaymentPersistence::fromPayment($payment);
-        $createdAt = new \DateTime();
+        $createdAt = new \DateTimeImmutable();
         $paymentPersistence->setCreatedAt($createdAt);
         $paymentPersistence->setNumberOfUses(0);
         if ($paymentType->isAuthRequired()) {
@@ -188,9 +188,9 @@ class PaymentService implements LoggerAwareInterface
         $paymentPersistence->setDataProtectionDeclarationUrl($paymentType->getDataProtectionDeclarationUrl());
 
         $config = $this->configurationService->getConfig();
-        $timeoutAt = new \DateTime();
+        $timeoutAt = new \DateTimeImmutable();
         $timeout = $config['payment_session_timeout'];
-        $timeoutAt->modify('+'.(int) $timeout.' seconds');
+        $timeoutAt = $timeoutAt->modify('+'.(int) $timeout.' seconds');
         $paymentPersistence->setTimeoutAt($timeoutAt);
 
         try {
@@ -265,7 +265,7 @@ class PaymentService implements LoggerAwareInterface
             }
 
             if ($isNotified) {
-                $notifiedAt = new \DateTime();
+                $notifiedAt = new \DateTimeImmutable();
                 $paymentPersistence->setNotifiedAt($notifiedAt);
             }
 
@@ -291,7 +291,7 @@ class PaymentService implements LoggerAwareInterface
             throw ApiError::withDetails(Response::HTTP_FORBIDDEN, 'Payment client IP not allowed!', 'mono:payment-client-ip-not-allowed');
         }
 
-        $now = new \DateTime();
+        $now = new \DateTimeImmutable();
         if ($now >= $paymentPersistence->getTimeoutAt()) {
             throw ApiError::withDetails(Response::HTTP_GONE, 'Payment timeout exceeded!', 'mono:payment-timeout-exceeded');
         }
@@ -317,7 +317,7 @@ class PaymentService implements LoggerAwareInterface
         if ($paymentPersistence->getPaymentStatus() === PaymentStatus::PREPARED) {
             $isDataUpdated = $backendService->updateData($paymentPersistence);
             if ($isDataUpdated) {
-                $dataUpdatedAt = new \DateTime();
+                $dataUpdatedAt = new \DateTimeImmutable();
                 $paymentPersistence->setDataUpdatedAt($dataUpdatedAt);
             }
 
@@ -361,7 +361,7 @@ class PaymentService implements LoggerAwareInterface
             throw ApiError::withDetails(Response::HTTP_TOO_MANY_REQUESTS, 'Start payment too many requests!', 'mono:start-payment-too-many-requests');
         }
 
-        $now = new \DateTime();
+        $now = new \DateTimeImmutable();
         if ($now >= $paymentPersistence->getTimeoutAt()) {
             throw ApiError::withDetails(Response::HTTP_GONE, 'Start payment timeout exceeded!', 'mono:start-payment-timeout-exceeded');
         }
@@ -400,12 +400,12 @@ class PaymentService implements LoggerAwareInterface
         $paymentPersistence->setPaymentStatus(PaymentStatus::STARTED);
 
         $config = $this->configurationService->getConfig();
-        $timeoutAt = new \DateTime();
+        $timeoutAt = new \DateTimeImmutable();
         $timeout = $config['payment_session_timeout'];
-        $timeoutAt->modify('+'.(int) $timeout.' seconds');
+        $timeoutAt = $timeoutAt->modify('+'.(int) $timeout.' seconds');
         $paymentPersistence->setTimeoutAt($timeoutAt);
 
-        $startedAt = new \DateTime();
+        $startedAt = new \DateTimeImmutable();
         $paymentPersistence->setStartedAt($startedAt);
 
         try {
@@ -480,7 +480,7 @@ class PaymentService implements LoggerAwareInterface
         $cleanupConfigs = $this->configurationService->getCleanupConfiguration();
         foreach ($cleanupConfigs as $cleanupConfig) {
             $paymentStatus = $cleanupConfig['payment_status'];
-            $timeoutBefore = new \DateTime($cleanupConfig['timeout_before']);
+            $timeoutBefore = new \DateTimeImmutable($cleanupConfig['timeout_before']);
             $paymentPersistences = $repo->findByPaymentStatusTimeoutBefore($paymentStatus, $timeoutBefore);
             foreach ($paymentPersistences as $paymentPersistence) {
                 $type = $paymentPersistence->getType();
@@ -530,7 +530,7 @@ class PaymentService implements LoggerAwareInterface
         $notifyErrorConfig = $paymentType->getNotifyErrorConfig();
 
         $type = $paymentType->getIdentifier();
-        $completedSince = new \DateTime($notifyErrorConfig['completed_begin']);
+        $completedSince = new \DateTimeImmutable($notifyErrorConfig['completed_begin']);
         $items = $repo->findUnnotifiedByTypeCompletedSince($type, $completedSince);
         $count = count($items);
 
@@ -566,7 +566,7 @@ class PaymentService implements LoggerAwareInterface
         $reportingConfig = $paymentType->getReportingConfig();
 
         $type = $paymentType->getIdentifier();
-        $createdSince = new \DateTime($reportingConfig['created_begin']);
+        $createdSince = new \DateTimeImmutable($reportingConfig['created_begin']);
         $count = $repo->countByTypeCreatedSince($type, $createdSince);
 
 //        if (count($count)) {
@@ -575,7 +575,7 @@ class PaymentService implements LoggerAwareInterface
             $context = [
                 'paymentType' => $paymentType,
                 'createdSince' => $createdSince,
-                'createdTo' => new \DateTime(),
+                'createdTo' => new \DateTimeImmutable(),
                 'count' => $count,
             ];
 

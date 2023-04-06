@@ -12,7 +12,7 @@ class PaymentPersistenceRepository extends EntityRepository
 {
     public function findOneActive($identifier): ?PaymentPersistence
     {
-        $now = new \DateTime();
+        $now = new \DateTimeImmutable();
         $qb = $this->createQueryBuilder('p')
             ->where('p.identifier = :identifier')
             ->andWhere('p.timeoutAt >= :timeoutAt')
@@ -31,7 +31,7 @@ class PaymentPersistenceRepository extends EntityRepository
 
     public function findOneActiveBy(array $criteria): ?PaymentPersistence
     {
-        $now = new \DateTime();
+        $now = new \DateTimeImmutable();
         $parameters = array_merge($criteria, [
             'timeoutAt' => $now,
         ]);
@@ -55,7 +55,7 @@ class PaymentPersistenceRepository extends EntityRepository
 
     public function countConcurrent(): int
     {
-        $now = new \DateTime();
+        $now = new \DateTimeImmutable();
         $qb = $this->createQueryBuilder('p');
         $qb->select('count(p.identifier)')
             ->where('p.timeoutAt >= :timeoutAt')
@@ -73,7 +73,7 @@ class PaymentPersistenceRepository extends EntityRepository
 
     public function countAuthConcurrent(string $userIdentifier = null): int
     {
-        $now = new \DateTime();
+        $now = new \DateTimeImmutable();
         $qb = $this->createQueryBuilder('p')
             ->select('count(p.identifier)')
             ->where('p.timeoutAt >= :timeoutAt')
@@ -97,7 +97,7 @@ class PaymentPersistenceRepository extends EntityRepository
 
     public function countUnauthConcurrent(string $clientIp = null): int
     {
-        $now = new \DateTime();
+        $now = new \DateTimeImmutable();
         $qb = $this->createQueryBuilder('p')
             ->select('count(p.identifier)')
             ->where('p.timeoutAt >= :timeoutAt')
@@ -139,7 +139,7 @@ class PaymentPersistenceRepository extends EntityRepository
         return $items;
     }
 
-    public function findUnnotifiedByTypeCompletedSince($type, \DateTime $completedSince)
+    public function findUnnotifiedByTypeCompletedSince($type, \DateTimeInterface $completedSince)
     {
         $parameters = [
             'type' => $type,
@@ -163,7 +163,7 @@ class PaymentPersistenceRepository extends EntityRepository
     /**
      * @return PaymentPersistence[]
      */
-    public function findByPaymentStatusTimeoutBefore(string $paymentStatus, \DateTime $timeoutBefore): array
+    public function findByPaymentStatusTimeoutBefore(string $paymentStatus, \DateTimeInterface $timeoutBefore): array
     {
         $parameters = [
             'paymentStatus' => $paymentStatus,
@@ -184,7 +184,7 @@ class PaymentPersistenceRepository extends EntityRepository
     /**
      * @return int[]
      */
-    public function countByTypeCreatedSince(string $type, \DateTime $createdSince): array
+    public function countByTypeCreatedSince(string $type, \DateTimeInterface $createdSince): array
     {
         $parameters = [
             'type' => $type,
