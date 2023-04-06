@@ -6,19 +6,19 @@ namespace Dbp\Relay\MonoBundle\Cron;
 
 use Dbp\Relay\CoreBundle\Cron\CronJobInterface;
 use Dbp\Relay\CoreBundle\Cron\CronOptions;
-use Dbp\Relay\MonoBundle\Service\PaymentService;
+use Dbp\Relay\MonoBundle\Service\ReportingService;
 
 class ReportingCronJob implements CronJobInterface
 {
     /**
-     * @var PaymentService
+     * @var ReportingService
      */
-    private $paymentService;
+    private $reportingService;
 
     public function __construct(
-        PaymentService $paymentService
+        ReportingService $reportingService
     ) {
-        $this->paymentService = $paymentService;
+        $this->reportingService = $reportingService;
     }
 
     public function getName(): string
@@ -33,6 +33,6 @@ class ReportingCronJob implements CronJobInterface
 
     public function run(CronOptions $options): void
     {
-        $this->paymentService->sendAllReporting();
+        $this->reportingService->sendAllReporting();
     }
 }

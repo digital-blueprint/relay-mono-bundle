@@ -7,7 +7,7 @@ namespace Dbp\Relay\MonoBundle\Cron;
 use Dbp\Relay\CoreBundle\Cron\CronJobInterface;
 use Dbp\Relay\CoreBundle\Cron\CronOptions;
 use Dbp\Relay\MonoBundle\Service\ConfigurationService;
-use Dbp\Relay\MonoBundle\Service\PaymentService;
+use Dbp\Relay\MonoBundle\Service\ReportingService;
 
 class NotifyErrorCronJob implements CronJobInterface
 {
@@ -15,18 +15,17 @@ class NotifyErrorCronJob implements CronJobInterface
      * @var ConfigurationService
      */
     private $configurationService;
-
     /**
-     * @var PaymentService
+     * @var ReportingService
      */
-    private $paymentService;
+    private $reportingService;
 
     public function __construct(
         ConfigurationService $configurationService,
-        PaymentService $paymentService
+        ReportingService $reportingService
     ) {
         $this->configurationService = $configurationService;
-        $this->paymentService = $paymentService;
+        $this->reportingService = $reportingService;
     }
 
     public function getName(): string
@@ -44,7 +43,7 @@ class NotifyErrorCronJob implements CronJobInterface
         $paymentTypes = $this->configurationService->getPaymentTypes();
         foreach ($paymentTypes as $paymentType) {
             if ($paymentType->getNotifyErrorConfig()) {
-                $this->paymentService->sendNotifyError($paymentType);
+                $this->reportingService->sendNotifyError($paymentType);
             }
         }
     }

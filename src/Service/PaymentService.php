@@ -9,7 +9,6 @@ use Dbp\Relay\CoreBundle\Exception\ApiError;
 use Dbp\Relay\MonoBundle\Entity\Payment;
 use Dbp\Relay\MonoBundle\Entity\PaymentPersistence;
 use Dbp\Relay\MonoBundle\Entity\PaymentStatus;
-use Dbp\Relay\MonoBundle\Entity\PaymentType;
 use Dbp\Relay\MonoBundle\Entity\StartPayAction;
 use Dbp\Relay\MonoBundle\PaymentServiceProvider\CompleteResponseInterface;
 use Dbp\Relay\MonoBundle\PaymentServiceProvider\StartResponseInterface;
@@ -24,12 +23,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Lock\LockFactory;
 use Symfony\Component\Lock\LockInterface;
-use Symfony\Component\Mailer\Mailer;
-use Symfony\Component\Mailer\Transport;
-use Symfony\Component\Mime\Email;
 use Symfony\Component\Uid\Uuid;
-use Twig\Environment;
-use Twig\Loader\FilesystemLoader;
 
 class PaymentService implements LoggerAwareInterface
 {
@@ -518,93 +512,5 @@ class PaymentService implements LoggerAwareInterface
             }
         }
         $this->em->flush();
-    }
-
-    public function sendNotifyError(PaymentType $paymentType)
-    {
-        $repo = $this->em->getRepository(PaymentPersistence::class);
-        assert($repo instanceof PaymentPersistenceRepository);
-
-        $this->logger->debug('Send notify error for: '.$paymentType->getIdentifier());
-
-        $notifyErrorConfig = $paymentType->getNotifyErrorConfig();
-
-        $type = $paymentType->getIdentifier();
-        $completedSince = new \DateTimeImmutable($notifyErrorConfig['completed_begin']);
-        $items = $repo->findUnnotifiedByTypeCompletedSince($type, $completedSince);
-        $count = count($items);
-
-        if ($count) {
-            $context = [
-                'paymentType' => $paymentType,
-                'items' => $items,
-                'count' => $count,
-            ];
-
-            $this->sendEmail($notifyErrorConfig, $context);
-        }
-    }
-
-    public function sendAllReporting(string $email = '')
-    {
-        $paymentTypes = $this->configurationService->getPaymentTypes();
-
-        foreach ($paymentTypes as $paymentType) {
-            if ($paymentType->getReportingConfig()) {
-                $this->sendReporting($paymentType, $email);
-            }
-        }
-    }
-
-    public function sendReporting(PaymentType $paymentType, string $email = '')
-    {
-        $repo = $this->em->getRepository(PaymentPersistence::class);
-        assert($repo instanceof PaymentPersistenceRepository);
-
-        $this->logger->debug('Send reporting for: '.$paymentType->getIdentifier());
-
-        $reportingConfig = $paymentType->getReportingConfig();
-
-        $type = $paymentType->getIdentifier();
-        $createdSince = new \DateTimeImmutable($reportingConfig['created_begin']);
-        $count = $repo->countByTypeCreatedSince($type, $createdSince);
-
-//        if (count($count)) {
-        // We want a report every day, even if there are no payments
-        if (true) {
-            $context = [
-                'paymentType' => $paymentType,
-                'createdSince' => $createdSince,
-                'createdTo' => new \DateTimeImmutable(),
-                'count' => $count,
-            ];
-
-            if ($email !== '') {
-                $reportingConfig['to'] = $email;
-            }
-
-            $this->sendEmail($reportingConfig, $context);
-        }
-    }
-
-    private function sendEmail(array $config, array $context)
-    {
-        $loader = new FilesystemLoader(dirname(__FILE__).'/../Resources/views/');
-        $twig = new Environment($loader);
-
-        $template = $twig->load($config['html_template']);
-        $html = $template->render($context);
-
-        $transport = Transport::fromDsn($config['dsn']);
-        $mailer = new Mailer($transport);
-
-        $email = (new Email())
-            ->from($config['from'])
-            ->to($config['to'])
-            ->subject($config['subject'])
-            ->html($html);
-
-        $this->logger->debug('Sending email to: '.$config['to']);
-        $mailer->send($email);
     }
 }

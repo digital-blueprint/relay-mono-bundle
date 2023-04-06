@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Dbp\Relay\MonoBundle\Command;
 
-use Dbp\Relay\MonoBundle\Service\PaymentService;
+use Dbp\Relay\MonoBundle\Service\ReportingService;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -13,18 +13,17 @@ use Symfony\Component\Console\Output\OutputInterface;
 class ReportingCommand extends Command
 {
     protected static $defaultName = 'dbp:relay-mono:reporting';
-
     /**
-     * @var PaymentService
+     * @var ReportingService
      */
-    private $paymentService;
+    private $reportingService;
 
     public function __construct(
-        PaymentService $paymentService
+        ReportingService $reportingService
     ) {
         parent::__construct();
 
-        $this->paymentService = $paymentService;
+        $this->reportingService = $reportingService;
     }
 
     /**
@@ -47,7 +46,7 @@ class ReportingCommand extends Command
 
         $output->writeln('Send reporting mail...');
 
-        $this->paymentService->sendAllReporting($email);
+        $this->reportingService->sendAllReporting($email);
 
         return 0;
     }

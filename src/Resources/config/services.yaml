@@ -40,6 +40,12 @@ services:
       $em: '@doctrine.orm.dbp_relay_mono_bundle_entity_manager'
       $auditLogger: '@monolog.logger.dbp_relay_mono_audit'
 
+  Dbp\Relay\MonoBundle\Service\ReportingService:
+    autowire: true
+    autoconfigure: true
+    arguments:
+      $em: '@doctrine.orm.dbp_relay_mono_bundle_entity_manager'
+
   Dbp\Relay\MonoBundle\Service\PaymentServiceProviderService:
     autowire: true
     autoconfigure: true
