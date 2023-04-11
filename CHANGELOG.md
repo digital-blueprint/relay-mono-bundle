@@ -1,3 +1,7 @@
+# v0.3.2
+
+* All duration based config entries like `payment_session_timeout`, `completed_begin`, `created_begin` and `timeout_before` are now in the ISO 8601 duration format.
+
 # v0.3.1
 
 * config: demo_mode is now per method instead of per type
