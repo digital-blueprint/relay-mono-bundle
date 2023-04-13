@@ -354,6 +354,11 @@ class PaymentService implements LoggerAwareInterface
             throw ApiError::withDetails(Response::HTTP_TOO_MANY_REQUESTS, 'Start payment too many requests!', 'mono:start-payment-too-many-requests');
         }
 
+        $status = $paymentPersistence->getPaymentStatus();
+        if (!in_array($status, [PaymentStatus::PREPARED, PaymentStatus::STARTED, PaymentStatus::CANCELLED, PaymentStatus::FAILED], true)) {
+            throw new ApiError(Response::HTTP_BAD_REQUEST, "Can't (re)start payment with status: ".$status);
+        }
+
         $now = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
         if ($now >= $paymentPersistence->getTimeoutAt()) {
             throw ApiError::withDetails(Response::HTTP_GONE, 'Start payment timeout exceeded!', 'mono:start-payment-timeout-exceeded');
