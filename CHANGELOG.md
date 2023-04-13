@@ -1,3 +1,7 @@
+# v0.3.3
+
+* Don't allow payment restarts if the payment is pending or completed.
+
 # v0.3.2
 
 * All duration based config entries like `payment_session_timeout`, `completed_begin`, `created_begin` and `timeout_before` are now in the ISO 8601 duration format.
