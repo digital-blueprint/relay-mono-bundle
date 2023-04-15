@@ -20,7 +20,7 @@
         "phpstan/phpstan": "^1.8.7",
         "phpstan/phpstan-phpunit": "^1.1.1",
         "phpstan/phpstan-symfony": "^1.2.14",
-        "phpunit/phpunit": "^9.5.25",
+        "phpunit/phpunit": "^10.0.0",
         "symfony/browser-kit": "^5.4.11",
         "symfony/http-client": "^5.4.13",
         "symfony/monolog-bundle": "^3.8",
