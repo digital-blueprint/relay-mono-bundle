@@ -1,5 +1,5 @@
 dbp_relay_mono:
-  credit_card: Credit card
+  credit_card: Debit card or credit card
   apple_pay: Apple Pay
   google_pay: Google Pay
   sofortueberweisung: Pay now
