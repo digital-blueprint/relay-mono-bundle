@@ -1,3 +1,7 @@
+# v0.3.4
+
+* Minor translation changes
+
 # v0.3.3
 
 * Don't allow payment restarts if the payment is pending or completed.
