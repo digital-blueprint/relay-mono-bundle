@@ -42,3 +42,4 @@ respective bundle documentation.
 
 * [Logging](./logging.md)
 * [Configuration](./config.md)
+* [Miscellaneous](./misc.md)
