@@ -1,3 +1,7 @@
+# v0.3.5
+
+* Update to api-platform v2.7
+
 # v0.3.4
 
 * Minor translation changes
