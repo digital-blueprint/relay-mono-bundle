@@ -22,13 +22,13 @@ the HTTP API.
 
 We currently provide the following PC connectors:
 
-* [CAMPUSOnline Connector](../mono-connector-campusonline): For paying tuition fees
-* [Generic Connector](../mono-connector-generic): For other services which
+* [CAMPUSOnline Connector](../mono-connector-campusonline/index.md): For paying tuition fees
+* [Generic Connector](../mono-connector-generic/index.md): For other services which
   implement the generic interface
 
 We currently provide the following PSP connectors:
 
-* [PayUnity Connector](../mono-connector-payunity): For processing the payment
+* [PayUnity Connector](../mono-connector-payunity/index.md): For processing the payment
   via https://www.payunity.com
 
 You can find more information about each specific client connector in their
