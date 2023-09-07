@@ -36,7 +36,7 @@ class NotifyCronJob implements CronJobInterface
         $paymentPersistences = $this->paymentService->getUnnotified();
 
         foreach ($paymentPersistences as $paymentPersistence) {
-            $this->paymentService->notify($paymentPersistence);
+            $this->paymentService->notifyIfCompleted($paymentPersistence);
         }
     }
 }

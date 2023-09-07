@@ -224,7 +224,7 @@ class PaymentService implements LoggerAwareInterface
         return $paymentPersistences;
     }
 
-    public function notify(PaymentPersistence $paymentPersistence)
+    public function notifyIfCompleted(PaymentPersistence $paymentPersistence)
     {
         // Only notify if the payment is completed
         if ($paymentPersistence->getPaymentStatus() !== PaymentStatus::COMPLETED) {
@@ -461,7 +461,7 @@ class PaymentService implements LoggerAwareInterface
             throw new ApiError(Response::HTTP_INTERNAL_SERVER_ERROR, 'Payment could not be updated!');
         }
 
-        $this->notify($paymentPersistence);
+        $this->notifyIfCompleted($paymentPersistence);
 
         return $completeResponse;
     }
