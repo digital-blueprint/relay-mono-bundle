@@ -443,7 +443,7 @@ class PaymentService implements LoggerAwareInterface
     ): CompleteResponseInterface {
         $paymentPersistence = $this->getPaymentPersistenceByIdentifier($identifier);
 
-        $this->auditLogger->debug('Completing payment', $this->getLoggingContext($paymentPersistence));
+        $this->auditLogger->debug('Trying to complete payment', $this->getLoggingContext($paymentPersistence));
 
         $type = $paymentPersistence->getType();
 
