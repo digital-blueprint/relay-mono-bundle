@@ -29,7 +29,7 @@ services:
     autowire: true
     autoconfigure: true
 
-  Dbp\Relay\MonoBundle\Service\BackendService:
+  Dbp\Relay\MonoBundle\BackendServiceProvider\BackendService:
     autowire: true
     autoconfigure: true
 
@@ -50,7 +50,7 @@ services:
     arguments:
       $em: '@doctrine.orm.dbp_relay_mono_bundle_entity_manager'
 
-  Dbp\Relay\MonoBundle\Service\PaymentServiceProviderService:
+  Dbp\Relay\MonoBundle\PaymentServiceProvider\PaymentServiceProviderService:
     autowire: true
     autoconfigure: true
 

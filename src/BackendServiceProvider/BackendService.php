@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Dbp\Relay\MonoBundle\Service;
+namespace Dbp\Relay\MonoBundle\BackendServiceProvider;
 
-use Dbp\Relay\MonoBundle\Config\PaymentContract;
+use Dbp\Relay\MonoBundle\Config\PaymentType;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class PaymentServiceProviderService
+class BackendService
 {
     /**
      * @var ContainerInterface
@@ -20,12 +20,12 @@ class PaymentServiceProviderService
         $this->container = $container;
     }
 
-    public function getByPaymentContract(PaymentContract $paymentContract): PaymentServiceProviderServiceInterface
+    public function getByPaymentType(PaymentType $paymentType): BackendServiceInterface
     {
-        $service = $paymentContract->getService();
+        $service = $paymentType->getService();
 
         $backend = $this->container->get($service);
-        assert($backend instanceof PaymentServiceProviderServiceInterface);
+        assert($backend instanceof BackendServiceInterface);
 
         return $backend;
     }

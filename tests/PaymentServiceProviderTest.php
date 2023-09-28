@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Dbp\Relay\MonoBundle\Tests;
 
 use Dbp\Relay\MonoBundle\Config\PaymentContract;
-use Dbp\Relay\MonoBundle\Service\PaymentServiceProviderService;
+use Dbp\Relay\MonoBundle\PaymentServiceProvider\PaymentServiceProviderService;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class PaymentServiceProviderTest extends KernelTestCase

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Dbp\Relay\MonoBundle\Service;
+namespace Dbp\Relay\MonoBundle\BackendServiceProvider;
 
 use Dbp\Relay\MonoBundle\Entity\Payment;
 use Dbp\Relay\MonoBundle\Persistence\PaymentPersistence;

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Dbp\Relay\MonoBundle\Tests;
 
+use Dbp\Relay\MonoBundle\BackendServiceProvider\BackendService;
 use Dbp\Relay\MonoBundle\Config\PaymentType;
-use Dbp\Relay\MonoBundle\Service\BackendService;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class BackendServiceTest extends KernelTestCase
