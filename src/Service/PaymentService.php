@@ -353,10 +353,6 @@ class PaymentService implements LoggerAwareInterface
             throw ApiError::withDetails(Response::HTTP_FORBIDDEN, 'Start payment client IP not allowed!', 'mono:start-payment-client-ip-not-allowed');
         }
 
-        if (!$startPayAction->isRestart() && $paymentPersistence->getStartedAt()) {
-            throw ApiError::withDetails(Response::HTTP_TOO_MANY_REQUESTS, 'Start payment too many requests!', 'mono:start-payment-too-many-requests');
-        }
-
         $status = $paymentPersistence->getPaymentStatus();
         if (!in_array($status, [PaymentStatus::PREPARED, PaymentStatus::STARTED, PaymentStatus::FAILED], true)) {
             throw new ApiError(Response::HTTP_BAD_REQUEST, "Can't (re)start payment with status: ".$status);
