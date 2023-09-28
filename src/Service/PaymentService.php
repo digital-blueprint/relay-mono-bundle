@@ -178,7 +178,6 @@ class PaymentService implements LoggerAwareInterface
         $now = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
         $paymentPersistence = PaymentPersistence::fromPayment($payment);
         $paymentPersistence->setCreatedAt($now);
-        $paymentPersistence->setNumberOfUses(0);
         if ($paymentType->isAuthRequired()) {
             $paymentPersistence->setUserIdentifier($userIdentifier);
         }
