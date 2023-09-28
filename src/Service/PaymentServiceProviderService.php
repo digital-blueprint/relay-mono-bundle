@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Dbp\Relay\MonoBundle\Service;
 
-use Dbp\Relay\MonoBundle\Entity\PaymentContract;
+use Dbp\Relay\MonoBundle\Config\PaymentContract;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class PaymentServiceProviderService

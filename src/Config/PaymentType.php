@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Dbp\Relay\MonoBundle\Entity;
+namespace Dbp\Relay\MonoBundle\Config;
 
 class PaymentType
 {

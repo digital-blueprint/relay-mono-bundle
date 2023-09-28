@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Dbp\Relay\MonoBundle\Tests;
 
-use Dbp\Relay\MonoBundle\Service\ConfigurationService;
+use Dbp\Relay\MonoBundle\Config\ConfigurationService;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\UrlHelper;

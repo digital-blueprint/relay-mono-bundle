@@ -29,7 +29,7 @@ services:
     autowire: true
     autoconfigure: true
 
-  Dbp\Relay\MonoBundle\Service\ConfigurationService:
+  Dbp\Relay\MonoBundle\Config\ConfigurationService:
     autowire: true
     autoconfigure: true
 

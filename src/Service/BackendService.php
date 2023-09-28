@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Dbp\Relay\MonoBundle\Service;
 
-use Dbp\Relay\MonoBundle\Entity\PaymentType;
+use Dbp\Relay\MonoBundle\Config\PaymentType;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class BackendService

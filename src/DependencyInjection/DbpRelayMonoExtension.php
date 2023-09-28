@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Dbp\Relay\MonoBundle\DependencyInjection;
 
 use Dbp\Relay\CoreBundle\Extension\ExtensionTrait;
-use Dbp\Relay\MonoBundle\Service\ConfigurationService;
+use Dbp\Relay\MonoBundle\Config\ConfigurationService;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;

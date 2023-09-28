@@ -2,11 +2,8 @@
 
 declare(strict_types=1);
 
-namespace Dbp\Relay\MonoBundle\Service;
+namespace Dbp\Relay\MonoBundle\Config;
 
-use Dbp\Relay\MonoBundle\Entity\PaymentContract;
-use Dbp\Relay\MonoBundle\Entity\PaymentMethod;
-use Dbp\Relay\MonoBundle\Entity\PaymentType;
 use Symfony\Component\HttpFoundation\UrlHelper;
 use Symfony\Contracts\Translation\TranslatorInterface;
 

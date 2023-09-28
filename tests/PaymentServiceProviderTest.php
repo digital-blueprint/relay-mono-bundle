@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Dbp\Relay\MonoBundle\Tests;
 
-use Dbp\Relay\MonoBundle\Entity\PaymentContract;
+use Dbp\Relay\MonoBundle\Config\PaymentContract;
 use Dbp\Relay\MonoBundle\Service\PaymentServiceProviderService;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
