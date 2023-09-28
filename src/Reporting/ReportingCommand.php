@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-namespace Dbp\Relay\MonoBundle\Command;
+namespace Dbp\Relay\MonoBundle\Reporting;
 
-use Dbp\Relay\MonoBundle\Service\ReportingService;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;

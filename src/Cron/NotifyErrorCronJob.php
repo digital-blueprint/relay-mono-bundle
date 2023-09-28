@@ -7,7 +7,7 @@ namespace Dbp\Relay\MonoBundle\Cron;
 use Dbp\Relay\CoreBundle\Cron\CronJobInterface;
 use Dbp\Relay\CoreBundle\Cron\CronOptions;
 use Dbp\Relay\MonoBundle\Config\ConfigurationService;
-use Dbp\Relay\MonoBundle\Service\ReportingService;
+use Dbp\Relay\MonoBundle\Reporting\ReportingService;
 
 class NotifyErrorCronJob implements CronJobInterface
 {

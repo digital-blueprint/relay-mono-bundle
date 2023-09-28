@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Dbp\Relay\MonoBundle\Service;
+namespace Dbp\Relay\MonoBundle\Reporting;
 
 use Dbp\Relay\MonoBundle\Config\ConfigurationService;
 use Dbp\Relay\MonoBundle\Config\PaymentType;
-use Dbp\Relay\MonoBundle\Entity\PaymentPersistence;
-use Dbp\Relay\MonoBundle\Repository\PaymentPersistenceRepository;
+use Dbp\Relay\MonoBundle\Persistence\PaymentPersistence;
+use Dbp\Relay\MonoBundle\Persistence\PaymentPersistenceRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;

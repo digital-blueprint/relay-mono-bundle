@@ -2,12 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Dbp\Relay\MonoBundle\Entity;
+namespace Dbp\Relay\MonoBundle\Persistence;
 
+use Dbp\Relay\MonoBundle\Entity\Payment;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="Dbp\Relay\MonoBundle\Repository\PaymentPersistenceRepository")
+ * @ORM\Entity(repositoryClass="Dbp\Relay\MonoBundle\Persistence\PaymentPersistenceRepository")
  * @ORM\Table(name="mono_payments")
  */
 class PaymentPersistence

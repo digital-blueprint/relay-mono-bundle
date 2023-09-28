@@ -2,10 +2,8 @@
 
 declare(strict_types=1);
 
-namespace Dbp\Relay\MonoBundle\Repository;
+namespace Dbp\Relay\MonoBundle\Persistence;
 
-use Dbp\Relay\MonoBundle\Entity\PaymentPersistence;
-use Dbp\Relay\MonoBundle\Entity\PaymentStatus;
 use Doctrine\ORM\EntityRepository;
 
 class PaymentPersistenceRepository extends EntityRepository

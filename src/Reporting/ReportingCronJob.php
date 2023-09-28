@@ -2,11 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Dbp\Relay\MonoBundle\Cron;
+namespace Dbp\Relay\MonoBundle\Reporting;
 
 use Dbp\Relay\CoreBundle\Cron\CronJobInterface;
 use Dbp\Relay\CoreBundle\Cron\CronOptions;
-use Dbp\Relay\MonoBundle\Service\ReportingService;
 
 class ReportingCronJob implements CronJobInterface
 {

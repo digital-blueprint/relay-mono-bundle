@@ -2,10 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Dbp\Relay\MonoBundle\DataPersister;
+namespace Dbp\Relay\MonoBundle\ApiPlatforma;
 
 use ApiPlatform\Core\DataPersister\ContextAwareDataPersisterInterface;
-use Dbp\Relay\MonoBundle\Entity\CompletePayAction;
 use Dbp\Relay\MonoBundle\Service\PaymentService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 

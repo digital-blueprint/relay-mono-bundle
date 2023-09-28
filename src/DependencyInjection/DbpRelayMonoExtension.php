@@ -59,8 +59,8 @@ class DbpRelayMonoExtension extends ConfigurableExtension implements PrependExte
                         'mappings' => [
                             'dbp_relay_mono' => [
                                 'type' => 'annotation',
-                                'dir' => __DIR__.'/../Entity',
-                                'prefix' => 'Dbp\Relay\MonoBundle\Entity',
+                                'dir' => __DIR__.'/../Persistence',
+                                'prefix' => 'Dbp\Relay\MonoBundle\Persistence',
                             ],
                         ],
                     ],

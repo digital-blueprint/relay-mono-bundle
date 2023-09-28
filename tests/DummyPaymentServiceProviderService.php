@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Dbp\Relay\MonoBundle\Tests;
 
-use Dbp\Relay\MonoBundle\Entity\PaymentPersistence;
 use Dbp\Relay\MonoBundle\PaymentServiceProvider\CompleteResponse;
 use Dbp\Relay\MonoBundle\PaymentServiceProvider\CompleteResponseInterface;
 use Dbp\Relay\MonoBundle\PaymentServiceProvider\StartResponse;
 use Dbp\Relay\MonoBundle\PaymentServiceProvider\StartResponseInterface;
+use Dbp\Relay\MonoBundle\Persistence\PaymentPersistence;
 use Dbp\Relay\MonoBundle\Service\PaymentServiceProviderServiceInterface;
 
 class DummyPaymentServiceProviderService implements PaymentServiceProviderServiceInterface

@@ -2,10 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Dbp\Relay\MonoBundle\Entity;
+namespace Dbp\Relay\MonoBundle\ApiPlatforma;
 
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Dbp\Relay\MonoBundle\Persistence\PaymentPersistence;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**

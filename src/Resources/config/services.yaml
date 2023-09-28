@@ -11,7 +11,11 @@ services:
     autowire: true
     autoconfigure: true
 
-  Dbp\Relay\MonoBundle\Cron\ReportingCronJob:
+  Dbp\Relay\MonoBundle\Reporting\ReportingCronJob:
+    autowire: true
+    autoconfigure: true
+
+  Dbp\Relay\MonoBundle\Reporting\ReportingCommand:
     autowire: true
     autoconfigure: true
 
@@ -40,7 +44,7 @@ services:
       $em: '@doctrine.orm.dbp_relay_mono_bundle_entity_manager'
       $auditLogger: '@monolog.logger.dbp_relay_mono_audit'
 
-  Dbp\Relay\MonoBundle\Service\ReportingService:
+  Dbp\Relay\MonoBundle\Reporting\ReportingService:
     autowire: true
     autoconfigure: true
     arguments:
@@ -51,10 +55,5 @@ services:
     autoconfigure: true
 
   Dbp\Relay\MonoBundle\Service\HealthCheck:
-    autowire: true
-    autoconfigure: true
-
-  Dbp\Relay\MonoBundle\Command\:
-    resource: '../../Command'
     autowire: true
     autoconfigure: true

@@ -2,11 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Dbp\Relay\MonoBundle\DataProvider;
+namespace Dbp\Relay\MonoBundle\ApiPlatforma;
 
 use ApiPlatform\Core\DataProvider\ItemDataProviderInterface;
 use ApiPlatform\Core\DataProvider\RestrictedDataProviderInterface;
-use Dbp\Relay\MonoBundle\Entity\Payment;
 use Dbp\Relay\MonoBundle\Service\PaymentService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
