@@ -24,12 +24,6 @@ class PaymentStatus
     public const PENDING = 'pending';
 
     /**
-     * After the user cancelled the payment process, if it is possible to know that.
-     * After this the status no longer changes.
-     */
-    public const CANCELLED = 'cancelled';
-
-    /**
      * After the payment failed for some other reason, or if the reason is unknown.
      * After this the status no longer changes.
      */

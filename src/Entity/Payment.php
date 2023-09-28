@@ -58,11 +58,6 @@ class Payment
     /**
      * @deprecated
      */
-    public const PAYMENT_STATUS_CANCELLED = PaymentStatus::CANCELLED;
-
-    /**
-     * @deprecated
-     */
     public const PAYMENT_STATUS_FAILED = PaymentStatus::FAILED;
 
     /**
