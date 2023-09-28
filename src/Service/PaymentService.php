@@ -6,10 +6,10 @@ namespace Dbp\Relay\MonoBundle\Service;
 
 use Dbp\Relay\CoreBundle\API\UserSessionInterface;
 use Dbp\Relay\CoreBundle\Exception\ApiError;
+use Dbp\Relay\MonoBundle\ApiPlatform\Payment;
+use Dbp\Relay\MonoBundle\ApiPlatform\StartPayAction;
 use Dbp\Relay\MonoBundle\BackendServiceProvider\BackendService;
 use Dbp\Relay\MonoBundle\Config\ConfigurationService;
-use Dbp\Relay\MonoBundle\Entity\Payment;
-use Dbp\Relay\MonoBundle\Entity\StartPayAction;
 use Dbp\Relay\MonoBundle\PaymentServiceProvider\CompleteResponseInterface;
 use Dbp\Relay\MonoBundle\PaymentServiceProvider\PaymentServiceProviderService;
 use Dbp\Relay\MonoBundle\PaymentServiceProvider\StartResponseInterface;

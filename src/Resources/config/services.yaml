@@ -19,13 +19,8 @@ services:
     autowire: true
     autoconfigure: true
 
-  Dbp\Relay\MonoBundle\DataPersister\:
-    resource: '../../DataPersister'
-    autowire: true
-    autoconfigure: true
-
-  Dbp\Relay\MonoBundle\DataProvider\:
-    resource: '../../DataProvider'
+  Dbp\Relay\MonoBundle\ApiPlatform\:
+    resource: '../../ApiPlatform'
     autowire: true
     autoconfigure: true
 

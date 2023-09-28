@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Dbp\Relay\MonoBundle\ApiPlatforma;
+namespace Dbp\Relay\MonoBundle\ApiPlatform;
 
 use ApiPlatform\Core\DataPersister\ContextAwareDataPersisterInterface;
 use Dbp\Relay\MonoBundle\Service\PaymentService;
