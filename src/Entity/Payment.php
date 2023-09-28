@@ -41,31 +41,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
 class Payment
 {
     /**
-     * @deprecated
-     */
-    public const PAYMENT_STATUS_PREPARED = PaymentStatus::PREPARED;
-
-    /**
-     * @deprecated
-     */
-    public const PAYMENT_STATUS_STARTED = PaymentStatus::STARTED;
-
-    /**
-     * @deprecated
-     */
-    public const PAYMENT_STATUS_PENDING = PaymentStatus::PENDING;
-
-    /**
-     * @deprecated
-     */
-    public const PAYMENT_STATUS_FAILED = PaymentStatus::FAILED;
-
-    /**
-     * @deprecated
-     */
-    public const PAYMENT_STATUS_COMPLETED = PaymentStatus::COMPLETED;
-
-    /**
      * @ApiProperty(identifier=true)
      * @Groups({"MonoPayment:output"})
      */
