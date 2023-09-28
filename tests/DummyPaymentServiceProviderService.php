@@ -18,7 +18,7 @@ class DummyPaymentServiceProviderService implements PaymentServiceProviderServic
         return new StartResponse('');
     }
 
-    public function complete(PaymentPersistence $paymentPersistence, string $pspData): CompleteResponseInterface
+    public function complete(PaymentPersistence $paymentPersistence): CompleteResponseInterface
     {
         return new CompleteResponse('');
     }

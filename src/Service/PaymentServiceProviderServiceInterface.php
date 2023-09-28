@@ -19,7 +19,7 @@ interface PaymentServiceProviderServiceInterface
      * Gets called once the user has finished the payment process and returned from the PSP.
      * The $pspData is a PSP specific string provided by the PSP frontend process.
      */
-    public function complete(PaymentPersistence $paymentPersistence, string $pspData): CompleteResponseInterface;
+    public function complete(PaymentPersistence $paymentPersistence): CompleteResponseInterface;
 
     /**
      * Gets called right before the payment is deleted and allows the PSP service to delete related data to the payment.

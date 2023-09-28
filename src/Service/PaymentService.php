@@ -438,8 +438,7 @@ class PaymentService implements LoggerAwareInterface
     }
 
     public function completePayAction(
-        string $identifier,
-        string $pspData
+        string $identifier
     ): CompleteResponseInterface {
         $paymentPersistence = $this->getPaymentPersistenceByIdentifier($identifier);
 
@@ -451,7 +450,7 @@ class PaymentService implements LoggerAwareInterface
         $paymentContract = $this->configurationService->getPaymentContractByTypeAndPaymentMethod($type, $paymentMethod);
 
         $paymentServiceProvider = $this->paymentServiceProviderService->getByPaymentContract($paymentContract);
-        $completeResponse = $paymentServiceProvider->complete($paymentPersistence, $pspData);
+        $completeResponse = $paymentServiceProvider->complete($paymentPersistence);
 
         try {
             $this->em->persist($paymentPersistence);
