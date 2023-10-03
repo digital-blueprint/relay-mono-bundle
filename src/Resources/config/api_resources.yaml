@@ -48,7 +48,7 @@ resources:
       localIdentifier:
         iri: "https://schema.org/Text"
       paymentStatus:
-        iri: "https://schema.org/PaymentStatusType"
+        iri: "https://schema.org/Text"
       paymentReference:
         iri: "https://schema.org/Text"
       amount:
