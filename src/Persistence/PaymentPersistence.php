@@ -511,6 +511,11 @@ class PaymentPersistence
         return $this;
     }
 
+    public function wasStarted(): bool
+    {
+        return $this->getStartedAt() !== null;
+    }
+
     public function getCompletedAt(): ?\DateTimeInterface
     {
         return $this->completedAt;
@@ -523,6 +528,11 @@ class PaymentPersistence
         return $this;
     }
 
+    public function wasCompleted(): bool
+    {
+        return $this->getCompletedAt() !== null;
+    }
+
     public function getNotifiedAt(): ?\DateTimeInterface
     {
         return $this->notifiedAt;
@@ -533,6 +543,11 @@ class PaymentPersistence
         $this->notifiedAt = $notifiedAt;
 
         return $this;
+    }
+
+    public function wasNotified(): bool
+    {
+        return $this->getNotifiedAt() !== null;
     }
 
     public static function fromPayment(Payment $payment): PaymentPersistence
