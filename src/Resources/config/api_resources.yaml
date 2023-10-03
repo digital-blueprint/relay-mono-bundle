@@ -15,19 +15,19 @@ resources:
         provider: Dbp\Relay\MonoBundle\ApiPlatform\DummyProvider
         uriTemplate: "/payment"
         openapiContext:
-          tags: ["ElectronicPayment"]
+          tags: ["Electronic Payment"]
 
       ApiPlatform\Metadata\Get:
         provider: Dbp\Relay\MonoBundle\ApiPlatform\PaymentProvider
         uriTemplate: "/payment/{identifier}"
         openapiContext:
-          tags: ["ElectronicPayment"]
+          tags: ["Electronic Payment"]
 
       ApiPlatform\Metadata\Post:
         processor: Dbp\Relay\MonoBundle\ApiPlatform\PaymentProcessor
         uriTemplate: "/payment"
         openapiContext:
-          tags: ["ElectronicPayment"]
+          tags: ["Electronic Payment"]
 
     properties:
       identifier:
@@ -89,19 +89,19 @@ resources:
         provider: Dbp\Relay\MonoBundle\ApiPlatform\DummyProvider
         uriTemplate: "/complete-pay-actions"
         openapiContext:
-          tags: ["ElectronicPayment"]
+          tags: ["Electronic Payment"]
 
       ApiPlatform\Metadata\Get:
         provider: Dbp\Relay\MonoBundle\ApiPlatform\DummyProvider
         uriTemplate: "/complete-pay-actions/{identifier}"
         openapiContext:
-          tags: ["ElectronicPayment"]
+          tags: ["Electronic Payment"]
 
       ApiPlatform\Metadata\Post:
         processor: Dbp\Relay\MonoBundle\ApiPlatform\CompletePayActionProcessor
         uriTemplate: "/complete-pay-actions"
         openapiContext:
-          tags: ["ElectronicPayment"]
+          tags: ["Electronic Payment"]
 
     properties:
       identifier:
@@ -127,19 +127,19 @@ resources:
         provider: Dbp\Relay\MonoBundle\ApiPlatform\DummyProvider
         uriTemplate: "/start-pay-actions"
         openapiContext:
-          tags: ["ElectronicPayment"]
+          tags: ["Electronic Payment"]
 
       ApiPlatform\Metadata\Get:
         provider: Dbp\Relay\MonoBundle\ApiPlatform\DummyProvider
         uriTemplate: "/start-pay-actions/{identifier}"
         openapiContext:
-          tags: ["ElectronicPayment"]
+          tags: ["Electronic Payment"]
 
       ApiPlatform\Metadata\Post:
         processor: Dbp\Relay\MonoBundle\ApiPlatform\StartPayActionProcessor
         uriTemplate: "/start-pay-actions"
         openapiContext:
-          tags: ["ElectronicPayment"]
+          tags: ["Electronic Payment"]
 
     properties:
       identifier:
