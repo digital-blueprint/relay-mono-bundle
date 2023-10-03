@@ -64,22 +64,19 @@ class ReportingService implements LoggerAwareInterface
 
         $count = $repo->countByTypeCreatedSince($type, $createdSince);
 
-//        if (count($count)) {
         // We want a report every day, even if there are no payments
-        if (true) {
-            $context = [
-                'paymentType' => $paymentType,
-                'createdSince' => $createdSince,
-                'createdTo' => $now,
-                'count' => $count,
-            ];
+        $context = [
+            'paymentType' => $paymentType,
+            'createdSince' => $createdSince,
+            'createdTo' => $now,
+            'count' => $count,
+        ];
 
-            if ($email !== '') {
-                $reportingConfig['to'] = $email;
-            }
-
-            $this->sendEmail($reportingConfig, $context);
+        if ($email !== '') {
+            $reportingConfig['to'] = $email;
         }
+
+        $this->sendEmail($reportingConfig, $context);
     }
 
     public function sendNotifyError(PaymentType $paymentType)
