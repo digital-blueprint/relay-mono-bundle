@@ -11,6 +11,7 @@ flowchart TB
     end
 
     mono_bundle --> mono_payment_client_bundle
+    mono_bundle --> mono_payment_service_provider_bundle
 ```
 
 To provide user/customer information for starting a payment and for storing the
