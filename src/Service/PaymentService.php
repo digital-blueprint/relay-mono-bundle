@@ -195,7 +195,7 @@ class PaymentService implements LoggerAwareInterface
             throw ApiError::withDetails(Response::HTTP_INTERNAL_SERVER_ERROR, 'Payment could not be created!', 'mono:payment-not-created', ['message' => $e->getMessage()]);
         }
 
-        $payment = Payment::fromPaymentPersistence($paymentPersistence);
+        $payment = self::createPaymentcreatePaymentFromPaymentPersistence($paymentPersistence);
 
         return $payment;
     }
@@ -324,7 +324,7 @@ class PaymentService implements LoggerAwareInterface
             }
         }
 
-        $payment = Payment::fromPaymentPersistence($paymentPersistence);
+        $payment = self::createPaymentcreatePaymentFromPaymentPersistence($paymentPersistence);
         $paymentMethods = $this->configurationService->getPaymentMethodsByType($type);
         $paymentMethod = json_encode($paymentMethods);
         $payment->setPaymentMethod($paymentMethod);
@@ -333,6 +333,29 @@ class PaymentService implements LoggerAwareInterface
 
         // We give the backend service one last chance to change things, for example for translations
         $backendService->updateEntity($paymentPersistence, $payment);
+
+        return $payment;
+    }
+
+    public static function createPaymentcreatePaymentFromPaymentPersistence(PaymentPersistence $paymentPersistence): Payment
+    {
+        $payment = new Payment();
+        $payment->setIdentifier($paymentPersistence->getIdentifier());
+        $payment->setReturnUrl($paymentPersistence->getReturnUrl());
+        $payment->setPspReturnUrl($paymentPersistence->getPspReturnUrl());
+        $payment->setLocalIdentifier($paymentPersistence->getLocalIdentifier());
+        $payment->setPaymentStatus($paymentPersistence->getPaymentStatus());
+        $payment->setPaymentReference($paymentPersistence->getPaymentReference());
+        $payment->setAmount($paymentPersistence->getAmount());
+        $payment->setCurrency($paymentPersistence->getCurrency());
+        $payment->setAlternateName($paymentPersistence->getAlternateName());
+        $payment->setHonorificPrefix($paymentPersistence->getHonorificPrefix());
+        $payment->setGivenName($paymentPersistence->getGivenName());
+        $payment->setFamilyName($paymentPersistence->getFamilyName());
+        $payment->setCompanyName($paymentPersistence->getCompanyName());
+        $payment->setHonorificSuffix($paymentPersistence->getHonorificSuffix());
+        $payment->setRecipient($paymentPersistence->getRecipient());
+        $payment->setDataProtectionDeclarationUrl($paymentPersistence->getDataProtectionDeclarationUrl());
 
         return $payment;
     }

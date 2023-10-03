@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Dbp\Relay\MonoBundle\ApiPlatform;
 
-use Dbp\Relay\MonoBundle\Persistence\PaymentPersistence;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 class Payment
@@ -389,28 +388,5 @@ class Payment
         $this->dataProtectionDeclarationUrl = $dataProtectionDeclarationUrl;
 
         return $this;
-    }
-
-    public static function fromPaymentPersistence(PaymentPersistence $paymentPersistence): Payment
-    {
-        $payment = new Payment();
-        $payment->setIdentifier((string) $paymentPersistence->getIdentifier());
-        $payment->setReturnUrl($paymentPersistence->getReturnUrl());
-        $payment->setPspReturnUrl($paymentPersistence->getPspReturnUrl());
-        $payment->setLocalIdentifier($paymentPersistence->getLocalIdentifier());
-        $payment->setPaymentStatus($paymentPersistence->getPaymentStatus());
-        $payment->setPaymentReference($paymentPersistence->getPaymentReference());
-        $payment->setAmount($paymentPersistence->getAmount());
-        $payment->setCurrency($paymentPersistence->getCurrency());
-        $payment->setAlternateName($paymentPersistence->getAlternateName());
-        $payment->setHonorificPrefix($paymentPersistence->getHonorificPrefix());
-        $payment->setGivenName($paymentPersistence->getGivenName());
-        $payment->setFamilyName($paymentPersistence->getFamilyName());
-        $payment->setCompanyName($paymentPersistence->getCompanyName());
-        $payment->setHonorificSuffix($paymentPersistence->getHonorificSuffix());
-        $payment->setRecipient($paymentPersistence->getRecipient());
-        $payment->setDataProtectionDeclarationUrl($paymentPersistence->getDataProtectionDeclarationUrl());
-
-        return $payment;
     }
 }
