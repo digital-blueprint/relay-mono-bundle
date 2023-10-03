@@ -1,3 +1,15 @@
+# v0.4.0
+
+* PaymentServiceProviderServiceInterface::complete() lost the pspData parameter, there is no replacement
+* PaymentStatus::CANCELLED was removed, use PaymentStatus::FAILED instead
+* Removed deprecated constants like PAYMENT_STATUS_PREPARED
+* Changed the namespace of various types (Payment, PaymentPersistence, etc.)
+* StartPayAction lost the restart parameter, it will be ignored and there is no replacement
+* Drop the unused `number_of_uses` column from the main database table
+* Port to new api-platform metadata APIs
+* Payment.paymentStatus: change from PaymentStatusType to just Text
+* Rename /mono/payment endpoint to /mono/payments, the old endpoint still works but is deprecated
+
 # v0.3.6
 
 * Minor logging improvements
