@@ -22,7 +22,12 @@ class DbpRelayMonoExtension extends ConfigurableExtension implements PrependExte
         $this->addPathToHide($container, '/mono/start-pay-actions');
         $this->addPathToHide($container, '/mono/complete-pay-actions');
         $this->addPathToHide($container, '/mono/complete-pay-actions/{identifier}');
+        $this->addPathToHide($container, '/mono/payments');
+
+        // Legacy endpoints
         $this->addPathToHide($container, '/mono/payment');
+        $this->addPathToHide($container, '/mono/payment', 'POST');
+        $this->addPathToHide($container, '/mono/payment/{identifier}');
 
         $loader = new YamlFileLoader(
             $container,
