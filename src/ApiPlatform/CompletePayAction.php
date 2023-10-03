@@ -4,58 +4,23 @@ declare(strict_types=1);
 
 namespace Dbp\Relay\MonoBundle\ApiPlatform;
 
-use ApiPlatform\Core\Annotation\ApiProperty;
-use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-/**
- * @ApiResource(
- *     collectionOperations={
- *         "post" = {
- *             "path" = "/mono/complete-pay-actions",
- *             "openapi_context" = {
- *                 "tags" = {"ElectronicPayment"},
- *             },
- *         }
- *     },
- *     itemOperations={
- *         "get" = {
- *             "path" = "/mono/complete-pay-actions/{identifier}",
- *             "openapi_context" = {
- *                 "tags" = {"ElectronicPayment"},
- *             },
- *         },
- *     },
- *     iri="https://schema.digital-blueprint.org/CompletePayAction",
- *     shortName="MonoCompletePayAction",
- *     normalizationContext={
- *         "groups" = {"MonoPayment:output"},
- *         "jsonld_embed_context" = true
- *     },
- *     denormalizationContext={
- *         "groups" = {"MonoPayment:input"},
- *         "jsonld_embed_context" = true
- *     }
- * )
- */
 class CompletePayAction
 {
     /**
-     * @ApiProperty(identifier=true)
      * @Groups({"MonoPayment:output"})
      */
     private $identifier;
 
     /**
      * @var string
-     * @ApiProperty(iri="https://schema.org/Text")
      * @Groups({"MonoPayment:input"})
      */
     private $pspData;
 
     /**
      * @var string|null
-     * @ApiProperty(iri="https://schema.org/URL")
      * @Groups({"MonoPayment:output"})
      */
     private $returnUrl;

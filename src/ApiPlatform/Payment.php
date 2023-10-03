@@ -4,185 +4,132 @@ declare(strict_types=1);
 
 namespace Dbp\Relay\MonoBundle\ApiPlatform;
 
-use ApiPlatform\Core\Annotation\ApiProperty;
-use ApiPlatform\Core\Annotation\ApiResource;
 use Dbp\Relay\MonoBundle\Persistence\PaymentPersistence;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-/**
- * @ApiResource(
- *     collectionOperations={
- *         "post" = {
- *             "path" = "/mono/payment",
- *             "openapi_context" = {
- *                 "tags" = {"ElectronicPayment"},
- *             },
- *         }
- *     },
- *     itemOperations={
- *         "get" = {
- *             "path" = "/mono/payment/{identifier}",
- *             "openapi_context" = {
- *                 "tags" = {"ElectronicPayment"},
- *             },
- *         },
- *     },
- *     iri="https://schema.digital-blueprint.org/Payment",
- *     shortName="MonoPayment",
- *     normalizationContext={
- *         "groups" = {"MonoPayment:output"},
- *         "jsonld_embed_context" = true
- *     },
- *     denormalizationContext={
- *         "groups" = {"MonoPayment:input"},
- *         "jsonld_embed_context" = true
- *     }
- * )
- */
 class Payment
 {
     /**
-     * @ApiProperty(identifier=true)
      * @Groups({"MonoPayment:output"})
      */
     private $identifier;
 
     /**
      * @var string
-     * @ApiProperty(iri="https://schema.org/Text")
      * @Groups({"MonoPayment:input"})
      */
     private $type;
 
     /**
      * @var string
-     * @ApiProperty(iri="https://schema.org/Text")
      * @Groups({"MonoPayment:input"})
      */
     private $data;
 
     /**
      * @var string|null
-     * @ApiProperty(iri="https://schema.org/Text")
      * @Groups({"MonoPayment:input"})
      */
     private $clientIp;
 
     /**
      * @var string|null
-     * @ApiProperty(iri="https://schema.org/URL")
      * @Groups({"MonoPayment:input", "MonoPayment:output"})
      */
     private $returnUrl;
 
     /**
      * @var string|null
-     * @ApiProperty(iri="https://schema.org/URL")
      * @Groups({"MonoPayment:input"})
      */
     private $notifyUrl;
 
     /**
      * @var string|null
-     * @ApiProperty(iri="https://schema.org/URL")
      * @Groups({"MonoPayment:output", "MonoPayment:input"})
      */
     private $pspReturnUrl;
 
     /**
      * @var string|null
-     * @ApiProperty(iri="https://schema.org/Text")
      * @Groups({"MonoPayment:output", "MonoPayment:input"})
      */
     private $localIdentifier;
 
     /**
      * @var string
-     * @ApiProperty(iri="https://schema.org/PaymentStatusType")
      * @Groups({"MonoPayment:output"})
      */
     private $paymentStatus;
 
     /**
      * @var string|null
-     * @ApiProperty(iri="https://schema.org/Text")
      * @Groups({"MonoPayment:output"})
      */
     private $paymentReference;
 
     /**
      * @var string|null
-     * @ApiProperty(iri="https://schema.org/Text")
      * @Groups({"MonoPayment:output"})
      */
     private $amount;
 
     /**
      * @var string|null
-     * @ApiProperty(iri="https://schema.org/Text")
      * @Groups({"MonoPayment:output"})
      */
     private $currency;
 
     /**
      * @var string|null
-     * @ApiProperty(iri="https://schema.org/Text")
      * @Groups({"MonoPayment:output"})
      */
     private $alternateName;
 
     /**
      * @var string|null
-     * @ApiProperty(iri="https://schema.org/Text")
      * @Groups({"MonoPayment:output"})
      */
     private $honorificPrefix;
 
     /**
      * @var string|null
-     * @ApiProperty(iri="https://schema.org/Text")
      * @Groups({"MonoPayment:output"})
      */
     private $givenName;
 
     /**
      * @var string|null
-     * @ApiProperty(iri="https://schema.org/Text")
      * @Groups({"MonoPayment:output"})
      */
     private $familyName;
 
     /**
      * @var string|null
-     * @ApiProperty(iri="https://schema.org/Text")
      * @Groups({"MonoPayment:output"})
      */
     private $companyName;
 
     /**
      * @var string|null
-     * @ApiProperty(iri="https://schema.org/Text")
      * @Groups({"MonoPayment:output"})
      */
     private $honorificSuffix;
 
     /**
      * @var string|null
-     * @ApiProperty(iri="https://schema.org/Text")
      * @Groups({"MonoPayment:output"})
      */
     private $recipient;
 
     /**
      * @var string
-     * @ApiProperty(iri="https://schema.org/Text")
      * @Groups({"MonoPayment:output"})
      */
     private $paymentMethod;
 
     /**
      * @var string|null
-     * @ApiProperty(iri="https://schema.org/URL")
      * @Groups({"MonoPayment:output"})
      */
     private $dataProtectionDeclarationUrl;

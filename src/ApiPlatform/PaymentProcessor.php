@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Dbp\Relay\MonoBundle\ApiPlatform;
 
-use ApiPlatform\Core\DataPersister\ContextAwareDataPersisterInterface;
+use ApiPlatform\Metadata\Operation;
+use ApiPlatform\State\ProcessorInterface;
 use Dbp\Relay\MonoBundle\Service\PaymentService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-class PaymentDataPersister extends AbstractController implements ContextAwareDataPersisterInterface
+class PaymentProcessor extends AbstractController implements ProcessorInterface
 {
     private $api;
 
@@ -17,12 +18,7 @@ class PaymentDataPersister extends AbstractController implements ContextAwareDat
         $this->api = $api;
     }
 
-    public function supports($data, array $context = []): bool
-    {
-        return $data instanceof Payment;
-    }
-
-    public function persist($data, array $context = []): Payment
+    public function process($data, Operation $operation, array $uriVariables = [], array $context = []): Payment
     {
         $payment = $data;
         assert($payment instanceof Payment);
@@ -30,9 +26,5 @@ class PaymentDataPersister extends AbstractController implements ContextAwareDat
         $payment = $this->api->createPayment($payment);
 
         return $payment;
-    }
-
-    public function remove($data, array $context = [])
-    {
     }
 }

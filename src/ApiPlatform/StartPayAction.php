@@ -4,86 +4,47 @@ declare(strict_types=1);
 
 namespace Dbp\Relay\MonoBundle\ApiPlatform;
 
-use ApiPlatform\Core\Annotation\ApiProperty;
-use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-/**
- * @ApiResource(
- *     collectionOperations={
- *         "post" = {
- *             "path" = "/mono/start-pay-actions",
- *             "openapi_context" = {
- *                 "tags" = {"ElectronicPayment"},
- *             },
- *         }
- *     },
- *     itemOperations={
- *         "get" = {
- *             "path" = "/mono/start-pay-actions/{identifier}",
- *             "openapi_context" = {
- *                 "tags" = {"ElectronicPayment"},
- *             },
- *         },
- *     },
- *     iri="https://schema.digital-blueprint.org/StartPayAction",
- *     shortName="MonoStartPayAction",
- *     normalizationContext={
- *         "groups" = {"MonoPayment:output"},
- *         "jsonld_embed_context" = true
- *     },
- *     denormalizationContext={
- *         "groups" = {"MonoPayment:input"},
- *         "jsonld_embed_context" = true
- *     }
- * )
- */
 class StartPayAction
 {
     /**
-     * @ApiProperty(identifier=true)
      * @Groups({"MonoPayment:input"})
      */
     private $identifier;
 
     /**
      * @var string
-     * @ApiProperty(iri="https://schema.org/Text")
      * @Groups({"MonoPayment:input"})
      */
     private $paymentMethod;
 
     /**
      * @var string
-     * @ApiProperty(iri="https://schema.org/URL")
      * @Groups({"MonoPayment:input"})
      */
     private $pspReturnUrl;
 
     /**
      * @var bool
-     * @ApiProperty(iri="https://schema.org/Boolean")
      * @Groups({"MonoPayment:input"})
      */
     private $consent;
 
     /**
      * @var string
-     * @ApiProperty(iri="https://schema.org/URL")
      * @Groups({"MonoPayment:output"})
      */
     private $widgetUrl;
 
     /**
      * @var string|null
-     * @ApiProperty(iri="https://schema.org/Text")
      * @Groups({"MonoPayment:output"})
      */
     private $pspData;
 
     /**
      * @var string|null
-     * @ApiProperty(iri="https://schema.org/Text")
      * @Groups({"MonoPayment:output"})
      */
     private $pspError;
