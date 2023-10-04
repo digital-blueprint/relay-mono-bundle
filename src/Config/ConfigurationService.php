@@ -48,6 +48,16 @@ class ConfigurationService
         return $this->config;
     }
 
+    public function checkConfig(): void
+    {
+        foreach ($this->getPaymentTypes() as $paymentType) {
+            // Make sure the expressions are valid
+            $paymentType->evaluatePspReturnUrlExpression('');
+            $paymentType->evaluateReturnUrlExpression('');
+            $paymentType->evaluateNotifyUrlExpression('');
+        }
+    }
+
     /**
      * @return PaymentType[]
      */

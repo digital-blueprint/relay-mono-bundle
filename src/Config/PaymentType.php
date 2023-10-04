@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Dbp\Relay\MonoBundle\Config;
 
+use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
+
 class PaymentType
 {
     /**
@@ -213,6 +215,13 @@ class PaymentType
         return $this;
     }
 
+    public function evaluateReturnUrlExpression(string $url): bool
+    {
+        $expressionLanguage = new ExpressionLanguage();
+
+        return $expressionLanguage->evaluate($this->getReturnUrlExpression(), ['url' => $url]);
+    }
+
     public function getNotifyUrlExpression(): string
     {
         return $this->notifyUrlExpression;
@@ -225,6 +234,13 @@ class PaymentType
         return $this;
     }
 
+    public function evaluateNotifyUrlExpression(string $url): bool
+    {
+        $expressionLanguage = new ExpressionLanguage();
+
+        return $expressionLanguage->evaluate($this->getNotifyUrlExpression(), ['url' => $url]);
+    }
+
     public function getPspReturnUrlExpression(): string
     {
         return $this->pspReturnUrlExpression;
@@ -235,6 +251,13 @@ class PaymentType
         $this->pspReturnUrlExpression = $pspReturnUrlExpression;
 
         return $this;
+    }
+
+    public function evaluatePspReturnUrlExpression(string $url): bool
+    {
+        $expressionLanguage = new ExpressionLanguage();
+        // pass pspReturnUrl only for backwards compat
+        return $expressionLanguage->evaluate($this->getPspReturnUrlExpression(), ['url' => $url, 'pspReturnUrl' => $url]);
     }
 
     public function getRecipient(): string

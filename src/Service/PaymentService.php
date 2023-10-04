@@ -21,7 +21,6 @@ use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
-use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Lock\LockFactory;
@@ -115,23 +114,24 @@ class PaymentService implements LoggerAwareInterface
             throw ApiError::withDetails(Response::HTTP_BAD_REQUEST, 'Unknown payment type', 'mono:unknown-payment-type');
         }
 
-        $returnUrlOverride = $paymentType->getReturnUrlOverride();
-        if ($returnUrlOverride) {
-            $payment->setReturnUrl($returnUrlOverride);
-        }
-
         $userIdentifier = $this->userSession->getUserIdentifier();
         if ($paymentType->isAuthRequired() && !$userIdentifier) {
             throw ApiError::withDetails(Response::HTTP_UNAUTHORIZED, 'Authorization required!', 'mono:authorization-required');
         }
 
-        $expressionLanguage = new ExpressionLanguage();
-        if ($paymentType->getNotifyUrlExpression() && !$expressionLanguage->evaluate($paymentType->getNotifyUrlExpression(), ['payment' => $payment])) {
+        $notifyUrl = $payment->getNotifyUrl();
+        if ($notifyUrl !== null && !$paymentType->evaluateNotifyUrlExpression($notifyUrl)) {
             throw ApiError::withDetails(Response::HTTP_BAD_REQUEST, 'Notify URL not allowed!', 'mono:notify-url-not-allowed');
         }
 
-        if ($paymentType->getReturnUrlExpression() && !$expressionLanguage->evaluate($paymentType->getReturnUrlExpression(), ['payment' => $payment])) {
+        $returnUrl = $payment->getReturnUrl();
+        if ($returnUrl !== null && !$paymentType->evaluateReturnUrlExpression($returnUrl)) {
             throw ApiError::withDetails(Response::HTTP_BAD_REQUEST, 'Return URL not allowed!', 'mono:return-url-not-allowed');
+        }
+
+        $returnUrlOverride = $paymentType->getReturnUrlOverride();
+        if ($returnUrlOverride) {
+            $payment->setReturnUrl($returnUrlOverride);
         }
 
         if (empty($payment->getClientIp())) {
@@ -401,8 +401,7 @@ class PaymentService implements LoggerAwareInterface
         }
 
         $pspReturnUrl = $startPayAction->getPspReturnUrl();
-        $expressionLanguage = new ExpressionLanguage();
-        if ($paymentType->getPspReturnUrlExpression() && !$expressionLanguage->evaluate($paymentType->getPspReturnUrlExpression(), ['payment' => $paymentPersistence, 'pspReturnUrl' => $pspReturnUrl])) {
+        if (!$paymentType->evaluatePspReturnUrlExpression($pspReturnUrl)) {
             throw ApiError::withDetails(Response::HTTP_BAD_REQUEST, 'PSP return URL not allowed!', 'mono:psp-return-url-not-allowed');
         }
 

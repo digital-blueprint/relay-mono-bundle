@@ -37,10 +37,10 @@ class ConfigurationServiceTest extends TestCase
                     'max_concurrent_auth_payments_per_user' => 3,
                     'max_concurrent_unauth_payments' => 4,
                     'max_concurrent_unauth_payments_per_ip' => 5,
-                    'return_url_expression' => '    ',
-                    'return_url_override' => '',
-                    'notify_url_expression' => '',
-                    'psp_return_url_expression' => '',
+                    'return_url_expression' => 'true',
+                    'return_url_override' => 'true',
+                    'notify_url_expression' => 'true',
+                    'psp_return_url_expression' => 'true',
                     'recipient' => '',
                     'payment_contracts' => [
                         'somecontract' => [
@@ -58,6 +58,8 @@ class ConfigurationServiceTest extends TestCase
                 ],
             ],
         ]);
+
+        $service->checkConfig();
 
         $this->assertTrue(is_array($service->getConfig()));
         $this->assertSame('started', $service->getCleanupConfiguration()[0]['payment_status']);

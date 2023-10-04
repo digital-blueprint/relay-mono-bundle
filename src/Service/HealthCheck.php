@@ -7,6 +7,7 @@ namespace Dbp\Relay\MonoBundle\Service;
 use Dbp\Relay\CoreBundle\HealthCheck\CheckInterface;
 use Dbp\Relay\CoreBundle\HealthCheck\CheckOptions;
 use Dbp\Relay\CoreBundle\HealthCheck\CheckResult;
+use Dbp\Relay\MonoBundle\Config\ConfigurationService;
 
 class HealthCheck implements CheckInterface
 {
@@ -14,10 +15,15 @@ class HealthCheck implements CheckInterface
      * @var PaymentService
      */
     private $payment;
+    /**
+     * @var ConfigurationService
+     */
+    private $configService;
 
-    public function __construct(PaymentService $payment)
+    public function __construct(PaymentService $payment, ConfigurationService $configService)
     {
         $this->payment = $payment;
+        $this->configService = $configService;
     }
 
     public function getName(): string
@@ -25,12 +31,14 @@ class HealthCheck implements CheckInterface
         return 'mono';
     }
 
-    private function checkDbConnection(): CheckResult
+    /**
+     * @param array<mixed> $args
+     */
+    private function checkMethod(string $description, callable $func, array $args = []): CheckResult
     {
-        $result = new CheckResult('Check if we can connect to the DB');
-
+        $result = new CheckResult($description);
         try {
-            $this->payment->checkConnection();
+            $func(...$args);
         } catch (\Throwable $e) {
             $result->set(CheckResult::STATUS_FAILURE, $e->getMessage(), ['exception' => $e]);
 
@@ -43,6 +51,9 @@ class HealthCheck implements CheckInterface
 
     public function check(CheckOptions $options): array
     {
-        return [$this->checkDbConnection()];
+        $results[] = $this->checkMethod('Check if we can connect to the DB', [$this->payment, 'checkConnection']);
+        $results[] = $this->checkMethod('Check bundle configuration', [$this->configService, 'checkConfig']);
+
+        return $results;
     }
 }
