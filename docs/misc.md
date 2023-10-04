@@ -15,3 +15,14 @@ php bin/console doctrine:migrations:migrate --em=dbp_relay_mono_bundle
 # Send reports to a custom email address foo@bar.com
 ./bin/console dbp:relay-mono:reporting --email foo@bar.com
 ```
+
+
+## Payment Status
+
+```mermaid
+graph TB
+    prepared -->|Start Payment| started
+    started -->|Payment Processing| pending
+    pending -->|Payment Approved| completed
+    pending -->|Payment Failed| failed
+```
