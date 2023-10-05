@@ -424,6 +424,9 @@ class PaymentService implements LoggerAwareInterface
 
         $paymentPersistence->setStartedAt($now);
 
+        $paymentServiceProvider = $this->paymentServiceProviderService->getByPaymentContract($paymentContract);
+        $startResponse = $paymentServiceProvider->start($paymentPersistence);
+
         try {
             $this->em->persist($paymentPersistence);
             $this->em->flush();
@@ -431,9 +434,6 @@ class PaymentService implements LoggerAwareInterface
             $this->logger->error('Payment could not be updated!', ['exception' => $e]);
             throw new ApiError(Response::HTTP_INTERNAL_SERVER_ERROR, 'Payment could not be updated!');
         }
-
-        $paymentServiceProvider = $this->paymentServiceProviderService->getByPaymentContract($paymentContract);
-        $startResponse = $paymentServiceProvider->start($paymentPersistence);
 
         return $startResponse;
     }
