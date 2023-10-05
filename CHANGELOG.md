@@ -1,3 +1,10 @@
+# v0.4.1
+
+* config: return_url_expression, notify_url_expression and psp_return_url_expression now get passed the URL via
+  the "url" variable and are "false" by default. The payment object is no longer accessible in the expression.
+* Added a health check for parsing all config Symfony expressions
+* Some minor documentation improvements
+
 # v0.4.0
 
 * PaymentServiceProviderServiceInterface::complete() lost the pspData parameter, there is no replacement
