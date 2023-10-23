@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Dbp\Relay\MonoBundle\Tests;
 
 use Dbp\Relay\MonoBundle\Config\ConfigurationService;
+use Dbp\Relay\MonoBundle\Config\PaymentType;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\UrlHelper;
@@ -76,5 +77,21 @@ class ConfigurationServiceTest extends TestCase
 
         $contract = $service->getPaymentContractByTypeAndPaymentMethod('sometype', 'quux');
         $this->assertSame('somecontract', $contract->getIdentifier());
+    }
+
+    public function testPaymentTypeExpressions()
+    {
+        $paymentType = new PaymentType();
+        $paymentType->setReturnUrlExpression('relay.str_starts_with(url, "https://return.com/")');
+        $this->assertFalse($paymentType->evaluateReturnUrlExpression('https://return.at/bla'));
+        $this->assertTrue($paymentType->evaluateReturnUrlExpression('https://return.com/bla'));
+
+        $paymentType->setPspReturnUrlExpression('relay.str_starts_with(url, "https://psp.com/")');
+        $this->assertFalse($paymentType->evaluatePspReturnUrlExpression('https://psp.at/bla'));
+        $this->assertTrue($paymentType->evaluatePspReturnUrlExpression('https://psp.com/bla'));
+
+        $paymentType->setNotifyUrlExpression('relay.str_starts_with(url, "https://notify.com/")');
+        $this->assertFalse($paymentType->evaluateNotifyUrlExpression('https://notify.at/bla'));
+        $this->assertTrue($paymentType->evaluateNotifyUrlExpression('https://notify.com/bla'));
     }
 }

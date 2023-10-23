@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Dbp\Relay\MonoBundle\Config;
 
-use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
+use Dbp\Relay\CoreBundle\ExpressionLanguage\ExpressionLanguage;
 
 class PaymentType
 {
