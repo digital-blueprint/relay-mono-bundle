@@ -6,7 +6,6 @@ resources:
     routePrefix: "/mono"
     normalizationContext:
       groups: [ "MonoPayment:output" ]
-      jsonld_embed_context: true
     denormalizationContext:
       groups: [ "MonoPayment:input" ]
     operations:
@@ -104,7 +103,6 @@ resources:
     routePrefix: "/mono"
     normalizationContext:
       groups: [ "MonoPayment:output" ]
-      jsonld_embed_context: true
     denormalizationContext:
       groups: [ "MonoPayment:input" ]
     operations:
@@ -142,7 +140,6 @@ resources:
     routePrefix: "/mono"
     normalizationContext:
       groups: [ "MonoPayment:output" ]
-      jsonld_embed_context: true
     denormalizationContext:
       groups: [ "MonoPayment:input" ]
     operations:

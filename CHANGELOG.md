@@ -1,3 +1,5 @@
+* JSON-LD contexts are no longer embedded in the API responses, they have to be fetched separately.
+
 # v0.4.1
 
 * config: return_url_expression, notify_url_expression and psp_return_url_expression now get passed the URL via
