@@ -1,4 +1,8 @@
+# v0.4.2
+
 * JSON-LD contexts are no longer embedded in the API responses, they have to be fetched separately.
+* The expressions in the bundle config now support the relay extensions
+* Make sure that any changes made by the connector bundles are persisted even if they error out/throw
 
 # v0.4.1
 
