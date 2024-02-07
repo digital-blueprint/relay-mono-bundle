@@ -1,3 +1,7 @@
+# v0.4.3
+
+* Drop support for PHP 7.3
+
 # v0.4.2
 
 * JSON-LD contexts are no longer embedded in the API responses, they have to be fetched separately.
