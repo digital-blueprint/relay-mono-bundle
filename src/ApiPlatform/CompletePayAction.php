@@ -15,12 +15,14 @@ class CompletePayAction
 
     /**
      * @var string
+     *
      * @Groups({"MonoPayment:input"})
      */
     private $pspData;
 
     /**
      * @var string|null
+     *
      * @Groups({"MonoPayment:output"})
      */
     private $returnUrl;

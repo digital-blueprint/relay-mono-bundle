@@ -23,8 +23,8 @@ class CompleteResponse implements CompleteResponseInterface
 
     public function __construct(
         ?string $returnUrl,
-        string $data = null,
-        string $error = null
+        ?string $data = null,
+        ?string $error = null
     ) {
         $this->returnUrl = $returnUrl;
         $this->data = $data;

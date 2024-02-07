@@ -256,6 +256,7 @@ class PaymentType
     public function evaluatePspReturnUrlExpression(string $url): bool
     {
         $expressionLanguage = new ExpressionLanguage();
+
         // pass pspReturnUrl only for backwards compat
         return $expressionLanguage->evaluate($this->getPspReturnUrlExpression(), ['url' => $url, 'pspReturnUrl' => $url]);
     }

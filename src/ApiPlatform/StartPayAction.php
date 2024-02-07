@@ -15,36 +15,42 @@ class StartPayAction
 
     /**
      * @var string
+     *
      * @Groups({"MonoPayment:input"})
      */
     private $paymentMethod;
 
     /**
      * @var string
+     *
      * @Groups({"MonoPayment:input"})
      */
     private $pspReturnUrl;
 
     /**
      * @var bool
+     *
      * @Groups({"MonoPayment:input"})
      */
     private $consent;
 
     /**
      * @var string
+     *
      * @Groups({"MonoPayment:output"})
      */
     private $widgetUrl;
 
     /**
      * @var string|null
+     *
      * @Groups({"MonoPayment:output"})
      */
     private $pspData;
 
     /**
      * @var string|null
+     *
      * @Groups({"MonoPayment:output"})
      */
     private $pspError;

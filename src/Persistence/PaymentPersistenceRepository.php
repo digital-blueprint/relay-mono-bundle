@@ -45,7 +45,7 @@ class PaymentPersistenceRepository extends EntityRepository
         return $count;
     }
 
-    public function countAuthConcurrent(string $userIdentifier = null): int
+    public function countAuthConcurrent(?string $userIdentifier = null): int
     {
         $now = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
         $qb = $this->createQueryBuilder('p')
@@ -69,7 +69,7 @@ class PaymentPersistenceRepository extends EntityRepository
         return $count;
     }
 
-    public function countUnauthConcurrent(string $clientIp = null): int
+    public function countUnauthConcurrent(?string $clientIp = null): int
     {
         $now = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
         $qb = $this->createQueryBuilder('p')

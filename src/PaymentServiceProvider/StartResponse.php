@@ -23,8 +23,8 @@ class StartResponse implements StartResponseInterface
 
     public function __construct(
         string $widgetUrl,
-        string $data = null,
-        string $error = null
+        ?string $data = null,
+        ?string $error = null
     ) {
         $this->widgetUrl = $widgetUrl;
         $this->data = $data;
