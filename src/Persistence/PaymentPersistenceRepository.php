@@ -6,6 +6,9 @@ namespace Dbp\Relay\MonoBundle\Persistence;
 
 use Doctrine\ORM\EntityRepository;
 
+/**
+ * @extends EntityRepository<PaymentPersistence>
+ */
 class PaymentPersistenceRepository extends EntityRepository
 {
     public function findOneActive($identifier): ?PaymentPersistence

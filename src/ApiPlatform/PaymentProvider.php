@@ -9,6 +9,9 @@ use ApiPlatform\State\ProviderInterface;
 use Dbp\Relay\MonoBundle\Service\PaymentService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
+/**
+ * @implements ProviderInterface<Payment>
+ */
 class PaymentProvider extends AbstractController implements ProviderInterface
 {
     private $api;

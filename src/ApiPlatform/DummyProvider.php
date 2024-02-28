@@ -13,6 +13,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 /**
  * For GET endpoints which we don't implement, either return an empty collection
  * or return null which gets translated to 404.
+ *
+ * @implements ProviderInterface<object>
  */
 class DummyProvider extends AbstractController implements ProviderInterface
 {
