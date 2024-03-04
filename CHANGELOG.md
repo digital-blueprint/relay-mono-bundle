@@ -1,3 +1,7 @@
+# v0.4.5
+
+* Symfony upgrade preparations: Remove dependency on injecting ContainerInterface
+
 # v0.4.4
 
 * Drop support for PHP 7.4/8.0
