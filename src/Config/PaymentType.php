@@ -88,11 +88,6 @@ class PaymentType
      */
     private $reportingConfig;
 
-    /**
-     * @var bool
-     */
-    private $demoMode;
-
     public function getIdentifier(): string
     {
         return $this->identifier;

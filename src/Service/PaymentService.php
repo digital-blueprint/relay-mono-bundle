@@ -204,7 +204,7 @@ class PaymentService implements LoggerAwareInterface
     {
         $repo = $this->em->getRepository(PaymentPersistence::class);
         assert($repo instanceof PaymentPersistenceRepository);
-        /** @var PaymentPersistence $paymentPersistence */
+        /** @var ?PaymentPersistence $paymentPersistence */
         $paymentPersistence = $repo->findOneActive($identifier);
 
         if (!$paymentPersistence) {
