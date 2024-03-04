@@ -15,7 +15,7 @@ class BackendServiceTest extends KernelTestCase
         self::bootKernel();
         $container = self::getContainer();
 
-        $backend = new BackendService($container);
+        $backend = $container->get(BackendService::class);
         $paymentType = new PaymentType();
         $paymentType->setService(DummyBackendService::class);
         $backendService = $backend->getByPaymentType($paymentType);

@@ -5,26 +5,32 @@ declare(strict_types=1);
 namespace Dbp\Relay\MonoBundle\PaymentServiceProvider;
 
 use Dbp\Relay\MonoBundle\Config\PaymentContract;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class PaymentServiceProviderService
 {
     /**
-     * @var ContainerInterface
+     * @var array<class-string,PaymentServiceProviderServiceInterface>
      */
-    private $container;
+    private array $services;
 
-    public function __construct(
-        ContainerInterface $container
-    ) {
-        $this->container = $container;
+    public function __construct()
+    {
+        $this->services = [];
+    }
+
+    public function addService(PaymentServiceProviderServiceInterface $service): void
+    {
+        $this->services[$service::class] = $service;
     }
 
     public function getByPaymentContract(PaymentContract $paymentContract): PaymentServiceProviderServiceInterface
     {
-        $service = $paymentContract->getService();
+        $serviceClass = $paymentContract->getService();
 
-        $backend = $this->container->get($service);
+        $backend = $this->services[$serviceClass] ?? null;
+        if ($backend === null) {
+            throw new \RuntimeException("$serviceClass not found");
+        }
         assert($backend instanceof PaymentServiceProviderServiceInterface);
 
         return $backend;

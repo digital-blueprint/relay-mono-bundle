@@ -44,8 +44,8 @@ class Kernel extends BaseKernel
 
     protected function configureContainer(ContainerConfigurator $container)
     {
-        $container->services()->set(DummyBackendService::class)->public();
-        $container->services()->set(DummyPaymentServiceProviderService::class)->public();
+        $container->services()->set(DummyBackendService::class)->public()->autoconfigure();
+        $container->services()->set(DummyPaymentServiceProviderService::class)->public()->autoconfigure();
 
         $container->import('@DbpRelayCoreBundle/Resources/config/services_test.yaml');
         $container->extension('framework', [

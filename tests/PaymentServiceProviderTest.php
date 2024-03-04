@@ -14,8 +14,7 @@ class PaymentServiceProviderTest extends KernelTestCase
     {
         self::bootKernel();
         $container = self::getContainer();
-
-        $psp = new PaymentServiceProviderService($container);
+        $psp = $container->get(PaymentServiceProviderService::class);
         $contract = new PaymentContract();
         $contract->setService(DummyPaymentServiceProviderService::class);
         $service = $psp->getByPaymentContract($contract);
