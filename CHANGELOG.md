@@ -1,3 +1,9 @@
+# v0.4.6
+
+* dev: replace abandoned composer-git-hooks with captainhook.
+  Run `vendor/bin/captainhook install -f` to replace the old hooks with the new ones
+  on an existing checkout.
+
 # v0.4.5
 
 * Symfony upgrade preparations: Remove dependency on injecting ContainerInterface
