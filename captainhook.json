@@ -1,0 +1,16 @@
+{
+    "pre-commit": {
+        "enabled": true,
+        "actions": [
+            {
+                "action": "composer phpstan"
+            },
+            {
+                "action": "composer psalm"
+            },
+            {
+                "action": "composer cs"
+            }
+        ]
+    }
+}
