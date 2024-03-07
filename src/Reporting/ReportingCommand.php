@@ -11,7 +11,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class ReportingCommand extends Command
 {
-    protected static $defaultName = 'dbp:relay-mono:reporting';
     /**
      * @var ReportingService
      */
@@ -30,6 +29,7 @@ class ReportingCommand extends Command
      */
     protected function configure()
     {
+        $this->setName('dbp:relay-mono:reporting');
         $this
             ->setDescription('Reporting command')
             ->addOption('email', null, InputOption::VALUE_OPTIONAL, 'Override email address to send report to', '');

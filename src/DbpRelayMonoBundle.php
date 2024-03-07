@@ -11,7 +11,7 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class DbpRelayMonoBundle extends Bundle
 {
-    public function build(ContainerBuilder $container)
+    public function build(ContainerBuilder $container): void
     {
         BackendServiceCompilerPass::register($container);
         PaymentServiceProviderServiceCompilerPass::register($container);
