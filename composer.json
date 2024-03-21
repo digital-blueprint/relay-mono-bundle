@@ -17,7 +17,7 @@
         "symfony/config": "^5.4 || ^6.4",
         "symfony/console": "^5.4 || ^6.4",
         "symfony/dependency-injection": "^5.4 || ^6.4",
-        "symfony/framework-bundle": "^5.4 || ^6.4",
+        "symfony/framework-bundle": "^5.4.30 || ^6.4",
         "symfony/http-foundation": "^5.4 || ^6.4",
         "symfony/http-kernel": "^5.4 || ^6.4",
         "symfony/lock": "^5.4 || ^6.4",
@@ -40,7 +40,7 @@
         "symfony/http-client": "^5.4 || ^6.4",
         "symfony/monolog-bridge": "^5.4 || ^6.4",
         "symfony/monolog-bundle": "^3.10",
-        "symfony/phpunit-bridge": "^5.4 || ^6.4",
+        "symfony/phpunit-bridge": "^7.0.4",
         "vimeo/psalm": "^5.22.2"
     },
     "autoload": {
