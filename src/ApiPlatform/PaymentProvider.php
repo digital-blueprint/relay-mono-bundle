@@ -21,10 +21,7 @@ class PaymentProvider extends AbstractController implements ProviderInterface
         $this->api = $api;
     }
 
-    /**
-     * @return Payment|iterable<Payment>
-     */
-    public function provide(Operation $operation, array $uriVariables = [], array $context = [])
+    public function provide(Operation $operation, array $uriVariables = [], array $context = []): Payment
     {
         $id = $uriVariables['identifier'];
         $payment = $this->api->getPaymentByIdentifier($id);

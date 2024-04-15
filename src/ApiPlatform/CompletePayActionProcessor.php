@@ -9,6 +9,9 @@ use ApiPlatform\State\ProcessorInterface;
 use Dbp\Relay\MonoBundle\Service\PaymentService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
+/**
+ * @implements ProcessorInterface<CompletePayAction,mixed>
+ */
 class CompletePayActionProcessor extends AbstractController implements ProcessorInterface
 {
     private $api;
@@ -21,7 +24,6 @@ class CompletePayActionProcessor extends AbstractController implements Processor
     public function process($data, Operation $operation, array $uriVariables = [], array $context = []): CompletePayAction
     {
         $completePayAction = $data;
-        assert($completePayAction instanceof CompletePayAction);
 
         $pspData = $completePayAction->getPspData();
         $identifier = $this->api->completeGetPaymentId($pspData);

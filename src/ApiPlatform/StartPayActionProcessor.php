@@ -9,6 +9,9 @@ use ApiPlatform\State\ProcessorInterface;
 use Dbp\Relay\MonoBundle\Service\PaymentService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
+/**
+ * @implements ProcessorInterface<StartPayAction,mixed>
+ */
 class StartPayActionProcessor extends AbstractController implements ProcessorInterface
 {
     private $api;
@@ -21,7 +24,6 @@ class StartPayActionProcessor extends AbstractController implements ProcessorInt
     public function process($data, Operation $operation, array $uriVariables = [], array $context = []): StartPayAction
     {
         $startPayAction = $data;
-        assert($startPayAction instanceof StartPayAction);
 
         $startResponse = $this->api->startPayAction($startPayAction);
 

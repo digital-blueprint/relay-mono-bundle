@@ -9,6 +9,9 @@ use ApiPlatform\State\ProcessorInterface;
 use Dbp\Relay\MonoBundle\Service\PaymentService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
+/**
+ * @implements ProcessorInterface<Payment,mixed>
+ */
 class PaymentProcessor extends AbstractController implements ProcessorInterface
 {
     private $api;
