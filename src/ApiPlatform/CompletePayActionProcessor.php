@@ -10,7 +10,7 @@ use Dbp\Relay\MonoBundle\Service\PaymentService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
- * @implements ProcessorInterface<CompletePayAction,mixed>
+ * @psalm-suppress MissingTemplateParam
  */
 class CompletePayActionProcessor extends AbstractController implements ProcessorInterface
 {
