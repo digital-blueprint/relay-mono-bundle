@@ -101,9 +101,9 @@ class PaymentService implements LoggerAwareInterface
         return $this->lockFactory->createLock($resourceKey, 60, true);
     }
 
-    private function getLoggingContext(PaymentPersistence $payment): array
+    private function getLoggingContext(PaymentPersistence $payment, array $extra = []): array
     {
-        return ['relay-mono-payment-id' => $payment->getIdentifier()];
+        return array_merge(['relay-mono-payment-id' => $payment->getIdentifier()], $extra);
     }
 
     public function createPayment(Payment $payment): Payment
@@ -273,9 +273,7 @@ class PaymentService implements LoggerAwareInterface
                 $this->em->persist($paymentPersistence);
                 $this->em->flush();
             } catch (\Exception $e) {
-                $context = $this->getLoggingContext($paymentPersistence);
-                $context['exception'] = $e;
-                $this->auditLogger->error('Persisting the notification status failed', $context);
+                $this->auditLogger->error('Persisting the notification status failed', $this->getLoggingContext($paymentPersistence, ['exception' => $e]));
                 throw ApiError::withDetails(Response::HTTP_INTERNAL_SERVER_ERROR, 'Payment could not be updated!', 'mono:payment-not-updated', ['message' => $e->getMessage()]);
             }
         } finally {
@@ -440,7 +438,7 @@ class PaymentService implements LoggerAwareInterface
                 $this->em->persist($paymentPersistence);
                 $this->em->flush();
             } catch (\Exception $e) {
-                $this->logger->error('Payment could not be updated!', ['exception' => $e]);
+                $this->logger->error('Payment could not be updated!', $this->getLoggingContext($paymentPersistence, ['exception' => $e]));
                 throw new ApiError(Response::HTTP_INTERNAL_SERVER_ERROR, 'Payment could not be updated!');
             }
         }
@@ -492,7 +490,7 @@ class PaymentService implements LoggerAwareInterface
                 $this->em->persist($paymentPersistence);
                 $this->em->flush();
             } catch (\Exception $e) {
-                $this->logger->error('Payment could not be updated!', ['exception' => $e]);
+                $this->logger->error('Payment could not be updated!', $this->getLoggingContext($paymentPersistence, ['exception' => $e]));
                 throw new ApiError(Response::HTTP_INTERNAL_SERVER_ERROR, 'Payment could not be updated!');
             }
         }
@@ -522,7 +520,7 @@ class PaymentService implements LoggerAwareInterface
                 $backendService = $this->backendService->getByPaymentType($paymentType);
                 $cleanupWorked = $backendService->cleanup($paymentPersistence);
                 if ($cleanupWorked !== true) {
-                    $this->logger->error('Backend cleanup failed for '.$paymentPersistence->getIdentifier().', skipping further cleanup');
+                    $this->logger->error('Backend cleanup failed, skipping further cleanup', $this->getLoggingContext($paymentPersistence));
                     continue;
                 }
 
@@ -536,7 +534,7 @@ class PaymentService implements LoggerAwareInterface
                         // in case the config is wrong, better not delete the entry from the DB if some related data could
                         // be still stored somewhere that needs to be cleaned up
 
-                        $this->logger->error("Can't find payment contract for method '$paymentMethod'. Can't clean up entry: ".$paymentPersistence->getIdentifier());
+                        $this->logger->error("Can't find payment contract for method '$paymentMethod'. Can't clean up entry.", $this->getLoggingContext($paymentPersistence));
                         continue;
                     }
 
@@ -544,12 +542,12 @@ class PaymentService implements LoggerAwareInterface
                     try {
                         $cleanupWorked = $paymentServiceProvider->cleanup($paymentPersistence);
                     } catch (\Exception $e) {
-                        $this->logger->error('PSP cleanup failed', ['exception' => $e]);
+                        $this->logger->error('PSP cleanup failed', $this->getLoggingContext($paymentPersistence, ['exception' => $e]));
                         $cleanupWorked = false;
                     }
 
                     if ($cleanupWorked !== true) {
-                        $this->logger->error('Payment provider cleanup failed for '.$paymentPersistence->getIdentifier().', skipping further cleanup');
+                        $this->logger->error('Payment provider cleanup failed, skipping further cleanup', $this->getLoggingContext($paymentPersistence));
                         continue;
                     }
                 }
