@@ -1,5 +1,14 @@
 # Changelog
 
+## v0.4.10
+
+* Port from doctrine annotations to PHP 8 attributes
+* Port to PHPUnit 10
+
+## v0.4.9
+
+* Minor psalm fixes
+
 ## v0.4.8
 
 * Add support for api-platform 3.2
