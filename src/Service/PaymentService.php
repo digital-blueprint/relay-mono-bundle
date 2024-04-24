@@ -269,6 +269,9 @@ class PaymentService implements LoggerAwareInterface
                 $this->em->persist($paymentPersistence);
                 $this->em->flush();
             } catch (\Exception $e) {
+                $context = $this->getLoggingContext($paymentPersistence);
+                $context['exception'] = $e;
+                $this->auditLogger->error('Persisting the notification status failed', $context);
                 throw ApiError::withDetails(Response::HTTP_INTERNAL_SERVER_ERROR, 'Payment could not be updated!', 'mono:payment-not-updated', ['message' => $e->getMessage()]);
             }
         } finally {
