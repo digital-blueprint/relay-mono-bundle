@@ -8,51 +8,43 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 class StartPayAction
 {
-    /**
-     * @Groups({"MonoPayment:input"})
-     */
+    #[Groups(['MonoPayment:input'])]
     private $identifier;
 
     /**
      * @var string
-     *
-     * @Groups({"MonoPayment:input"})
      */
+    #[Groups(['MonoPayment:input'])]
     private $paymentMethod;
 
     /**
      * @var string
-     *
-     * @Groups({"MonoPayment:input"})
      */
+    #[Groups(['MonoPayment:input'])]
     private $pspReturnUrl;
 
     /**
      * @var bool
-     *
-     * @Groups({"MonoPayment:input"})
      */
+    #[Groups(['MonoPayment:input'])]
     private $consent;
 
     /**
      * @var string
-     *
-     * @Groups({"MonoPayment:output"})
      */
+    #[Groups(['MonoPayment:output'])]
     private $widgetUrl;
 
     /**
      * @var string|null
-     *
-     * @Groups({"MonoPayment:output"})
      */
+    #[Groups(['MonoPayment:output'])]
     private $pspData;
 
     /**
      * @var string|null
-     *
-     * @Groups({"MonoPayment:output"})
      */
+    #[Groups(['MonoPayment:output'])]
     private $pspError;
 
     public function getIdentifier(): string

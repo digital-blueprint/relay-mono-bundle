@@ -7,214 +7,180 @@ namespace Dbp\Relay\MonoBundle\Persistence;
 use Dbp\Relay\MonoBundle\ApiPlatform\Payment;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass="Dbp\Relay\MonoBundle\Persistence\PaymentPersistenceRepository")
- *
- * @ORM\Table(name="mono_payments")
- */
+#[ORM\Table(name: 'mono_payments')]
+#[ORM\Entity(repositoryClass: PaymentPersistenceRepository::class)]
 class PaymentPersistence
 {
-    /**
-     * @ORM\Id
-     *
-     * @ORM\Column(type="string", length=36, unique=true)
-     */
+    #[ORM\Id]
+    #[ORM\Column(type: 'string', length: 36, unique: true)]
     private $identifier;
 
     /**
      * @var string
-     *
-     * @ORM\Column(type="string")
      */
+    #[ORM\Column(type: 'string')]
     private $type;
 
     /**
      * @var string
-     *
-     * @ORM\Column(type="text")
      */
+    #[ORM\Column(type: 'text')]
     private $data;
 
     /**
      * @var string|null
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $userIdentifier;
 
     /**
      * @var string|null
-     *
-     * @ORM\Column(type="string", length=45, nullable=true)
      */
+    #[ORM\Column(type: 'string', length: 45, nullable: true)]
     private $clientIp;
 
     /**
      * @var string|null
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $returnUrl;
 
     /**
      * @var string|null
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $notifyUrl;
 
     /**
      * @var string|null
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $pspReturnUrl;
 
     /**
      * @var string|null
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $localIdentifier;
 
     /**
      * @var string
-     *
-     * @ORM\Column(type="string")
      */
+    #[ORM\Column(type: 'string')]
     private $paymentStatus;
 
     /**
      * @var string|null
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $paymentReference;
 
     /**
      * @var string|null
-     *
-     * @ORM\Column(type="string", length=8, nullable=true)
      */
+    #[ORM\Column(type: 'string', length: 8, nullable: true)]
     private $amount;
 
     /**
      * @var string|null
-     *
-     * @ORM\Column(type="string", length=3, nullable=true)
      */
+    #[ORM\Column(type: 'string', length: 3, nullable: true)]
     private $currency;
 
     /**
      * @var string|null
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $alternateName;
 
     /**
      * @var string|null
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $honorificPrefix;
 
     /**
      * @var string|null
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $givenName;
 
     /**
      * @var string|null
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $familyName;
 
     /**
      * @var string|null
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $companyName;
 
     /**
      * @var string|null
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $honorificSuffix;
 
     /**
      * @var string|null
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $recipient;
 
     /**
      * @var string|null
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $paymentMethod;
 
     /**
      * @var string|null
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $paymentContract;
 
     /**
      * @var string|null
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $dataProtectionDeclarationUrl;
 
     /**
      * @var \DateTimeInterface
-     *
-     * @ORM\Column(type="datetime", nullable=true)
      */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $createdAt;
 
     /**
      * @var \DateTimeInterface
-     *
-     * @ORM\Column(type="datetime", nullable=true)
      */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $timeoutAt;
 
     /**
      * @var \DateTimeInterface|null
-     *
-     * @ORM\Column(type="datetime", nullable=true)
      */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $dataUpdatedAt;
 
     /**
      * @var \DateTimeInterface|null
-     *
-     * @ORM\Column(type="datetime", nullable=true)
      */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $startedAt;
 
     /**
      * @var \DateTimeInterface|null
-     *
-     * @ORM\Column(type="datetime", nullable=true)
      */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $completedAt;
 
     /**
      * @var \DateTimeInterface|null
-     *
-     * @ORM\Column(type="datetime", nullable=true)
      */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $notifiedAt;
 
     public function getIdentifier(): string

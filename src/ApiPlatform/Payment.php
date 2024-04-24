@@ -8,149 +8,127 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 class Payment
 {
-    /**
-     * @Groups({"MonoPayment:output"})
-     */
+    #[Groups(['MonoPayment:output'])]
     private $identifier;
 
     /**
      * @var string
-     *
-     * @Groups({"MonoPayment:input"})
      */
+    #[Groups(['MonoPayment:input'])]
     private $type;
 
     /**
      * @var string
-     *
-     * @Groups({"MonoPayment:input"})
      */
+    #[Groups(['MonoPayment:input'])]
     private $data;
 
     /**
      * @var string|null
-     *
-     * @Groups({"MonoPayment:input"})
      */
+    #[Groups(['MonoPayment:input'])]
     private $clientIp;
 
     /**
      * @var string|null
-     *
-     * @Groups({"MonoPayment:input", "MonoPayment:output"})
      */
+    #[Groups(['MonoPayment:input', 'MonoPayment:output'])]
     private $returnUrl;
 
     /**
      * @var string|null
-     *
-     * @Groups({"MonoPayment:input"})
      */
+    #[Groups(['MonoPayment:input'])]
     private $notifyUrl;
 
     /**
      * @var string|null
-     *
-     * @Groups({"MonoPayment:output", "MonoPayment:input"})
      */
+    #[Groups(['MonoPayment:output', 'MonoPayment:input'])]
     private $pspReturnUrl;
 
     /**
      * @var string|null
-     *
-     * @Groups({"MonoPayment:output", "MonoPayment:input"})
      */
+    #[Groups(['MonoPayment:output', 'MonoPayment:input'])]
     private $localIdentifier;
 
     /**
      * @var string
-     *
-     * @Groups({"MonoPayment:output"})
      */
+    #[Groups(['MonoPayment:output'])]
     private $paymentStatus;
 
     /**
      * @var string|null
-     *
-     * @Groups({"MonoPayment:output"})
      */
+    #[Groups(['MonoPayment:output'])]
     private $paymentReference;
 
     /**
      * @var string|null
-     *
-     * @Groups({"MonoPayment:output"})
      */
+    #[Groups(['MonoPayment:output'])]
     private $amount;
 
     /**
      * @var string|null
-     *
-     * @Groups({"MonoPayment:output"})
      */
+    #[Groups(['MonoPayment:output'])]
     private $currency;
 
     /**
      * @var string|null
-     *
-     * @Groups({"MonoPayment:output"})
      */
+    #[Groups(['MonoPayment:output'])]
     private $alternateName;
 
     /**
      * @var string|null
-     *
-     * @Groups({"MonoPayment:output"})
      */
+    #[Groups(['MonoPayment:output'])]
     private $honorificPrefix;
 
     /**
      * @var string|null
-     *
-     * @Groups({"MonoPayment:output"})
      */
+    #[Groups(['MonoPayment:output'])]
     private $givenName;
 
     /**
      * @var string|null
-     *
-     * @Groups({"MonoPayment:output"})
      */
+    #[Groups(['MonoPayment:output'])]
     private $familyName;
 
     /**
      * @var string|null
-     *
-     * @Groups({"MonoPayment:output"})
      */
+    #[Groups(['MonoPayment:output'])]
     private $companyName;
 
     /**
      * @var string|null
-     *
-     * @Groups({"MonoPayment:output"})
      */
+    #[Groups(['MonoPayment:output'])]
     private $honorificSuffix;
 
     /**
      * @var string|null
-     *
-     * @Groups({"MonoPayment:output"})
      */
+    #[Groups(['MonoPayment:output'])]
     private $recipient;
 
     /**
      * @var string
-     *
-     * @Groups({"MonoPayment:output"})
      */
+    #[Groups(['MonoPayment:output'])]
     private $paymentMethod;
 
     /**
      * @var string|null
-     *
-     * @Groups({"MonoPayment:output"})
      */
+    #[Groups(['MonoPayment:output'])]
     private $dataProtectionDeclarationUrl;
 
     public function __construct()
