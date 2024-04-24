@@ -235,8 +235,11 @@ class PaymentService implements LoggerAwareInterface
 
         $lock = $this->createPaymentLock($paymentPersistence);
         if (!$lock->acquire()) {
+            $this->auditLogger->debug('Failed to acquire lock for notify, skipping notify', $this->getLoggingContext($paymentPersistence));
+
             return;
         }
+        $this->auditLogger->debug('Acquired lock for notify', $this->getLoggingContext($paymentPersistence));
         try {
             if ($paymentPersistence->getNotifiedAt() !== null) {
                 return;
@@ -260,6 +263,7 @@ class PaymentService implements LoggerAwareInterface
             }
 
             if ($isNotified) {
+                $this->auditLogger->debug('Setting payment as notified', $this->getLoggingContext($paymentPersistence));
                 $now = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
                 $paymentPersistence->setNotifiedAt($now);
             }
@@ -275,6 +279,7 @@ class PaymentService implements LoggerAwareInterface
                 throw ApiError::withDetails(Response::HTTP_INTERNAL_SERVER_ERROR, 'Payment could not be updated!', 'mono:payment-not-updated', ['message' => $e->getMessage()]);
             }
         } finally {
+            $this->auditLogger->debug('Releasing lock for notify', $this->getLoggingContext($paymentPersistence));
             $lock->release();
         }
     }
