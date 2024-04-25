@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.4.11
+
+* Improved logging around backend notifications
+
 ## v0.4.10
 
 * Port from doctrine annotations to PHP 8 attributes
