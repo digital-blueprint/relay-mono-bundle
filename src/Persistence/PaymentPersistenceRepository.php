@@ -17,10 +17,8 @@ class PaymentPersistenceRepository extends EntityRepository
         $qb = $this->createQueryBuilder('p')
             ->where('p.identifier = :identifier')
             ->andWhere('p.timeoutAt >= :timeoutAt')
-            ->setParameters([
-                'identifier' => $identifier,
-                'timeoutAt' => $now,
-            ]);
+            ->setParameter('identifier', $identifier)
+            ->setParameter('timeoutAt', $now);
 
         $query = $qb->getQuery();
 
@@ -37,9 +35,7 @@ class PaymentPersistenceRepository extends EntityRepository
         $qb->select('count(p.identifier)')
             ->where('p.timeoutAt >= :timeoutAt')
             ->andWhere('p.completedAt IS NULL')
-            ->setParameters([
-                'timeoutAt' => $now,
-            ]);
+            ->setParameter('timeoutAt', $now);
 
         $query = $qb->getQuery();
 
@@ -55,15 +51,13 @@ class PaymentPersistenceRepository extends EntityRepository
             ->select('count(p.identifier)')
             ->where('p.timeoutAt >= :timeoutAt')
             ->andWhere('p.completedAt IS NULL')
-            ->andWhere('p.userIdentifier IS NOT NULL');
-        $parameters = [
-            'timeoutAt' => $now,
-        ];
+            ->andWhere('p.userIdentifier IS NOT NULL')
+            ->setParameter('timeoutAt', $now);
+
         if ($userIdentifier !== null) {
             $qb->andWhere('p.userIdentifier = :userIdentifier');
-            $parameters['userIdentifier'] = $userIdentifier;
+            $qb->setParameter('userIdentifier', $userIdentifier);
         }
-        $qb->setParameters($parameters);
 
         $query = $qb->getQuery();
 
@@ -79,15 +73,13 @@ class PaymentPersistenceRepository extends EntityRepository
             ->select('count(p.identifier)')
             ->where('p.timeoutAt >= :timeoutAt')
             ->andWhere('p.completedAt IS NULL')
-            ->andWhere('p.userIdentifier IS NULL');
-        $parameters = [
-            'timeoutAt' => $now,
-        ];
+            ->andWhere('p.userIdentifier IS NULL')
+            ->setParameter('timeoutAt', $now);
+
         if ($clientIp !== null) {
             $qb->andWhere('p.clientIp = :clientIp');
-            $parameters['clientIp'] = $clientIp;
+            $qb->setParameter('clientIp', $clientIp);
         }
-        $qb->setParameters($parameters);
 
         $query = $qb->getQuery();
 
@@ -101,14 +93,10 @@ class PaymentPersistenceRepository extends EntityRepository
      */
     public function findUnnotified(): array
     {
-        $parameters = [
-            'paymentStatus' => PaymentStatus::COMPLETED,
-        ];
-
         $qb = $this->createQueryBuilder('p');
         $qb->where('p.paymentStatus = :paymentStatus')
             ->andWhere($qb->expr()->isNull('p.notifiedAt'))
-            ->setParameters($parameters);
+            ->setParameter('paymentStatus', PaymentStatus::COMPLETED);
 
         $query = $qb->getQuery();
         $items = $query->getResult();
@@ -118,18 +106,14 @@ class PaymentPersistenceRepository extends EntityRepository
 
     public function findUnnotifiedByTypeCompletedSince($type, \DateTimeInterface $completedSince)
     {
-        $parameters = [
-            'type' => $type,
-            'paymentStatus' => PaymentStatus::COMPLETED,
-            'completedSince' => $completedSince,
-        ];
-
         $qb = $this->createQueryBuilder('p');
         $qb->where('p.type = :type')
             ->andWhere('p.paymentStatus = :paymentStatus')
             ->andWhere('p.completedAt >= :completedSince')
             ->andWhere($qb->expr()->isNull('p.notifiedAt'))
-            ->setParameters($parameters);
+            ->setParameter('type', $type)
+            ->setParameter('paymentStatus', PaymentStatus::COMPLETED)
+            ->setParameter('completedSince', $completedSince);
 
         $query = $qb->getQuery();
         $items = $query->getResult();
@@ -142,15 +126,11 @@ class PaymentPersistenceRepository extends EntityRepository
      */
     public function findByPaymentStatusTimeoutBefore(string $paymentStatus, \DateTimeInterface $timeoutBefore): array
     {
-        $parameters = [
-            'paymentStatus' => $paymentStatus,
-            'timeoutBefore' => $timeoutBefore,
-        ];
-
         $qb = $this->createQueryBuilder('p');
         $qb->where('p.paymentStatus = :paymentStatus')
             ->andWhere('p.timeoutAt < :timeoutBefore')
-            ->setParameters($parameters);
+            ->setParameter('paymentStatus', $paymentStatus)
+            ->setParameter('timeoutBefore', $timeoutBefore);
 
         $query = $qb->getQuery();
         $items = $query->getResult();
@@ -163,17 +143,13 @@ class PaymentPersistenceRepository extends EntityRepository
      */
     public function countByTypeCreatedSince(string $type, \DateTimeInterface $createdSince): array
     {
-        $parameters = [
-            'type' => $type,
-            'createdSince' => $createdSince,
-        ];
-
         $qb = $this->createQueryBuilder('p');
         $qb->select('p.paymentStatus', 'count(p.identifier)')
             ->where('p.type = :type')
             ->andWhere('p.createdAt >= :createdSince')
             ->groupBy('p.paymentStatus')
-            ->setParameters($parameters);
+            ->setParameter('type', $type)
+            ->setParameter('createdSince', $createdSince);
 
         $query = $qb->getQuery();
         $rows = $query->execute();

@@ -54,7 +54,7 @@ class Kernel extends BaseKernel
             'annotations' => false,
         ]);
         $container->extension('dbp_relay_mono', [
-            'database_url' => 'bla',
+            'database_url' => 'sqlite:///:memory:',
             'cleanup' => [
                 [
                     'payment_status' => 'ada',

@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+* Add support for doctrine/dbal v4
+* Add support for doctrine/orm v3.2
+
 ## v0.4.11
 
 * Improved logging around backend notifications

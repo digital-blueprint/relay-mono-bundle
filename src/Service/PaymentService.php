@@ -88,7 +88,7 @@ class PaymentService implements LoggerAwareInterface
 
     public function checkConnection()
     {
-        $this->em->getConnection()->connect();
+        $this->em->getConnection()->getNativeConnection();
     }
 
     private function createPaymentLock(PaymentPersistence $payment): LockInterface
