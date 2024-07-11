@@ -150,37 +150,37 @@ class PaymentPersistence
     /**
      * @var \DateTimeInterface
      */
-    #[ORM\Column(type: 'datetime', nullable: true)]
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     private $createdAt;
 
     /**
      * @var \DateTimeInterface
      */
-    #[ORM\Column(type: 'datetime', nullable: true)]
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     private $timeoutAt;
 
     /**
      * @var \DateTimeInterface|null
      */
-    #[ORM\Column(type: 'datetime', nullable: true)]
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     private $dataUpdatedAt;
 
     /**
      * @var \DateTimeInterface|null
      */
-    #[ORM\Column(type: 'datetime', nullable: true)]
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     private $startedAt;
 
     /**
      * @var \DateTimeInterface|null
      */
-    #[ORM\Column(type: 'datetime', nullable: true)]
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     private $completedAt;
 
     /**
      * @var \DateTimeInterface|null
      */
-    #[ORM\Column(type: 'datetime', nullable: true)]
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     private $notifiedAt;
 
     public function getIdentifier(): string
