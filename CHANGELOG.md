@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## v0.4.12
 
 * Add support for doctrine/dbal v4
 * Add support for doctrine/orm v3.2
