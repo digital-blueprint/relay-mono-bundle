@@ -101,6 +101,25 @@ class PaymentPersistenceTest extends KernelTestCase
         $this->assertSame(1, $this->repo->countConcurrent());
     }
 
+    public function testDateTime()
+    {
+        $payment = $this->getPayment('some-id');
+        $payment->setTimeoutAt(new \DateTime());
+        $payment->setCompletedAt(new \DateTime());
+        $payment->setCreatedAt(new \DateTime());
+        $payment->setStartedAt(new \DateTime());
+        $payment->setNotifiedAt(new \DateTime());
+        $payment->setDataUpdatedAt(new \DateTime());
+        $this->em->persist($payment);
+        $this->em->flush();
+
+        $this->repo->countByTypeCreatedSince('some_type', new \DateTime());
+        $this->repo->findByPaymentStatusTimeoutBefore(PaymentStatus::COMPLETED, new \DateTime());
+        $this->repo->findUnnotifiedByTypeCompletedSince('some_type', new \DateTime());
+
+        $this->assertTrue(true);
+    }
+
     public function testCountAuthConcurrent()
     {
         $this->assertSame(0, $this->repo->countAuthConcurrent());

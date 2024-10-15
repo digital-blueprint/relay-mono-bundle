@@ -466,7 +466,7 @@ class PaymentPersistence
 
     public function setCreatedAt(\DateTimeInterface $createdAt): self
     {
-        $this->createdAt = $createdAt;
+        $this->createdAt = \DateTimeImmutable::createFromInterface($createdAt);
 
         return $this;
     }
@@ -478,7 +478,7 @@ class PaymentPersistence
 
     public function setTimeoutAt(\DateTimeInterface $timeoutAt): self
     {
-        $this->timeoutAt = $timeoutAt;
+        $this->timeoutAt = \DateTimeImmutable::createFromInterface($timeoutAt);
 
         return $this;
     }
@@ -490,7 +490,7 @@ class PaymentPersistence
 
     public function setDataUpdatedAt(?\DateTimeInterface $dataUpdatedAt): self
     {
-        $this->dataUpdatedAt = $dataUpdatedAt;
+        $this->dataUpdatedAt = $dataUpdatedAt !== null ? \DateTimeImmutable::createFromInterface($dataUpdatedAt) : null;
 
         return $this;
     }
@@ -502,7 +502,7 @@ class PaymentPersistence
 
     public function setStartedAt(?\DateTimeInterface $startedAt): self
     {
-        $this->startedAt = $startedAt;
+        $this->startedAt = $startedAt !== null ? \DateTimeImmutable::createFromInterface($startedAt) : null;
 
         return $this;
     }
@@ -519,7 +519,7 @@ class PaymentPersistence
 
     public function setCompletedAt(?\DateTimeInterface $completedAt): self
     {
-        $this->completedAt = $completedAt;
+        $this->completedAt = $completedAt !== null ? \DateTimeImmutable::createFromInterface($completedAt) : null;
 
         return $this;
     }
@@ -536,7 +536,7 @@ class PaymentPersistence
 
     public function setNotifiedAt(?\DateTimeInterface $notifiedAt): self
     {
-        $this->notifiedAt = $notifiedAt;
+        $this->notifiedAt = $notifiedAt !== null ? \DateTimeImmutable::createFromInterface($notifiedAt) : null;
 
         return $this;
     }
