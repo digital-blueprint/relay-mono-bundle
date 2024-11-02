@@ -7821,16 +7821,16 @@
         },
         {
             "name": "captainhook/captainhook",
-            "version": "5.23.5",
+            "version": "5.23.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/captainhookphp/captainhook.git",
-                "reference": "8b39418081b0db0c8a2996f8740ea44345af6888"
+                "reference": "6c9a60f5771581f3788f98d7b4aa9a61156cfebb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/captainhookphp/captainhook/zipball/8b39418081b0db0c8a2996f8740ea44345af6888",
-                "reference": "8b39418081b0db0c8a2996f8740ea44345af6888",
+                "url": "https://api.github.com/repos/captainhookphp/captainhook/zipball/6c9a60f5771581f3788f98d7b4aa9a61156cfebb",
+                "reference": "6c9a60f5771581f3788f98d7b4aa9a61156cfebb",
                 "shasum": ""
             },
             "require": {
@@ -7893,7 +7893,7 @@
             ],
             "support": {
                 "issues": "https://github.com/captainhookphp/captainhook/issues",
-                "source": "https://github.com/captainhookphp/captainhook/tree/5.23.5"
+                "source": "https://github.com/captainhookphp/captainhook/tree/5.23.6"
             },
             "funding": [
                 {
@@ -7901,7 +7901,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-09-05T15:44:55+00:00"
+            "time": "2024-10-30T14:15:58+00:00"
         },
         {
             "name": "captainhook/secrets",
@@ -9677,16 +9677,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "10.5.37",
+            "version": "10.5.38",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "c7cffa0efa2b70c22366523e6d804c9419eb2400"
+                "reference": "a86773b9e887a67bc53efa9da9ad6e3f2498c132"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/c7cffa0efa2b70c22366523e6d804c9419eb2400",
-                "reference": "c7cffa0efa2b70c22366523e6d804c9419eb2400",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/a86773b9e887a67bc53efa9da9ad6e3f2498c132",
+                "reference": "a86773b9e887a67bc53efa9da9ad6e3f2498c132",
                 "shasum": ""
             },
             "require": {
@@ -9758,7 +9758,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/10.5.37"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/10.5.38"
             },
             "funding": [
                 {
@@ -9774,7 +9774,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-10-19T13:03:41+00:00"
+            "time": "2024-10-28T13:06:21+00:00"
         },
         {
             "name": "react/cache",
