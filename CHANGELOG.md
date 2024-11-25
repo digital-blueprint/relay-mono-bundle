@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+* Drop support for Symfony 5
+
 ## v0.4.12
 
 * Add support for doctrine/dbal v4
