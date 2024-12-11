@@ -2,7 +2,11 @@
 
 ## Unreleased
 
+## v0.4.13
+
 * Drop support for Symfony 5
+* Drop support for api-platform 2
+* Test with PHP 8.4
 
 ## v0.4.12
 
