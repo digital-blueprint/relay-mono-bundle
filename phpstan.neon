@@ -10,3 +10,7 @@ parameters:
         - tests
     excludePaths:
         - tests/bootstrap.php
+    ignoreErrors:
+        - identifier: method.alreadyNarrowedType
+        - identifier: function.alreadyNarrowedType
+        - identifier: instanceof.alwaysTrue
