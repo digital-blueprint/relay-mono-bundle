@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## v0.4.14
+
+* Fixes for newer phpstan
+
 ## v0.4.13
 
 * Drop support for Symfony 5
