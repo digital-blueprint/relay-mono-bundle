@@ -26,7 +26,9 @@ class PaymentPersistenceTest extends KernelTestCase
         $metaData = $this->em->getMetadataFactory()->getAllMetadata();
         $schemaTool = new SchemaTool($this->em);
         $schemaTool->updateSchema($metaData);
-        $this->repo = $this->em->getRepository(PaymentPersistence::class);
+        $repo = $this->em->getRepository(PaymentPersistence::class);
+        assert($repo instanceof PaymentPersistenceRepository);
+        $this->repo = $repo;
     }
 
     public function tearDown(): void
