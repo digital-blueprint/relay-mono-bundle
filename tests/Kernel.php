@@ -55,12 +55,6 @@ class Kernel extends BaseKernel
         ]);
         $container->extension('dbp_relay_mono', [
             'database_url' => 'sqlite:///:memory:',
-            'cleanup' => [
-                [
-                    'payment_status' => 'ada',
-                    'timeout_before' => '123',
-                ],
-            ],
         ]);
     }
 }
