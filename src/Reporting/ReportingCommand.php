@@ -32,14 +32,14 @@ class ReportingCommand extends Command
         $this->setName('dbp:relay-mono:reporting');
         $this
             ->setDescription('Reporting command')
-            ->addOption('email', null, InputOption::VALUE_OPTIONAL, 'Override email address to send report to', '');
+            ->addOption('email', null, InputOption::VALUE_REQUIRED, 'Override email address to send report to');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $email = trim($input->getOption('email'));
+        $email = $input->getOption('email');
 
-        if ($email !== '') {
+        if ($email !== null) {
             $output->writeln('Override email address: '.$email);
         }
 

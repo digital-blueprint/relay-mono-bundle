@@ -49,7 +49,7 @@ class PaymentType
     private $maxConcurrentUnauthPaymentsPerIp;
 
     /**
-     * @var string
+     * @var ?string
      */
     private $returnUrlOverride;
 
@@ -69,7 +69,7 @@ class PaymentType
     private $pspReturnUrlExpression;
 
     /**
-     * @var string
+     * @var ?string
      */
     private $recipient;
 
@@ -79,12 +79,12 @@ class PaymentType
     private $dataProtectionDeclarationUrl;
 
     /**
-     * @var ?array
+     * @var ?NotifyErrorConfig
      */
     private $notifyErrorConfig;
 
     /**
-     * @var ?array
+     * @var ?ReportingConfig
      */
     private $reportingConfig;
 
@@ -186,12 +186,12 @@ class PaymentType
         return $this->maxConcurrentUnauthPaymentsPerIp;
     }
 
-    public function getReturnUrlOverride(): string
+    public function getReturnUrlOverride(): ?string
     {
         return $this->returnUrlOverride;
     }
 
-    public function setReturnUrlOverride(string $returnUrlOverride): self
+    public function setReturnUrlOverride(?string $returnUrlOverride): self
     {
         $this->returnUrlOverride = $returnUrlOverride;
 
@@ -256,36 +256,34 @@ class PaymentType
         return $expressionLanguage->evaluate($this->getPspReturnUrlExpression(), ['url' => $url, 'pspReturnUrl' => $url]);
     }
 
-    public function getRecipient(): string
+    public function getRecipient(): ?string
     {
         return $this->recipient;
     }
 
-    public function setRecipient(string $recipient): self
+    public function setRecipient(?string $recipient): self
     {
         $this->recipient = $recipient;
 
         return $this;
     }
 
-    public function getNotifyErrorConfig(): ?array
+    public function getNotifyErrorConfig(): ?NotifyErrorConfig
     {
         return $this->notifyErrorConfig;
     }
 
-    public function setNotifyErrorConfig(?array $notifyErrorConfig): self
+    public function setNotifyErrorConfig(?NotifyErrorConfig $notifyErrorConfig)
     {
         $this->notifyErrorConfig = $notifyErrorConfig;
-
-        return $this;
     }
 
-    public function getReportingConfig(): ?array
+    public function getReportingConfig(): ?ReportingConfig
     {
         return $this->reportingConfig;
     }
 
-    public function setReportingConfig(?array $reportingConfig): self
+    public function setReportingConfig(?ReportingConfig $reportingConfig): self
     {
         $this->reportingConfig = $reportingConfig;
 
@@ -303,35 +301,21 @@ class PaymentType
         $paymentType->setMaxConcurrentAuthPaymentsPerUser((int) $config['max_concurrent_auth_payments_per_user']);
         $paymentType->setMaxConcurrentUnauthPayments((int) $config['max_concurrent_unauth_payments']);
         $paymentType->setMaxConcurrentUnauthPaymentsPerIp((int) $config['max_concurrent_unauth_payments_per_ip']);
-        $paymentType->setReturnUrlOverride((string) $config['return_url_override']);
+        $paymentType->setReturnUrlOverride($config['return_url_override'] ?? null);
         $paymentType->setReturnUrlExpression((string) $config['return_url_expression']);
         $paymentType->setNotifyUrlExpression((string) $config['notify_url_expression']);
         $paymentType->setPspReturnUrlExpression((string) $config['psp_return_url_expression']);
         $paymentType->setDataProtectionDeclarationUrl($config['data_protection_declaration_url'] ?? null);
-        $paymentType->setRecipient((string) $config['recipient']);
-        if (
-            array_key_exists('notify_error', $config)
-            && is_array($config['notify_error'])
-            && !empty($config['notify_error']['dsn'])
-            && !empty($config['notify_error']['from'])
-            && !empty($config['notify_error']['to'])
-            && !empty($config['notify_error']['subject'])
-            && !empty($config['notify_error']['html_template'])
-            && !empty($config['notify_error']['completed_begin'])
-        ) {
-            $paymentType->setNotifyErrorConfig($config['notify_error']);
+        $paymentType->setRecipient($config['recipient'] ?? null);
+
+        $notifyErrorConfig = $config['notify_error'] ?? null;
+        if ($notifyErrorConfig !== null) {
+            $paymentType->setNotifyErrorConfig(new NotifyErrorConfig($notifyErrorConfig));
         }
-        if (
-            array_key_exists('reporting', $config)
-            && is_array($config['reporting'])
-            && !empty($config['reporting']['dsn'])
-            && !empty($config['reporting']['from'])
-            && !empty($config['reporting']['to'])
-            && !empty($config['reporting']['subject'])
-            && !empty($config['reporting']['html_template'])
-            && !empty($config['reporting']['created_begin'])
-        ) {
-            $paymentType->setReportingConfig($config['reporting']);
+
+        $reportingConfig = $config['reporting'] ?? null;
+        if ($reportingConfig !== null) {
+            $paymentType->setReportingConfig(new ReportingConfig($reportingConfig));
         }
 
         return $paymentType;
