@@ -62,7 +62,7 @@ class ConfigurationServiceTest extends TestCase
 
         $service->checkConfig();
 
-        $this->assertTrue(is_array($service->getConfig()));
+        $this->assertSame('PT1234S', $service->getPaymentSessionTimeout());
         $this->assertSame('started', $service->getCleanupConfiguration()[0]['payment_status']);
 
         $paymentTypes = $service->getPaymentTypes();
