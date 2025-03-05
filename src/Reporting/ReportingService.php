@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Dbp\Relay\MonoBundle\Reporting;
 
 use Dbp\Relay\MonoBundle\Config\ConfigurationService;
+use Dbp\Relay\MonoBundle\Config\EmailConfig;
 use Dbp\Relay\MonoBundle\Config\PaymentType;
 use Dbp\Relay\MonoBundle\Persistence\PaymentPersistence;
 use Dbp\Relay\MonoBundle\Persistence\PaymentPersistenceRepository;
@@ -38,29 +39,30 @@ class ReportingService implements LoggerAwareInterface
         $this->logger = new NullLogger();
     }
 
-    public function sendAllReporting(string $email = '')
+    public function sendAllReporting(?string $overrideEmail = null)
     {
         $paymentTypes = $this->configurationService->getPaymentTypes();
 
         foreach ($paymentTypes as $paymentType) {
-            if ($paymentType->getReportingConfig()) {
-                $this->sendReporting($paymentType, $email);
-            }
+            $this->sendReporting($paymentType, $overrideEmail);
         }
     }
 
-    public function sendReporting(PaymentType $paymentType, string $email = '')
+    public function sendReporting(PaymentType $paymentType, ?string $overrideEmail = null)
     {
+        $reportingConfig = $paymentType->getReportingConfig();
+        if ($reportingConfig === null) {
+            return;
+        }
+
         $repo = $this->em->getRepository(PaymentPersistence::class);
         assert($repo instanceof PaymentPersistenceRepository);
 
         $this->logger->debug('Send reporting for: '.$paymentType->getIdentifier());
 
-        $reportingConfig = $paymentType->getReportingConfig();
-
         $type = $paymentType->getIdentifier();
         $now = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
-        $createdSince = $now->sub(new \DateInterval($reportingConfig['created_begin']));
+        $createdSince = $now->sub(new \DateInterval($reportingConfig->getCreatedBegin()));
 
         $count = $repo->countByTypeCreatedSince($type, $createdSince);
 
@@ -72,25 +74,24 @@ class ReportingService implements LoggerAwareInterface
             'count' => $count,
         ];
 
-        if ($email !== '') {
-            $reportingConfig['to'] = $email;
-        }
-
-        $this->sendEmail($reportingConfig, $context);
+        $this->sendEmail($reportingConfig, $context, $overrideEmail);
     }
 
     public function sendNotifyError(PaymentType $paymentType)
     {
+        $notifyErrorConfig = $paymentType->getNotifyErrorConfig();
+        if ($notifyErrorConfig === null) {
+            return;
+        }
+
         $repo = $this->em->getRepository(PaymentPersistence::class);
         assert($repo instanceof PaymentPersistenceRepository);
 
         $this->logger->debug('Send notify error for: '.$paymentType->getIdentifier());
 
-        $notifyErrorConfig = $paymentType->getNotifyErrorConfig();
-
         $type = $paymentType->getIdentifier();
         $now = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
-        $completedSince = $now->sub(new \DateInterval($notifyErrorConfig['completed_begin']));
+        $completedSince = $now->sub(new \DateInterval($notifyErrorConfig->getCompletedBegin()));
         $items = $repo->findUnnotifiedByTypeCompletedSince($type, $completedSince);
         $count = count($items);
 
@@ -105,24 +106,26 @@ class ReportingService implements LoggerAwareInterface
         }
     }
 
-    private function sendEmail(array $config, array $context)
+    private function sendEmail(EmailConfig $config, array $context, ?string $overrideEmail = null)
     {
         $loader = new FilesystemLoader(dirname(__FILE__).'/../Resources/views/');
         $twig = new Environment($loader);
 
-        $template = $twig->load($config['html_template']);
+        $template = $twig->load($config->getHtmlTemplate());
         $html = $template->render($context);
 
-        $transport = Transport::fromDsn($config['dsn']);
+        $transport = Transport::fromDsn($config->getDsn());
         $mailer = new Mailer($transport);
 
+        $to = $overrideEmail ?? $config->getTo();
+
         $email = (new Email())
-            ->from($config['from'])
-            ->to($config['to'])
-            ->subject($config['subject'])
+            ->from($config->getFrom())
+            ->to($to)
+            ->subject($config->getSubject())
             ->html($html);
 
-        $this->logger->debug('Sending email to: '.$config['to']);
+        $this->logger->debug('Sending email to: '.$to);
         $mailer->send($email);
     }
 }
