@@ -130,7 +130,7 @@ class PaymentService implements LoggerAwareInterface
         }
 
         $returnUrlOverride = $paymentType->getReturnUrlOverride();
-        if ($returnUrlOverride) {
+        if ($returnUrlOverride !== null) {
             $payment->setReturnUrl($returnUrlOverride);
         }
 
