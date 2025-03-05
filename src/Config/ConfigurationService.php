@@ -180,8 +180,19 @@ class ConfigurationService
         return $contracts;
     }
 
-    public function getCleanupConfiguration(): array
+    /**
+     * ISO duration after a payment has expired after which the payment can be considered for cleanup.
+     * Returns null if no cleanup is wanted.
+     */
+    public function getCleanupTimeout(string $paymentStatus): ?string
     {
-        return $this->config['cleanup'];
+        $cleanupConfigs = $this->config['cleanup'];
+        foreach ($cleanupConfigs as $cleanupConfig) {
+            if ($paymentStatus === $cleanupConfig['payment_status']) {
+                return $cleanupConfig['timeout_before'];
+            }
+        }
+
+        return null;
     }
 }
