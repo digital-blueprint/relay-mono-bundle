@@ -22,7 +22,7 @@ class Configuration implements ConfigurationInterface
                         ->defaultValue('%env(resolve:DATABASE_URL)%')
                     ->end()
                     ->scalarNode('payment_session_timeout')
-                        ->isRequired()
+                        ->info('Time after which a created payment can no longer be continued.')
                         ->defaultValue('PT1800S')
                     ->end()
                     ->arrayNode('payment_types')
