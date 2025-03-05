@@ -508,10 +508,13 @@ class PaymentService implements LoggerAwareInterface
         $this->logger->debug('Running cleanup');
 
         $now = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
-        $cleanupConfigs = $this->configurationService->getCleanupConfiguration();
-        foreach ($cleanupConfigs as $cleanupConfig) {
-            $paymentStatus = $cleanupConfig['payment_status'];
-            $timeoutBefore = $now->sub(new \DateInterval($cleanupConfig['timeout_before']));
+        $paymentStatuses = [PaymentStatus::PREPARED, PaymentStatus::STARTED, PaymentStatus::PENDING, PaymentStatus::COMPLETED, PaymentStatus::FAILED];
+        foreach ($paymentStatuses as $paymentStatus) {
+            $cleanupTimeout = $this->configurationService->getCleanupTimeout($paymentStatus);
+            if ($cleanupTimeout === null) {
+                continue;
+            }
+            $timeoutBefore = $now->sub(new \DateInterval($cleanupTimeout));
             $paymentPersistences = $repo->findByPaymentStatusTimeoutBefore($paymentStatus, $timeoutBefore);
             foreach ($paymentPersistences as $paymentPersistence) {
                 $type = $paymentPersistence->getType();
