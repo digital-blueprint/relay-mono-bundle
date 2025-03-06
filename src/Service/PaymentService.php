@@ -144,27 +144,27 @@ class PaymentService implements LoggerAwareInterface
         assert($repo instanceof PaymentPersistenceRepository);
         if (
             (
-                $paymentType->getMaxConcurrentPayments() >= 0
+                $paymentType->getMaxConcurrentPayments() !== null
                 && $repo->countConcurrent() >= $paymentType->getMaxConcurrentPayments()
             )
             || (
                 $userIdentifier
-                && $paymentType->getMaxConcurrentAuthPayments() >= 0
+                && $paymentType->getMaxConcurrentAuthPayments() !== null
                 && $repo->countAuthConcurrent() >= $paymentType->getMaxConcurrentAuthPayments()
             )
             || (
                 $userIdentifier
-                && $paymentType->getMaxConcurrentAuthPaymentsPerUser() >= 0
+                && $paymentType->getMaxConcurrentAuthPaymentsPerUser() !== null
                 && $repo->countAuthConcurrent($userIdentifier) >= $paymentType->getMaxConcurrentAuthPaymentsPerUser()
             )
             || (
                 !$userIdentifier
-                && $paymentType->getMaxConcurrentUnauthPayments() >= 0
+                && $paymentType->getMaxConcurrentUnauthPayments() !== null
                 && $repo->countUnauthConcurrent() >= $paymentType->getMaxConcurrentUnauthPayments()
             )
             || (
                 !$userIdentifier
-                && $paymentType->getMaxConcurrentUnauthPaymentsPerIp() >= 0
+                && $paymentType->getMaxConcurrentUnauthPaymentsPerIp() !== null
                 && $repo->countUnauthConcurrent($payment->getClientIp()) >= $paymentType->getMaxConcurrentUnauthPaymentsPerIp()
             )
         ) {

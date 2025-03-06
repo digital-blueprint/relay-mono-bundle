@@ -24,27 +24,27 @@ class PaymentType
     private $authRequired;
 
     /**
-     * @var int
+     * @var ?int
      */
     private $maxConcurrentPayments;
 
     /**
-     * @var int
+     * @var ?int
      */
     private $maxConcurrentAuthPayments;
 
     /**
-     * @var int
+     * @var ?int
      */
     private $maxConcurrentAuthPaymentsPerUser;
 
     /**
-     * @var int
+     * @var ?int
      */
     private $maxConcurrentUnauthPayments;
 
     /**
-     * @var int
+     * @var ?int
      */
     private $maxConcurrentUnauthPaymentsPerIp;
 
@@ -304,11 +304,11 @@ class PaymentType
         $paymentType->setRecipient($config['recipient'] ?? null);
 
         $concurrencyLimits = $config['concurrency_limits'];
-        $paymentType->setMaxConcurrentPayments((int) $concurrencyLimits['max_concurrent_payments']);
-        $paymentType->setMaxConcurrentAuthPayments((int) $concurrencyLimits['max_concurrent_auth_payments']);
-        $paymentType->setMaxConcurrentAuthPaymentsPerUser((int) $concurrencyLimits['max_concurrent_auth_payments_per_user']);
-        $paymentType->setMaxConcurrentUnauthPayments((int) $concurrencyLimits['max_concurrent_unauth_payments']);
-        $paymentType->setMaxConcurrentUnauthPaymentsPerIp((int) $concurrencyLimits['max_concurrent_unauth_payments_per_ip']);
+        $paymentType->setMaxConcurrentPayments($concurrencyLimits['max_concurrent_payments'] ?? null);
+        $paymentType->setMaxConcurrentAuthPayments($concurrencyLimits['max_concurrent_auth_payments'] ?? null);
+        $paymentType->setMaxConcurrentAuthPaymentsPerUser($concurrencyLimits['max_concurrent_auth_payments_per_user'] ?? null);
+        $paymentType->setMaxConcurrentUnauthPayments($concurrencyLimits['max_concurrent_unauth_payments']);
+        $paymentType->setMaxConcurrentUnauthPaymentsPerIp($concurrencyLimits['max_concurrent_unauth_payments_per_ip'] ?? null);
 
         $notifyErrorConfig = $config['notify_error'] ?? null;
         if ($notifyErrorConfig !== null) {
