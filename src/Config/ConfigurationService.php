@@ -141,7 +141,7 @@ class ConfigurationService
             foreach ($paymentMethodsConfig as $paymentMethodConfig) {
                 $paymentMethodObject = PaymentMethod::fromConfig($paymentMethodConfig);
                 if ($paymentMethodObject->getIdentifier() === $paymentMethod) {
-                    return $this->getPaymentContract($type, $paymentMethodObject->getContract());
+                    return $this->getPaymentContract($paymentMethodObject->getContract());
                 }
             }
         }
@@ -152,14 +152,11 @@ class ConfigurationService
     /**
      * Returns a payment contract by name.
      */
-    public function getPaymentContract(string $type, string $contract): ?PaymentContract
+    public function getPaymentContract(string $contract): ?PaymentContract
     {
-        if (array_key_exists($type, $this->config['payment_types'])) {
-            $paymentTypeConfig = $this->config['payment_types'][$type];
-            $paymentContractsConfig = $paymentTypeConfig['payment_contracts'];
-            if (array_key_exists($contract, $paymentContractsConfig)) {
-                return PaymentContract::fromConfig($contract, $paymentContractsConfig[$contract]);
-            }
+        $paymentContractsConfig = $this->config['payment_contracts'];
+        if (array_key_exists($contract, $paymentContractsConfig)) {
+            return PaymentContract::fromConfig($contract, $paymentContractsConfig[$contract]);
         }
 
         return null;
@@ -170,15 +167,13 @@ class ConfigurationService
      *
      * @return array<PaymentContract>
      */
-    public function getPaymentContracts(string $type): array
+    public function getPaymentContracts(): array
     {
         $contracts = [];
-        if (array_key_exists($type, $this->config['payment_types'])) {
-            $paymentContractsConfig = $this->config['payment_types'][$type]['payment_contracts'];
-            foreach ($paymentContractsConfig as $paymentContractIdentifier => $paymentContractConfig) {
-                $paymentContract = PaymentContract::fromConfig($paymentContractIdentifier, $paymentContractConfig);
-                $contracts[] = $paymentContract;
-            }
+        $paymentContractsConfig = $this->config['payment_contracts'];
+        foreach ($paymentContractsConfig as $paymentContractIdentifier => $paymentContractConfig) {
+            $paymentContract = PaymentContract::fromConfig($paymentContractIdentifier, $paymentContractConfig);
+            $contracts[] = $paymentContract;
         }
 
         return $contracts;

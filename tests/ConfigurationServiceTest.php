@@ -28,6 +28,11 @@ class ConfigurationServiceTest extends TestCase
                 ],
             ],
             'payment_session_timeout' => 'PT1234S',
+            'payment_contracts' => [
+                'somecontract' => [
+                    'service' => 'bla',
+                ],
+            ],
             'payment_types' => [
                 'sometype' => [
                     'identifier' => 'foo',
@@ -44,11 +49,6 @@ class ConfigurationServiceTest extends TestCase
                         'max_concurrent_auth_payments_per_user' => 3,
                         'max_concurrent_unauth_payments' => 4,
                         'max_concurrent_unauth_payments_per_ip' => 5,
-                    ],
-                    'payment_contracts' => [
-                        'somecontract' => [
-                            'service' => 'bla',
-                        ],
                     ],
                     'payment_methods' => [
                         [
@@ -73,7 +73,7 @@ class ConfigurationServiceTest extends TestCase
         $this->assertCount(1, $paymentTypes);
         $this->assertSame(42, $paymentTypes[0]->getMaxConcurrentPayments());
 
-        $contracts = $service->getPaymentContracts('sometype');
+        $contracts = $service->getPaymentContracts();
         $this->assertCount(1, $contracts);
         $this->assertSame('somecontract', $contracts[0]->getIdentifier());
 
@@ -85,9 +85,8 @@ class ConfigurationServiceTest extends TestCase
 
         $this->assertSame('sometype', $service->getPaymentTypeByType('sometype')->getIdentifier());
 
-        $this->assertNull($service->getPaymentContract('nope', 'somecontract'));
-        $this->assertNull($service->getPaymentContract('sometype', 'nope'));
-        $contract = $service->getPaymentContract('sometype', 'somecontract');
+        $this->assertNull($service->getPaymentContract('nope'));
+        $contract = $service->getPaymentContract('somecontract');
         $this->assertSame('somecontract', $contract->getIdentifier());
 
         $this->assertNull($service->getPaymentMethodByTypeAndPaymentMethod('nope', 'quux'));

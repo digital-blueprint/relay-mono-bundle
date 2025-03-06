@@ -457,18 +457,16 @@ class PaymentService implements LoggerAwareInterface
     {
         $this->auditLogger->debug('Completing for PSP data', ['mono-psp-data' => $pspData]);
         // first map the PSP data to an existing payment entry by asking all PSP connectors
-        foreach ($this->configurationService->getPaymentTypes() as $paymentType) {
-            foreach ($this->configurationService->getPaymentContracts($paymentType->getIdentifier()) as $contract) {
-                $pspService = $this->paymentServiceProviderService->getByPaymentContract($contract);
-                try {
-                    $paymentId = $pspService->getPaymentIdForPspData($pspData);
-                } catch (\Exception $e) {
-                    $this->logger->error('PSP service failed to get payment ID', ['exception' => $e]);
-                    continue;
-                }
-                if ($paymentId !== null) {
-                    return $paymentId;
-                }
+        foreach ($this->configurationService->getPaymentContracts() as $contract) {
+            $pspService = $this->paymentServiceProviderService->getByPaymentContract($contract);
+            try {
+                $paymentId = $pspService->getPaymentIdForPspData($pspData);
+            } catch (\Exception $e) {
+                $this->logger->error('PSP service failed to get payment ID', ['exception' => $e]);
+                continue;
+            }
+            if ($paymentId !== null) {
+                return $paymentId;
             }
         }
 
