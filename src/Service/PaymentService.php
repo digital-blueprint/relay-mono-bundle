@@ -419,7 +419,10 @@ class PaymentService implements LoggerAwareInterface
         $paymentPersistence->setPaymentMethod($paymentMethod);
 
         $paymentContract = $this->configurationService->getPaymentContractByTypeAndPaymentMethod($type, $paymentMethod);
-        $paymentPersistence->setPaymentContract((string) $paymentContract);
+        if ($paymentContract === null) {
+            throw new \RuntimeException('No payment contract found!');
+        }
+        $paymentPersistence->setPaymentContract($paymentContract->getIdentifier());
 
         $paymentPersistence->setPaymentStatus(PaymentStatus::STARTED);
 
