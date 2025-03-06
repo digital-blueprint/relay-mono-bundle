@@ -48,14 +48,15 @@ class ConfigurationServiceTest extends TestCase
                     'payment_contracts' => [
                         'somecontract' => [
                             'service' => 'bla',
-                            'payment_methods' => [
-                                [
-                                    'identifier' => 'quux',
-                                    'name' => 'somename',
-                                    'image' => 'bar.svg',
-                                    'demo_mode' => false,
-                                ],
-                            ],
+                        ],
+                    ],
+                    'payment_methods' => [
+                        [
+                            'identifier' => 'quux',
+                            'contract' => 'somecontract',
+                            'name' => 'somename',
+                            'image' => 'bar.svg',
+                            'demo_mode' => true,
                         ],
                     ],
                 ],
@@ -66,17 +67,36 @@ class ConfigurationServiceTest extends TestCase
 
         $this->assertSame('PT1234S', $service->getPaymentSessionTimeout());
         $this->assertSame('P1D', $service->getCleanupTimeout('started'));
+        $this->assertNull($service->getCleanupTimeout('nope'));
 
         $paymentTypes = $service->getPaymentTypes();
         $this->assertCount(1, $paymentTypes);
         $this->assertSame(42, $paymentTypes[0]->getMaxConcurrentPayments());
 
+        $contracts = $service->getPaymentContracts('sometype');
+        $this->assertCount(1, $contracts);
+        $this->assertSame('somecontract', $contracts[0]->getIdentifier());
+
         $methods = $service->getPaymentMethodsByType($paymentTypes[0]->getIdentifier());
         $this->assertCount(1, $methods);
         $this->assertSame('bar.svg', $methods[0]->getImage());
+        $this->assertSame(' (DEMO)', $methods[0]->getName());
+        $this->assertSame('somecontract', $methods[0]->getContract());
 
         $this->assertSame('sometype', $service->getPaymentTypeByType('sometype')->getIdentifier());
 
+        $this->assertNull($service->getPaymentContract('nope', 'somecontract'));
+        $this->assertNull($service->getPaymentContract('sometype', 'nope'));
+        $contract = $service->getPaymentContract('sometype', 'somecontract');
+        $this->assertSame('somecontract', $contract->getIdentifier());
+
+        $this->assertNull($service->getPaymentMethodByTypeAndPaymentMethod('nope', 'quux'));
+        $this->assertNull($service->getPaymentMethodByTypeAndPaymentMethod('sometype', 'nope'));
+        $method = $service->getPaymentMethodByTypeAndPaymentMethod('sometype', 'quux');
+        $this->assertSame('quux', $method->getIdentifier());
+
+        $this->assertNull($service->getPaymentContractByTypeAndPaymentMethod('nope', 'quux'));
+        $this->assertNull($service->getPaymentContractByTypeAndPaymentMethod('sometype', 'nope'));
         $contract = $service->getPaymentContractByTypeAndPaymentMethod('sometype', 'quux');
         $this->assertSame('somecontract', $contract->getIdentifier());
     }
