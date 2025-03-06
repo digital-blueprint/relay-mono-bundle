@@ -40,9 +40,9 @@ class NotifyErrorCronJob implements CronJobInterface
 
     public function run(CronOptions $options): void
     {
-        $paymentTypes = $this->configurationService->getPaymentTypes();
-        foreach ($paymentTypes as $paymentType) {
-            $this->reportingService->sendNotifyError($paymentType);
+        $paymentProfiles = $this->configurationService->getPaymentProfiles();
+        foreach ($paymentProfiles as $paymentProfile) {
+            $this->reportingService->sendNotifyError($paymentProfile);
         }
     }
 }

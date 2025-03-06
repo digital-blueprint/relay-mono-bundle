@@ -109,27 +109,27 @@ class PaymentService implements LoggerAwareInterface
     public function createPayment(Payment $payment): Payment
     {
         $type = $payment->getType();
-        $paymentType = $this->configurationService->getPaymentTypeByType($type);
-        if ($paymentType === null) {
+        $paymentProfile = $this->configurationService->getPaymentProfileByType($type);
+        if ($paymentProfile === null) {
             throw ApiError::withDetails(Response::HTTP_BAD_REQUEST, 'Unknown payment type', 'mono:unknown-payment-type');
         }
 
         $userIdentifier = $this->userSession->getUserIdentifier();
-        if ($paymentType->isAuthRequired() && !$userIdentifier) {
+        if ($paymentProfile->isAuthRequired() && !$userIdentifier) {
             throw ApiError::withDetails(Response::HTTP_UNAUTHORIZED, 'Authorization required!', 'mono:authorization-required');
         }
 
         $notifyUrl = $payment->getNotifyUrl();
-        if ($notifyUrl !== null && !$paymentType->evaluateNotifyUrlExpression($notifyUrl)) {
+        if ($notifyUrl !== null && !$paymentProfile->evaluateNotifyUrlExpression($notifyUrl)) {
             throw ApiError::withDetails(Response::HTTP_BAD_REQUEST, 'Notify URL not allowed!', 'mono:notify-url-not-allowed');
         }
 
         $returnUrl = $payment->getReturnUrl();
-        if ($returnUrl !== null && !$paymentType->evaluateReturnUrlExpression($returnUrl)) {
+        if ($returnUrl !== null && !$paymentProfile->evaluateReturnUrlExpression($returnUrl)) {
             throw ApiError::withDetails(Response::HTTP_BAD_REQUEST, 'Return URL not allowed!', 'mono:return-url-not-allowed');
         }
 
-        $returnUrlOverride = $paymentType->getReturnUrlOverride();
+        $returnUrlOverride = $paymentProfile->getReturnUrlOverride();
         if ($returnUrlOverride !== null) {
             $payment->setReturnUrl($returnUrlOverride);
         }
@@ -144,28 +144,28 @@ class PaymentService implements LoggerAwareInterface
         assert($repo instanceof PaymentPersistenceRepository);
         if (
             (
-                $paymentType->getMaxConcurrentPayments() !== null
-                && $repo->countConcurrent() >= $paymentType->getMaxConcurrentPayments()
+                $paymentProfile->getMaxConcurrentPayments() !== null
+                && $repo->countConcurrent() >= $paymentProfile->getMaxConcurrentPayments()
             )
             || (
                 $userIdentifier
-                && $paymentType->getMaxConcurrentAuthPayments() !== null
-                && $repo->countAuthConcurrent() >= $paymentType->getMaxConcurrentAuthPayments()
+                && $paymentProfile->getMaxConcurrentAuthPayments() !== null
+                && $repo->countAuthConcurrent() >= $paymentProfile->getMaxConcurrentAuthPayments()
             )
             || (
                 $userIdentifier
-                && $paymentType->getMaxConcurrentAuthPaymentsPerUser() !== null
-                && $repo->countAuthConcurrent($userIdentifier) >= $paymentType->getMaxConcurrentAuthPaymentsPerUser()
+                && $paymentProfile->getMaxConcurrentAuthPaymentsPerUser() !== null
+                && $repo->countAuthConcurrent($userIdentifier) >= $paymentProfile->getMaxConcurrentAuthPaymentsPerUser()
             )
             || (
                 !$userIdentifier
-                && $paymentType->getMaxConcurrentUnauthPayments() !== null
-                && $repo->countUnauthConcurrent() >= $paymentType->getMaxConcurrentUnauthPayments()
+                && $paymentProfile->getMaxConcurrentUnauthPayments() !== null
+                && $repo->countUnauthConcurrent() >= $paymentProfile->getMaxConcurrentUnauthPayments()
             )
             || (
                 !$userIdentifier
-                && $paymentType->getMaxConcurrentUnauthPaymentsPerIp() !== null
-                && $repo->countUnauthConcurrent($payment->getClientIp()) >= $paymentType->getMaxConcurrentUnauthPaymentsPerIp()
+                && $paymentProfile->getMaxConcurrentUnauthPaymentsPerIp() !== null
+                && $repo->countUnauthConcurrent($payment->getClientIp()) >= $paymentProfile->getMaxConcurrentUnauthPaymentsPerIp()
             )
         ) {
             throw ApiError::withDetails(Response::HTTP_TOO_MANY_REQUESTS, 'Too many requests!', 'mono:too-many-requests');
@@ -178,10 +178,10 @@ class PaymentService implements LoggerAwareInterface
         $now = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
         $paymentPersistence = PaymentPersistence::fromPayment($payment);
         $paymentPersistence->setCreatedAt($now);
-        if ($paymentType->isAuthRequired()) {
+        if ($paymentProfile->isAuthRequired()) {
             $paymentPersistence->setUserIdentifier($userIdentifier);
         }
-        $paymentPersistence->setDataProtectionDeclarationUrl($paymentType->getDataProtectionDeclarationUrl());
+        $paymentPersistence->setDataProtectionDeclarationUrl($paymentProfile->getDataProtectionDeclarationUrl());
 
         $sessionTimeout = $this->configurationService->getPaymentSessionTimeout();
         $now = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
@@ -247,7 +247,7 @@ class PaymentService implements LoggerAwareInterface
 
             $type = $paymentPersistence->getType();
             $method = $paymentPersistence->getPaymentMethod();
-            $paymentType = $this->configurationService->getPaymentTypeByType($type);
+            $paymentType = $this->configurationService->getPaymentType($type);
 
             $backendService = $this->backendService->getByPaymentType($paymentType);
 
@@ -298,20 +298,21 @@ class PaymentService implements LoggerAwareInterface
         }
 
         $type = $paymentPersistence->getType();
-        $paymentType = $this->configurationService->getPaymentTypeByType($type);
-        if ($paymentType === null) {
+        $paymentProfile = $this->configurationService->getPaymentProfileByType($type);
+        if ($paymentProfile === null) {
             throw ApiError::withDetails(Response::HTTP_BAD_REQUEST, 'Unknown payment type', 'mono:start-payment-unknown-payment-type');
         }
 
         $userIdentifier = $this->userSession->getUserIdentifier();
-        if ($paymentType->isAuthRequired() && !$userIdentifier) {
+        if ($paymentProfile->isAuthRequired() && !$userIdentifier) {
             throw ApiError::withDetails(Response::HTTP_UNAUTHORIZED, 'Authorization required!', 'mono:authorization-required');
         }
 
-        if ($paymentType->isAuthRequired() && $userIdentifier !== $paymentPersistence->getUserIdentifier()) {
+        if ($paymentProfile->isAuthRequired() && $userIdentifier !== $paymentPersistence->getUserIdentifier()) {
             throw ApiError::withDetails(Response::HTTP_FORBIDDEN, 'Start payment user identifier not allowed!', 'mono:start-payment-user-identifier-not-allowed');
         }
 
+        $paymentType = $this->configurationService->getPaymentType($type);
         $backendService = $this->backendService->getByPaymentType($paymentType);
 
         // We allow the backend to update the payment data as long as we are in the prepared state
@@ -334,7 +335,7 @@ class PaymentService implements LoggerAwareInterface
         $paymentMethods = $this->configurationService->getPaymentMethodsByType($type);
         $paymentMethod = json_encode($paymentMethods);
         $payment->setPaymentMethod($paymentMethod);
-        $recipient = $paymentType->getRecipient();
+        $recipient = $paymentProfile->getRecipient();
         $payment->setRecipient($recipient);
 
         // We give the backend service one last chance to change things, for example for translations
@@ -392,22 +393,22 @@ class PaymentService implements LoggerAwareInterface
         }
 
         $type = $paymentPersistence->getType();
-        $paymentType = $this->configurationService->getPaymentTypeByType($type);
-        if ($paymentType === null) {
+        $paymentProfile = $this->configurationService->getPaymentProfileByType($type);
+        if ($paymentProfile === null) {
             throw ApiError::withDetails(Response::HTTP_BAD_REQUEST, 'Unknown payment type', 'mono:start-payment-unknown-payment-type');
         }
 
         $userIdentifier = $this->userSession->getUserIdentifier();
-        if ($paymentType->isAuthRequired() && !$userIdentifier) {
+        if ($paymentProfile->isAuthRequired() && !$userIdentifier) {
             throw ApiError::withDetails(Response::HTTP_UNAUTHORIZED, 'Authorization required!', 'mono:authorization-required');
         }
 
-        if ($paymentType->isAuthRequired() && $userIdentifier !== $paymentPersistence->getUserIdentifier()) {
+        if ($paymentProfile->isAuthRequired() && $userIdentifier !== $paymentPersistence->getUserIdentifier()) {
             throw ApiError::withDetails(Response::HTTP_FORBIDDEN, 'Start payment user identifier not allowed!', 'mono:start-payment-user-identifier-not-allowed');
         }
 
         $pspReturnUrl = $startPayAction->getPspReturnUrl();
-        if (!$paymentType->evaluatePspReturnUrlExpression($pspReturnUrl)) {
+        if (!$paymentProfile->evaluatePspReturnUrlExpression($pspReturnUrl)) {
             throw ApiError::withDetails(Response::HTTP_BAD_REQUEST, 'PSP return URL not allowed!', 'mono:psp-return-url-not-allowed');
         }
 
@@ -522,7 +523,7 @@ class PaymentService implements LoggerAwareInterface
             $paymentPersistences = $repo->findByPaymentStatusTimeoutBefore($paymentStatus, $timeoutBefore);
             foreach ($paymentPersistences as $paymentPersistence) {
                 $type = $paymentPersistence->getType();
-                $paymentType = $this->configurationService->getPaymentTypeByType($type);
+                $paymentType = $this->configurationService->getPaymentType($type);
 
                 $backendService = $this->backendService->getByPaymentType($paymentType);
                 $cleanupWorked = $backendService->cleanup($paymentPersistence);

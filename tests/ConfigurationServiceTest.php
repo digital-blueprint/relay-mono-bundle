@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Dbp\Relay\MonoBundle\Tests;
 
 use Dbp\Relay\MonoBundle\Config\ConfigurationService;
-use Dbp\Relay\MonoBundle\Config\PaymentType;
+use Dbp\Relay\MonoBundle\Config\PaymentProfile;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\UrlHelper;
@@ -35,8 +35,12 @@ class ConfigurationServiceTest extends TestCase
             ],
             'payment_types' => [
                 'sometype' => [
-                    'identifier' => 'foo',
                     'service' => 'bla',
+                ],
+            ],
+            'payment_profiles' => [
+                [
+                    'type' => 'sometype',
                     'auth_required' => false,
                     'return_url_expression' => 'true',
                     'return_url_override' => 'true',
@@ -69,21 +73,21 @@ class ConfigurationServiceTest extends TestCase
         $this->assertSame('P1D', $service->getCleanupTimeout('started'));
         $this->assertNull($service->getCleanupTimeout('nope'));
 
-        $paymentTypes = $service->getPaymentTypes();
-        $this->assertCount(1, $paymentTypes);
-        $this->assertSame(42, $paymentTypes[0]->getMaxConcurrentPayments());
+        $paymentProfiles = $service->getPaymentProfiles();
+        $this->assertCount(1, $paymentProfiles);
+        $this->assertSame(42, $paymentProfiles[0]->getMaxConcurrentPayments());
 
         $contracts = $service->getPaymentContracts();
         $this->assertCount(1, $contracts);
         $this->assertSame('somecontract', $contracts[0]->getIdentifier());
 
-        $methods = $service->getPaymentMethodsByType($paymentTypes[0]->getIdentifier());
+        $methods = $service->getPaymentMethodsByType($paymentProfiles[0]->getType());
         $this->assertCount(1, $methods);
         $this->assertSame('bar.svg', $methods[0]->getImage());
         $this->assertSame(' (DEMO)', $methods[0]->getName());
         $this->assertSame('somecontract', $methods[0]->getContract());
 
-        $this->assertSame('sometype', $service->getPaymentTypeByType('sometype')->getIdentifier());
+        $this->assertSame('sometype', $service->getPaymentProfileByType('sometype')->getType());
 
         $this->assertNull($service->getPaymentContract('nope'));
         $contract = $service->getPaymentContract('somecontract');
@@ -100,19 +104,19 @@ class ConfigurationServiceTest extends TestCase
         $this->assertSame('somecontract', $contract->getIdentifier());
     }
 
-    public function testPaymentTypeExpressions()
+    public function testPaymentProfileExpressions()
     {
-        $paymentType = new PaymentType();
-        $paymentType->setReturnUrlExpression('relay.str_starts_with(url, "https://return.com/")');
-        $this->assertFalse($paymentType->evaluateReturnUrlExpression('https://return.at/bla'));
-        $this->assertTrue($paymentType->evaluateReturnUrlExpression('https://return.com/bla'));
+        $paymentProfile = new PaymentProfile();
+        $paymentProfile->setReturnUrlExpression('relay.str_starts_with(url, "https://return.com/")');
+        $this->assertFalse($paymentProfile->evaluateReturnUrlExpression('https://return.at/bla'));
+        $this->assertTrue($paymentProfile->evaluateReturnUrlExpression('https://return.com/bla'));
 
-        $paymentType->setPspReturnUrlExpression('relay.str_starts_with(url, "https://psp.com/")');
-        $this->assertFalse($paymentType->evaluatePspReturnUrlExpression('https://psp.at/bla'));
-        $this->assertTrue($paymentType->evaluatePspReturnUrlExpression('https://psp.com/bla'));
+        $paymentProfile->setPspReturnUrlExpression('relay.str_starts_with(url, "https://psp.com/")');
+        $this->assertFalse($paymentProfile->evaluatePspReturnUrlExpression('https://psp.at/bla'));
+        $this->assertTrue($paymentProfile->evaluatePspReturnUrlExpression('https://psp.com/bla'));
 
-        $paymentType->setNotifyUrlExpression('relay.str_starts_with(url, "https://notify.com/")');
-        $this->assertFalse($paymentType->evaluateNotifyUrlExpression('https://notify.at/bla'));
-        $this->assertTrue($paymentType->evaluateNotifyUrlExpression('https://notify.com/bla'));
+        $paymentProfile->setNotifyUrlExpression('relay.str_starts_with(url, "https://notify.com/")');
+        $this->assertFalse($paymentProfile->evaluateNotifyUrlExpression('https://notify.at/bla'));
+        $this->assertTrue($paymentProfile->evaluateNotifyUrlExpression('https://notify.com/bla'));
     }
 }

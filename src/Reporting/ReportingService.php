@@ -6,7 +6,7 @@ namespace Dbp\Relay\MonoBundle\Reporting;
 
 use Dbp\Relay\MonoBundle\Config\ConfigurationService;
 use Dbp\Relay\MonoBundle\Config\EmailConfig;
-use Dbp\Relay\MonoBundle\Config\PaymentType;
+use Dbp\Relay\MonoBundle\Config\PaymentProfile;
 use Dbp\Relay\MonoBundle\Persistence\PaymentPersistence;
 use Dbp\Relay\MonoBundle\Persistence\PaymentPersistenceRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -41,16 +41,16 @@ class ReportingService implements LoggerAwareInterface
 
     public function sendAllReporting(?string $overrideEmail = null)
     {
-        $paymentTypes = $this->configurationService->getPaymentTypes();
+        $paymentProfiles = $this->configurationService->getPaymentProfiles();
 
-        foreach ($paymentTypes as $paymentType) {
-            $this->sendReporting($paymentType, $overrideEmail);
+        foreach ($paymentProfiles as $paymentProfile) {
+            $this->sendReporting($paymentProfile, $overrideEmail);
         }
     }
 
-    public function sendReporting(PaymentType $paymentType, ?string $overrideEmail = null)
+    public function sendReporting(PaymentProfile $paymentProfile, ?string $overrideEmail = null)
     {
-        $reportingConfig = $paymentType->getReportingConfig();
+        $reportingConfig = $paymentProfile->getReportingConfig();
         if ($reportingConfig === null) {
             return;
         }
@@ -58,9 +58,9 @@ class ReportingService implements LoggerAwareInterface
         $repo = $this->em->getRepository(PaymentPersistence::class);
         assert($repo instanceof PaymentPersistenceRepository);
 
-        $this->logger->debug('Send reporting for: '.$paymentType->getIdentifier());
+        $this->logger->debug('Send reporting for: '.$paymentProfile->getType());
 
-        $type = $paymentType->getIdentifier();
+        $type = $paymentProfile->getType();
         $now = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
         $createdSince = $now->sub(new \DateInterval($reportingConfig->getCreatedBegin()));
 
@@ -68,7 +68,7 @@ class ReportingService implements LoggerAwareInterface
 
         // We want a report every day, even if there are no payments
         $context = [
-            'paymentType' => $paymentType,
+            'paymentProfile' => $paymentProfile,
             'createdSince' => $createdSince,
             'createdTo' => $now,
             'count' => $count,
@@ -77,9 +77,9 @@ class ReportingService implements LoggerAwareInterface
         $this->sendEmail($reportingConfig, $context, $overrideEmail);
     }
 
-    public function sendNotifyError(PaymentType $paymentType)
+    public function sendNotifyError(PaymentProfile $paymentProfile)
     {
-        $notifyErrorConfig = $paymentType->getNotifyErrorConfig();
+        $notifyErrorConfig = $paymentProfile->getNotifyErrorConfig();
         if ($notifyErrorConfig === null) {
             return;
         }
@@ -87,9 +87,9 @@ class ReportingService implements LoggerAwareInterface
         $repo = $this->em->getRepository(PaymentPersistence::class);
         assert($repo instanceof PaymentPersistenceRepository);
 
-        $this->logger->debug('Send notify error for: '.$paymentType->getIdentifier());
+        $this->logger->debug('Send notify error for: '.$paymentProfile->getType());
 
-        $type = $paymentType->getIdentifier();
+        $type = $paymentProfile->getType();
         $now = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
         $completedSince = $now->sub(new \DateInterval($notifyErrorConfig->getCompletedBegin()));
         $items = $repo->findUnnotifiedByTypeCompletedSince($type, $completedSince);
@@ -97,7 +97,7 @@ class ReportingService implements LoggerAwareInterface
 
         if ($count) {
             $context = [
-                'paymentType' => $paymentType,
+                'paymentProfile' => $paymentProfile,
                 'items' => $items,
                 'count' => $count,
             ];
