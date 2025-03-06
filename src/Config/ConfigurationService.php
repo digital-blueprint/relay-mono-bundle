@@ -99,22 +99,20 @@ class ConfigurationService
         $paymentMethods = [];
 
         if (array_key_exists($type, $this->config['payment_types'])) {
-            $paymentContractsConfig = $this->config['payment_types'][$type]['payment_contracts'];
-            foreach ($paymentContractsConfig as $paymentContractConfig) {
-                $paymentMethodsConfig = $paymentContractConfig['payment_methods'];
-                foreach ($paymentMethodsConfig as $paymentMethodConfig) {
-                    if (array_key_exists('name', $paymentMethodConfig)) {
-                        $paymentMethodConfig['name'] = $this->translator->trans($paymentMethodConfig['name']);
-                    }
-                    if ($paymentMethodConfig['demo_mode']) {
-                        $paymentMethodConfig['name'] .= ' (DEMO)';
-                    }
-                    if (array_key_exists('image', $paymentMethodConfig)) {
-                        $paymentMethodConfig['image'] = $this->urlHelper->getAbsoluteUrl($paymentMethodConfig['image']);
-                    }
-                    $paymentMethod = PaymentMethod::fromConfig($paymentMethodConfig);
-                    $paymentMethods[] = $paymentMethod;
+            $paymentTypeConfig = $this->config['payment_types'][$type];
+            $paymentMethodsConfig = $paymentTypeConfig['payment_methods'];
+            foreach ($paymentMethodsConfig as $paymentMethodConfig) {
+                if (array_key_exists('name', $paymentMethodConfig)) {
+                    $paymentMethodConfig['name'] = $this->translator->trans($paymentMethodConfig['name']);
                 }
+                if ($paymentMethodConfig['demo_mode']) {
+                    $paymentMethodConfig['name'] .= ' (DEMO)';
+                }
+                if (array_key_exists('image', $paymentMethodConfig)) {
+                    $paymentMethodConfig['image'] = $this->urlHelper->getAbsoluteUrl($paymentMethodConfig['image']);
+                }
+                $paymentMethod = PaymentMethod::fromConfig($paymentMethodConfig);
+                $paymentMethods[] = $paymentMethod;
             }
         }
 
@@ -124,14 +122,11 @@ class ConfigurationService
     public function getPaymentMethodByTypeAndPaymentMethod(string $type, string $paymentMethod): ?PaymentMethod
     {
         if (array_key_exists($type, $this->config['payment_types'])) {
-            $paymentContractsConfig = $this->config['payment_types'][$type]['payment_contracts'];
-            foreach ($paymentContractsConfig as $paymentContractIdentifier => $paymentContractConfig) {
-                $paymentMethodsConfig = $paymentContractConfig['payment_methods'];
-                foreach ($paymentMethodsConfig as $paymentMethodConfig) {
-                    $paymentMethodObject = PaymentMethod::fromConfig($paymentMethodConfig);
-                    if ($paymentMethodObject->getIdentifier() === $paymentMethod) {
-                        return $paymentMethodObject;
-                    }
+            $paymentMethodsConfig = $this->config['payment_types'][$type]['payment_methods'];
+            foreach ($paymentMethodsConfig as $paymentMethodConfig) {
+                $paymentMethodObject = PaymentMethod::fromConfig($paymentMethodConfig);
+                if ($paymentMethodObject->getIdentifier() === $paymentMethod) {
+                    return $paymentMethodObject;
                 }
             }
         }
@@ -141,23 +136,33 @@ class ConfigurationService
 
     public function getPaymentContractByTypeAndPaymentMethod(string $type, string $paymentMethod): ?PaymentContract
     {
-        $paymentContract = null;
-
         if (array_key_exists($type, $this->config['payment_types'])) {
-            $paymentContractsConfig = $this->config['payment_types'][$type]['payment_contracts'];
-            foreach ($paymentContractsConfig as $paymentContractIdentifier => $paymentContractConfig) {
-                $paymentMethodsConfig = $paymentContractConfig['payment_methods'];
-                foreach ($paymentMethodsConfig as $paymentMethodConfig) {
-                    $paymentMethodObject = PaymentMethod::fromConfig($paymentMethodConfig);
-                    if ($paymentMethodObject->getIdentifier() === $paymentMethod) {
-                        $paymentContract = PaymentContract::fromConfig($paymentContractIdentifier, $paymentContractConfig);
-                        break 2;
-                    }
+            $paymentMethodsConfig = $this->config['payment_types'][$type]['payment_methods'];
+            foreach ($paymentMethodsConfig as $paymentMethodConfig) {
+                $paymentMethodObject = PaymentMethod::fromConfig($paymentMethodConfig);
+                if ($paymentMethodObject->getIdentifier() === $paymentMethod) {
+                    return $this->getPaymentContract($type, $paymentMethodObject->getContract());
                 }
             }
         }
 
-        return $paymentContract;
+        return null;
+    }
+
+    /**
+     * Returns a payment contract by name.
+     */
+    public function getPaymentContract(string $type, string $contract): ?PaymentContract
+    {
+        if (array_key_exists($type, $this->config['payment_types'])) {
+            $paymentTypeConfig = $this->config['payment_types'][$type];
+            $paymentContractsConfig = $paymentTypeConfig['payment_contracts'];
+            if (array_key_exists($contract, $paymentContractsConfig)) {
+                return PaymentContract::fromConfig($contract, $paymentContractsConfig[$contract]);
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -165,12 +170,11 @@ class ConfigurationService
      *
      * @return array<PaymentContract>
      */
-    public function getPaymentContracts(): array
+    public function getPaymentContracts(string $type): array
     {
         $contracts = [];
-        $paymentTypesConfig = $this->config['payment_types'];
-        foreach ($paymentTypesConfig as $type => $paymentTypeConfig) {
-            $paymentContractsConfig = $paymentTypeConfig['payment_contracts'];
+        if (array_key_exists($type, $this->config['payment_types'])) {
+            $paymentContractsConfig = $this->config['payment_types'][$type]['payment_contracts'];
             foreach ($paymentContractsConfig as $paymentContractIdentifier => $paymentContractConfig) {
                 $paymentContract = PaymentContract::fromConfig($paymentContractIdentifier, $paymentContractConfig);
                 $contracts[] = $paymentContract;

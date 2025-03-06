@@ -14,6 +14,11 @@ class PaymentMethod implements \JsonSerializable
     /**
      * @var string
      */
+    private $contract;
+
+    /**
+     * @var string
+     */
     private $name;
 
     /**
@@ -76,6 +81,7 @@ class PaymentMethod implements \JsonSerializable
     {
         $paymentMethod = new PaymentMethod();
         $paymentMethod->setIdentifier((string) $config['identifier']);
+        $paymentMethod->setContract((string) $config['contract']);
         $paymentMethod->setName((string) $config['name']);
         $paymentMethod->setImage((string) $config['image']);
         $paymentMethod->setDemoMode($config['demo_mode']);
@@ -98,5 +104,15 @@ class PaymentMethod implements \JsonSerializable
     public function __toString()
     {
         return $this->identifier;
+    }
+
+    public function getContract(): string
+    {
+        return $this->contract;
+    }
+
+    public function setContract(string $contract): void
+    {
+        $this->contract = $contract;
     }
 }
