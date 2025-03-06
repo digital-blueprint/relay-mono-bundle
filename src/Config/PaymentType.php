@@ -296,17 +296,19 @@ class PaymentType
         $paymentType->setIdentifier((string) $identifier);
         $paymentType->setService((string) $config['service']);
         $paymentType->setAuthRequired((bool) $config['auth_required']);
-        $paymentType->setMaxConcurrentPayments((int) $config['max_concurrent_payments']);
-        $paymentType->setMaxConcurrentAuthPayments((int) $config['max_concurrent_auth_payments']);
-        $paymentType->setMaxConcurrentAuthPaymentsPerUser((int) $config['max_concurrent_auth_payments_per_user']);
-        $paymentType->setMaxConcurrentUnauthPayments((int) $config['max_concurrent_unauth_payments']);
-        $paymentType->setMaxConcurrentUnauthPaymentsPerIp((int) $config['max_concurrent_unauth_payments_per_ip']);
         $paymentType->setReturnUrlOverride($config['return_url_override'] ?? null);
         $paymentType->setReturnUrlExpression((string) $config['return_url_expression']);
         $paymentType->setNotifyUrlExpression((string) $config['notify_url_expression']);
         $paymentType->setPspReturnUrlExpression((string) $config['psp_return_url_expression']);
         $paymentType->setDataProtectionDeclarationUrl($config['data_protection_declaration_url'] ?? null);
         $paymentType->setRecipient($config['recipient'] ?? null);
+
+        $concurrencyLimits = $config['concurrency_limits'];
+        $paymentType->setMaxConcurrentPayments((int) $concurrencyLimits['max_concurrent_payments']);
+        $paymentType->setMaxConcurrentAuthPayments((int) $concurrencyLimits['max_concurrent_auth_payments']);
+        $paymentType->setMaxConcurrentAuthPaymentsPerUser((int) $concurrencyLimits['max_concurrent_auth_payments_per_user']);
+        $paymentType->setMaxConcurrentUnauthPayments((int) $concurrencyLimits['max_concurrent_unauth_payments']);
+        $paymentType->setMaxConcurrentUnauthPaymentsPerIp((int) $concurrencyLimits['max_concurrent_unauth_payments_per_ip']);
 
         $notifyErrorConfig = $config['notify_error'] ?? null;
         if ($notifyErrorConfig !== null) {
