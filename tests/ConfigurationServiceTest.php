@@ -33,16 +33,18 @@ class ConfigurationServiceTest extends TestCase
                     'identifier' => 'foo',
                     'service' => 'bla',
                     'auth_required' => false,
-                    'max_concurrent_payments' => 42,
-                    'max_concurrent_auth_payments' => 2,
-                    'max_concurrent_auth_payments_per_user' => 3,
-                    'max_concurrent_unauth_payments' => 4,
-                    'max_concurrent_unauth_payments_per_ip' => 5,
                     'return_url_expression' => 'true',
                     'return_url_override' => 'true',
                     'notify_url_expression' => 'true',
                     'psp_return_url_expression' => 'true',
                     'recipient' => '',
+                    'concurrency_limits' => [
+                        'max_concurrent_payments' => 42,
+                        'max_concurrent_auth_payments' => 2,
+                        'max_concurrent_auth_payments_per_user' => 3,
+                        'max_concurrent_unauth_payments' => 4,
+                        'max_concurrent_unauth_payments_per_ip' => 5,
+                    ],
                     'payment_contracts' => [
                         'somecontract' => [
                             'service' => 'bla',
