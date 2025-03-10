@@ -10,23 +10,28 @@ use Dbp\Relay\MonoBundle\Persistence\PaymentPersistence;
 
 class DummyBackendService implements BackendServiceInterface
 {
-    public function updateData(PaymentPersistence $paymentPersistence): bool
+    public function updateData(string $paymentClientType, PaymentPersistence $paymentPersistence): bool
     {
         return true;
     }
 
-    public function updateEntity(PaymentPersistence $paymentPersistence, Payment $payment): bool
+    public function updateEntity(string $paymentClientType, PaymentPersistence $paymentPersistence, Payment $payment): bool
     {
         return true;
     }
 
-    public function notify(PaymentPersistence $paymentPersistence): bool
+    public function notify(string $paymentClientType, PaymentPersistence $paymentPersistence): bool
     {
         return true;
     }
 
-    public function cleanup(PaymentPersistence $paymentPersistence): bool
+    public function cleanup(string $paymentClientType, PaymentPersistence $paymentPersistence): bool
     {
         return true;
+    }
+
+    public function getPaymentClientTypes(): array
+    {
+        return ['foobar'];
     }
 }

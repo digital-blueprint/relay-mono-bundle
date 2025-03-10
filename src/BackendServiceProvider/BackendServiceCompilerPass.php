@@ -20,10 +20,10 @@ class BackendServiceCompilerPass implements CompilerPassInterface
 
     public function process(ContainerBuilder $container): void
     {
-        if (!$container->has(BackendService::class)) {
+        if (!$container->has(BackendServiceRegistry::class)) {
             return;
         }
-        $definition = $container->findDefinition(BackendService::class);
+        $definition = $container->findDefinition(BackendServiceRegistry::class);
         $taggedServices = $container->findTaggedServiceIds(self::TAG);
         foreach ($taggedServices as $id => $tags) {
             $definition->addMethodCall('addService', [new Reference($id)]);

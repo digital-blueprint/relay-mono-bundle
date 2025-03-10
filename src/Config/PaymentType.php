@@ -14,11 +14,6 @@ class PaymentType
     private $identifier;
 
     /**
-     * @var string
-     */
-    private $service;
-
-    /**
      * @var bool
      */
     private $authRequired;
@@ -108,18 +103,6 @@ class PaymentType
     public function setDataProtectionDeclarationUrl(?string $dataProtectionDeclarationUrl): self
     {
         $this->dataProtectionDeclarationUrl = $dataProtectionDeclarationUrl;
-
-        return $this;
-    }
-
-    public function getService(): string
-    {
-        return $this->service;
-    }
-
-    public function setService(string $service): self
-    {
-        $this->service = $service;
 
         return $this;
     }
@@ -294,7 +277,6 @@ class PaymentType
     {
         $paymentType = new PaymentType();
         $paymentType->setIdentifier((string) $identifier);
-        $paymentType->setService((string) $config['service']);
         $paymentType->setAuthRequired((bool) $config['auth_required']);
         $paymentType->setReturnUrlOverride($config['return_url_override'] ?? null);
         $paymentType->setReturnUrlExpression((string) $config['return_url_expression']);

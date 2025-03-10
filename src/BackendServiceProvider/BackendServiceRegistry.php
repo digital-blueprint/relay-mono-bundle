@@ -6,7 +6,7 @@ namespace Dbp\Relay\MonoBundle\BackendServiceProvider;
 
 use Dbp\Relay\MonoBundle\Config\PaymentType;
 
-class BackendService
+class BackendServiceRegistry
 {
     /**
      * @var array<class-string,BackendServiceInterface>
@@ -20,16 +20,21 @@ class BackendService
 
     public function addService(BackendServiceInterface $service): void
     {
-        $this->services[$service::class] = $service;
+        foreach ($service->getPaymentClientTypes() as $paymentTypeId) {
+            if (array_key_exists($paymentTypeId, $this->services)) {
+                throw new \RuntimeException("$paymentTypeId already registered");
+            }
+            $this->services[$paymentTypeId] = $service;
+        }
     }
 
     public function getByPaymentType(PaymentType $paymentType): BackendServiceInterface
     {
-        $serviceClass = $paymentType->getService();
+        $paymentTypeId = $paymentType->getIdentifier();
 
-        $backend = $this->services[$serviceClass] ?? null;
+        $backend = $this->services[$paymentTypeId] ?? null;
         if ($backend === null) {
-            throw new \RuntimeException("$serviceClass not found");
+            throw new \RuntimeException("$paymentTypeId not found");
         }
         assert($backend instanceof BackendServiceInterface);
 

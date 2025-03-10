@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Dbp\Relay\MonoBundle\Tests;
 
-use Dbp\Relay\MonoBundle\BackendServiceProvider\BackendService;
+use Dbp\Relay\MonoBundle\BackendServiceProvider\BackendServiceRegistry;
 use Dbp\Relay\MonoBundle\Config\PaymentType;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
@@ -15,9 +15,9 @@ class BackendServiceTest extends KernelTestCase
         self::bootKernel();
         $container = self::getContainer();
 
-        $backend = $container->get(BackendService::class);
+        $backend = $container->get(BackendServiceRegistry::class);
         $paymentType = new PaymentType();
-        $paymentType->setService(DummyBackendService::class);
+        $paymentType->setIdentifier('foobar');
         $backendService = $backend->getByPaymentType($paymentType);
         $this->assertTrue($backendService instanceof DummyBackendService);
     }

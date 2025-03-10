@@ -8,7 +8,7 @@ use Dbp\Relay\CoreBundle\API\UserSessionInterface;
 use Dbp\Relay\CoreBundle\Exception\ApiError;
 use Dbp\Relay\MonoBundle\ApiPlatform\Payment;
 use Dbp\Relay\MonoBundle\ApiPlatform\StartPayAction;
-use Dbp\Relay\MonoBundle\BackendServiceProvider\BackendService;
+use Dbp\Relay\MonoBundle\BackendServiceProvider\BackendServiceRegistry;
 use Dbp\Relay\MonoBundle\Config\ConfigurationService;
 use Dbp\Relay\MonoBundle\PaymentServiceProvider\CompleteResponseInterface;
 use Dbp\Relay\MonoBundle\PaymentServiceProvider\PaymentServiceProviderService;
@@ -32,9 +32,9 @@ class PaymentService implements LoggerAwareInterface
     use LoggerAwareTrait;
 
     /**
-     * @var BackendService
+     * @var BackendServiceRegistry
      */
-    private $backendService;
+    private $backendServiceRegistry;
 
     /**
      * @var ConfigurationService
@@ -67,7 +67,7 @@ class PaymentService implements LoggerAwareInterface
     private $lockFactory;
 
     public function __construct(
-        BackendService $backendService,
+        BackendServiceRegistry $backendService,
         ConfigurationService $configurationService,
         EntityManagerInterface $em,
         PaymentServiceProviderService $paymentServiceProviderService,
@@ -75,7 +75,7 @@ class PaymentService implements LoggerAwareInterface
         LoggerInterface $auditLogger,
         LockFactory $lockFactory
     ) {
-        $this->backendService = $backendService;
+        $this->backendServiceRegistry = $backendService;
         $this->configurationService = $configurationService;
         $this->em = $em;
 
@@ -249,7 +249,7 @@ class PaymentService implements LoggerAwareInterface
             $method = $paymentPersistence->getPaymentMethod();
             $paymentType = $this->configurationService->getPaymentTypeByType($type);
 
-            $backendService = $this->backendService->getByPaymentType($paymentType);
+            $backendService = $this->backendServiceRegistry->getByPaymentType($paymentType);
 
             $this->auditLogger->debug('Notifying backend service', $this->getLoggingContext($paymentPersistence));
 
@@ -259,7 +259,7 @@ class PaymentService implements LoggerAwareInterface
                 $this->auditLogger->warning('Demo mode active, backend not notified.', $this->getLoggingContext($paymentPersistence));
                 $isNotified = true;
             } else {
-                $isNotified = $backendService->notify($paymentPersistence);
+                $isNotified = $backendService->notify($type, $paymentPersistence);
             }
 
             if ($isNotified) {
@@ -312,11 +312,11 @@ class PaymentService implements LoggerAwareInterface
             throw ApiError::withDetails(Response::HTTP_FORBIDDEN, 'Start payment user identifier not allowed!', 'mono:start-payment-user-identifier-not-allowed');
         }
 
-        $backendService = $this->backendService->getByPaymentType($paymentType);
+        $backendService = $this->backendServiceRegistry->getByPaymentType($paymentType);
 
         // We allow the backend to update the payment data as long as we are in the prepared state
         if ($paymentPersistence->getPaymentStatus() === PaymentStatus::PREPARED) {
-            $isDataUpdated = $backendService->updateData($paymentPersistence);
+            $isDataUpdated = $backendService->updateData($type, $paymentPersistence);
             if ($isDataUpdated) {
                 $now = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
                 $paymentPersistence->setDataUpdatedAt($now);
@@ -338,7 +338,7 @@ class PaymentService implements LoggerAwareInterface
         $payment->setRecipient($recipient);
 
         // We give the backend service one last chance to change things, for example for translations
-        $backendService->updateEntity($paymentPersistence, $payment);
+        $backendService->updateEntity($type, $paymentPersistence, $payment);
 
         return $payment;
     }
@@ -524,8 +524,8 @@ class PaymentService implements LoggerAwareInterface
                 $type = $paymentPersistence->getType();
                 $paymentType = $this->configurationService->getPaymentTypeByType($type);
 
-                $backendService = $this->backendService->getByPaymentType($paymentType);
-                $cleanupWorked = $backendService->cleanup($paymentPersistence);
+                $backendService = $this->backendServiceRegistry->getByPaymentType($paymentType);
+                $cleanupWorked = $backendService->cleanup($type, $paymentPersistence);
                 if ($cleanupWorked !== true) {
                     $this->logger->error('Backend cleanup failed, skipping further cleanup', $this->getLoggingContext($paymentPersistence));
                     continue;
