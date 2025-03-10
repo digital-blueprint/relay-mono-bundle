@@ -13,17 +13,17 @@ use Dbp\Relay\MonoBundle\Persistence\PaymentPersistence;
 
 class DummyPaymentServiceProviderService implements PaymentServiceProviderServiceInterface
 {
-    public function start(PaymentPersistence $paymentPersistence): StartResponseInterface
+    public function start(string $pspContract, string $pspMethod, PaymentPersistence $paymentPersistence): StartResponseInterface
     {
         return new StartResponse('');
     }
 
-    public function complete(PaymentPersistence $paymentPersistence): CompleteResponseInterface
+    public function complete(string $pspContract, PaymentPersistence $paymentPersistence): CompleteResponseInterface
     {
         return new CompleteResponse('');
     }
 
-    public function cleanup(PaymentPersistence $paymentPersistence): bool
+    public function cleanup(string $pspContract, PaymentPersistence $paymentPersistence): bool
     {
         return true;
     }
@@ -31,5 +31,19 @@ class DummyPaymentServiceProviderService implements PaymentServiceProviderServic
     public function getPaymentIdForPspData(string $pspData): ?string
     {
         return null;
+    }
+
+    public function getPaymentContracts(): array
+    {
+        return ['quux'];
+    }
+
+    public function getPaymentMethods(string $pspContract): array
+    {
+        if ($pspContract === 'quux') {
+            return ['baz'];
+        }
+
+        return [];
     }
 }

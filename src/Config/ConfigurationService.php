@@ -26,7 +26,7 @@ class ConfigurationService
 
     public function __construct(
         TranslatorInterface $translator,
-        UrlHelper $urlHelper
+        UrlHelper $urlHelper,
     ) {
         $this->translator = $translator;
         $this->urlHelper = $urlHelper;
@@ -132,51 +132,6 @@ class ConfigurationService
         }
 
         return null;
-    }
-
-    public function getPaymentContractByTypeAndPaymentMethod(string $type, string $paymentMethod): ?PaymentContract
-    {
-        if (array_key_exists($type, $this->config['payment_types'])) {
-            $paymentMethodsConfig = $this->config['payment_types'][$type]['payment_methods'];
-            foreach ($paymentMethodsConfig as $paymentMethodConfig) {
-                $paymentMethodObject = PaymentMethod::fromConfig($paymentMethodConfig);
-                if ($paymentMethodObject->getIdentifier() === $paymentMethod) {
-                    return $this->getPaymentContract($paymentMethodObject->getContract());
-                }
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * Returns a payment contract by name.
-     */
-    public function getPaymentContract(string $contract): ?PaymentContract
-    {
-        $paymentContractsConfig = $this->config['payment_contracts'];
-        if (array_key_exists($contract, $paymentContractsConfig)) {
-            return PaymentContract::fromConfig($contract, $paymentContractsConfig[$contract]);
-        }
-
-        return null;
-    }
-
-    /**
-     * Returns all configured payment contracts.
-     *
-     * @return array<PaymentContract>
-     */
-    public function getPaymentContracts(): array
-    {
-        $contracts = [];
-        $paymentContractsConfig = $this->config['payment_contracts'];
-        foreach ($paymentContractsConfig as $paymentContractIdentifier => $paymentContractConfig) {
-            $paymentContract = PaymentContract::fromConfig($paymentContractIdentifier, $paymentContractConfig);
-            $contracts[] = $paymentContract;
-        }
-
-        return $contracts;
     }
 
     /**

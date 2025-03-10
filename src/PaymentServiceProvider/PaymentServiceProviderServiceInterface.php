@@ -9,21 +9,35 @@ use Dbp\Relay\MonoBundle\Persistence\PaymentPersistence;
 interface PaymentServiceProviderServiceInterface
 {
     /**
+     * Returns a list of payment contract IDs provided by the connector.
+     *
+     * @return string[]
+     */
+    public function getPaymentContracts(): array;
+
+    /**
+     * Returns a list of payment method IDs for a given contract.
+     *
+     * @return string[]
+     */
+    public function getPaymentMethods(string $pspContract): array;
+
+    /**
      * Gets called with a filled out payment entry to start a payment with the PSP.
      */
-    public function start(PaymentPersistence $paymentPersistence): StartResponseInterface;
+    public function start(string $pspContract, string $pspMethod, PaymentPersistence $paymentPersistence): StartResponseInterface;
 
     /**
      * Gets called once the user has finished the payment process and returned from the PSP.
      * The $pspData is a PSP specific string provided by the PSP frontend process.
      */
-    public function complete(PaymentPersistence $paymentPersistence): CompleteResponseInterface;
+    public function complete(string $pspContract, PaymentPersistence $paymentPersistence): CompleteResponseInterface;
 
     /**
      * Gets called right before the payment is deleted and allows the PSP service to delete related data to the payment.
      * Should return true if deleting was successful or if there was nothing to delete.
      */
-    public function cleanup(PaymentPersistence $paymentPersistence): bool;
+    public function cleanup(string $pspContract, PaymentPersistence $paymentPersistence): bool;
 
     /**
      * Given a PSP data string should return a payment ID in case the PSP recognizes the

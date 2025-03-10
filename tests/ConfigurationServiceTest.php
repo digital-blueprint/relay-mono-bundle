@@ -73,10 +73,6 @@ class ConfigurationServiceTest extends TestCase
         $this->assertCount(1, $paymentTypes);
         $this->assertSame(42, $paymentTypes[0]->getMaxConcurrentPayments());
 
-        $contracts = $service->getPaymentContracts();
-        $this->assertCount(1, $contracts);
-        $this->assertSame('somecontract', $contracts[0]->getIdentifier());
-
         $methods = $service->getPaymentMethodsByType($paymentTypes[0]->getIdentifier());
         $this->assertCount(1, $methods);
         $this->assertSame('bar.svg', $methods[0]->getImage());
@@ -85,19 +81,10 @@ class ConfigurationServiceTest extends TestCase
 
         $this->assertSame('sometype', $service->getPaymentTypeByType('sometype')->getIdentifier());
 
-        $this->assertNull($service->getPaymentContract('nope'));
-        $contract = $service->getPaymentContract('somecontract');
-        $this->assertSame('somecontract', $contract->getIdentifier());
-
         $this->assertNull($service->getPaymentMethodByTypeAndPaymentMethod('nope', 'quux'));
         $this->assertNull($service->getPaymentMethodByTypeAndPaymentMethod('sometype', 'nope'));
         $method = $service->getPaymentMethodByTypeAndPaymentMethod('sometype', 'quux');
         $this->assertSame('quux', $method->getIdentifier());
-
-        $this->assertNull($service->getPaymentContractByTypeAndPaymentMethod('nope', 'quux'));
-        $this->assertNull($service->getPaymentContractByTypeAndPaymentMethod('sometype', 'nope'));
-        $contract = $service->getPaymentContractByTypeAndPaymentMethod('sometype', 'quux');
-        $this->assertSame('somecontract', $contract->getIdentifier());
     }
 
     public function testPaymentTypeExpressions()

@@ -20,10 +20,10 @@ class PaymentServiceProviderServiceCompilerPass implements CompilerPassInterface
 
     public function process(ContainerBuilder $container): void
     {
-        if (!$container->has(PaymentServiceProviderService::class)) {
+        if (!$container->has(PaymentServiceProviderServiceRegistry::class)) {
             return;
         }
-        $definition = $container->findDefinition(PaymentServiceProviderService::class);
+        $definition = $container->findDefinition(PaymentServiceProviderServiceRegistry::class);
         $taggedServices = $container->findTaggedServiceIds(self::TAG);
         foreach ($taggedServices as $id => $tags) {
             $definition->addMethodCall('addService', [new Reference($id)]);

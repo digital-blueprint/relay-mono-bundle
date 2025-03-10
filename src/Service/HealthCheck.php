@@ -51,8 +51,9 @@ class HealthCheck implements CheckInterface
 
     public function check(CheckOptions $options): array
     {
-        $results[] = $this->checkMethod('Check if we can connect to the DB', [$this->payment, 'checkConnection']);
         $results[] = $this->checkMethod('Check bundle configuration', [$this->configService, 'checkConfig']);
+        $results[] = $this->checkMethod('Check if we can connect to the DB', [$this->payment, 'checkConnection']);
+        $results[] = $this->checkMethod('Check connector configuration', [$this->payment, 'checkConfig']);
 
         return $results;
     }

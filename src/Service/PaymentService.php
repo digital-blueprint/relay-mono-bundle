@@ -11,7 +11,7 @@ use Dbp\Relay\MonoBundle\ApiPlatform\StartPayAction;
 use Dbp\Relay\MonoBundle\BackendServiceProvider\BackendServiceRegistry;
 use Dbp\Relay\MonoBundle\Config\ConfigurationService;
 use Dbp\Relay\MonoBundle\PaymentServiceProvider\CompleteResponseInterface;
-use Dbp\Relay\MonoBundle\PaymentServiceProvider\PaymentServiceProviderService;
+use Dbp\Relay\MonoBundle\PaymentServiceProvider\PaymentServiceProviderServiceRegistry;
 use Dbp\Relay\MonoBundle\PaymentServiceProvider\StartResponseInterface;
 use Dbp\Relay\MonoBundle\Persistence\PaymentPersistence;
 use Dbp\Relay\MonoBundle\Persistence\PaymentPersistenceRepository;
@@ -47,9 +47,9 @@ class PaymentService implements LoggerAwareInterface
     private $em;
 
     /**
-     * @var PaymentServiceProviderService
+     * @var PaymentServiceProviderServiceRegistry
      */
-    private $paymentServiceProviderService;
+    private $paymentServiceProviderServiceRegistry;
 
     /**
      * @var UserSessionInterface
@@ -70,7 +70,7 @@ class PaymentService implements LoggerAwareInterface
         BackendServiceRegistry $backendService,
         ConfigurationService $configurationService,
         EntityManagerInterface $em,
-        PaymentServiceProviderService $paymentServiceProviderService,
+        PaymentServiceProviderServiceRegistry $paymentServiceProviderService,
         UserSessionInterface $userSession,
         LoggerInterface $auditLogger,
         LockFactory $lockFactory
@@ -79,7 +79,7 @@ class PaymentService implements LoggerAwareInterface
         $this->configurationService = $configurationService;
         $this->em = $em;
 
-        $this->paymentServiceProviderService = $paymentServiceProviderService;
+        $this->paymentServiceProviderServiceRegistry = $paymentServiceProviderService;
         $this->userSession = $userSession;
         $this->logger = new NullLogger();
         $this->auditLogger = $auditLogger;
@@ -89,6 +89,23 @@ class PaymentService implements LoggerAwareInterface
     public function checkConnection()
     {
         $this->em->getConnection()->getNativeConnection();
+    }
+
+    public function checkConfig(): void
+    {
+        foreach ($this->configurationService->getPaymentTypes() as $paymentType) {
+            // Make sure all referenced methods are provided by a connector
+            $methods = $this->configurationService->getPaymentMethodsByType($paymentType->getIdentifier());
+            foreach ($methods as $method) {
+                $inst = $this->paymentServiceProviderServiceRegistry->getByPaymentMethod($method);
+                if (!in_array($method->getIdentifier(), $inst->getPaymentMethods($method->getContract()), true)) {
+                    throw new \RuntimeException($method->getIdentifier().' is not a valid payment method provided by '.$method->getContract());
+                }
+            }
+
+            // Make sure all referenced types are provided by a connector
+            $this->backendServiceRegistry->getByPaymentType($paymentType);
+        }
     }
 
     private function createPaymentLock(PaymentPersistence $payment): LockInterface
@@ -415,14 +432,14 @@ class PaymentService implements LoggerAwareInterface
 
         $paymentPersistence->setPspReturnUrl($pspReturnUrl);
 
-        $paymentMethod = $startPayAction->getPaymentMethod();
-        $paymentPersistence->setPaymentMethod($paymentMethod);
+        $paymentMethodId = $startPayAction->getPaymentMethod();
+        $paymentPersistence->setPaymentMethod($paymentMethodId);
 
-        $paymentContract = $this->configurationService->getPaymentContractByTypeAndPaymentMethod($type, $paymentMethod);
-        if ($paymentContract === null) {
-            throw new \RuntimeException('No payment contract found!');
+        $paymentMethod = $this->configurationService->getPaymentMethodByTypeAndPaymentMethod($type, $paymentMethodId);
+        if ($paymentMethod === null) {
+            throw new \RuntimeException('No payment method found!');
         }
-        $paymentPersistence->setPaymentContract($paymentContract->getIdentifier());
+        $paymentPersistence->setPaymentContract($paymentMethod->getContract());
 
         $paymentPersistence->setPaymentStatus(PaymentStatus::STARTED);
 
@@ -433,9 +450,9 @@ class PaymentService implements LoggerAwareInterface
 
         $paymentPersistence->setStartedAt($now);
 
-        $paymentServiceProvider = $this->paymentServiceProviderService->getByPaymentContract($paymentContract);
+        $paymentServiceProvider = $this->paymentServiceProviderServiceRegistry->getByPaymentMethod($paymentMethod);
         try {
-            $startResponse = $paymentServiceProvider->start($paymentPersistence);
+            $startResponse = $paymentServiceProvider->start($paymentMethod->getContract(), $paymentMethod->getIdentifier(), $paymentPersistence);
         } finally {
             try {
                 $this->em->persist($paymentPersistence);
@@ -457,8 +474,7 @@ class PaymentService implements LoggerAwareInterface
     {
         $this->auditLogger->debug('Completing for PSP data', ['mono-psp-data' => $pspData]);
         // first map the PSP data to an existing payment entry by asking all PSP connectors
-        foreach ($this->configurationService->getPaymentContracts() as $contract) {
-            $pspService = $this->paymentServiceProviderService->getByPaymentContract($contract);
+        foreach ($this->paymentServiceProviderServiceRegistry->getServices() as $pspService) {
             try {
                 $paymentId = $pspService->getPaymentIdForPspData($pspData);
             } catch (\Exception $e) {
@@ -483,12 +499,12 @@ class PaymentService implements LoggerAwareInterface
 
         $type = $paymentPersistence->getType();
 
-        $paymentMethod = $paymentPersistence->getPaymentMethod();
-        $paymentContract = $this->configurationService->getPaymentContractByTypeAndPaymentMethod($type, $paymentMethod);
+        $paymentMethodId = $paymentPersistence->getPaymentMethod();
+        $paymentMethod = $this->configurationService->getPaymentMethodByTypeAndPaymentMethod($type, $paymentMethodId);
 
-        $paymentServiceProvider = $this->paymentServiceProviderService->getByPaymentContract($paymentContract);
+        $paymentServiceProvider = $this->paymentServiceProviderServiceRegistry->getByPaymentMethod($paymentMethod);
         try {
-            $completeResponse = $paymentServiceProvider->complete($paymentPersistence);
+            $completeResponse = $paymentServiceProvider->complete($paymentMethod->getContract(), $paymentPersistence);
         } finally {
             try {
                 $this->em->persist($paymentPersistence);
@@ -531,23 +547,23 @@ class PaymentService implements LoggerAwareInterface
                     continue;
                 }
 
-                $paymentMethod = $paymentPersistence->getPaymentMethod();
+                $paymentMethodId = $paymentPersistence->getPaymentMethod();
                 // We only have a payment method once the payment was started
-                assert($paymentMethod !== null || $paymentStatus === PaymentStatus::PREPARED);
+                assert($paymentMethodId !== null || $paymentStatus === PaymentStatus::PREPARED);
 
-                if ($paymentMethod !== null) {
-                    $paymentContract = $this->configurationService->getPaymentContractByTypeAndPaymentMethod($type, $paymentMethod);
-                    if ($paymentContract === null) {
+                if ($paymentMethodId !== null) {
+                    $paymentMethod = $this->configurationService->getPaymentMethodByTypeAndPaymentMethod($type, $paymentMethodId);
+                    if ($paymentMethod === null) {
                         // in case the config is wrong, better not delete the entry from the DB if some related data could
                         // be still stored somewhere that needs to be cleaned up
 
-                        $this->logger->error("Can't find payment contract for method '$paymentMethod'. Can't clean up entry.", $this->getLoggingContext($paymentPersistence));
+                        $this->logger->error("Can't find payment contract for method '$paymentMethodId'. Can't clean up entry.", $this->getLoggingContext($paymentPersistence));
                         continue;
                     }
 
-                    $paymentServiceProvider = $this->paymentServiceProviderService->getByPaymentContract($paymentContract);
+                    $paymentServiceProvider = $this->paymentServiceProviderServiceRegistry->getByPaymentMethod($paymentMethod);
                     try {
-                        $cleanupWorked = $paymentServiceProvider->cleanup($paymentPersistence);
+                        $cleanupWorked = $paymentServiceProvider->cleanup($paymentMethod->getContract(), $paymentPersistence);
                     } catch (\Exception $e) {
                         $this->logger->error('PSP cleanup failed', $this->getLoggingContext($paymentPersistence, ['exception' => $e]));
                         $cleanupWorked = false;
