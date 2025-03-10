@@ -276,7 +276,7 @@ class PaymentService implements LoggerAwareInterface
                 $this->auditLogger->warning('Demo mode active, backend not notified.', $this->getLoggingContext($paymentPersistence));
                 $isNotified = true;
             } else {
-                $isNotified = $backendService->notify($type, $paymentPersistence);
+                $isNotified = $backendService->notify($paymentType->getClientType(), $paymentPersistence);
             }
 
             if ($isNotified) {
@@ -333,7 +333,7 @@ class PaymentService implements LoggerAwareInterface
 
         // We allow the backend to update the payment data as long as we are in the prepared state
         if ($paymentPersistence->getPaymentStatus() === PaymentStatus::PREPARED) {
-            $isDataUpdated = $backendService->updateData($type, $paymentPersistence);
+            $isDataUpdated = $backendService->updateData($paymentType->getClientType(), $paymentPersistence);
             if ($isDataUpdated) {
                 $now = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
                 $paymentPersistence->setDataUpdatedAt($now);
@@ -355,7 +355,7 @@ class PaymentService implements LoggerAwareInterface
         $payment->setRecipient($recipient);
 
         // We give the backend service one last chance to change things, for example for translations
-        $backendService->updateEntity($type, $paymentPersistence, $payment);
+        $backendService->updateEntity($paymentType->getClientType(), $paymentPersistence, $payment);
 
         return $payment;
     }
@@ -541,7 +541,7 @@ class PaymentService implements LoggerAwareInterface
                 $paymentType = $this->configurationService->getPaymentTypeByType($type);
 
                 $backendService = $this->backendServiceRegistry->getByPaymentType($paymentType);
-                $cleanupWorked = $backendService->cleanup($type, $paymentPersistence);
+                $cleanupWorked = $backendService->cleanup($paymentType->getClientType(), $paymentPersistence);
                 if ($cleanupWorked !== true) {
                     $this->logger->error('Backend cleanup failed, skipping further cleanup', $this->getLoggingContext($paymentPersistence));
                     continue;

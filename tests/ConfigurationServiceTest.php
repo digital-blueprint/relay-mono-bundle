@@ -35,7 +35,7 @@ class ConfigurationServiceTest extends TestCase
             ],
             'payment_types' => [
                 'sometype' => [
-                    'identifier' => 'foo',
+                    'client_type' => 'foo',
                     'service' => 'bla',
                     'auth_required' => false,
                     'return_url_expression' => 'true',

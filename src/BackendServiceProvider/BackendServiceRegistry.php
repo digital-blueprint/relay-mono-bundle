@@ -30,7 +30,7 @@ class BackendServiceRegistry
 
     public function getByPaymentType(PaymentType $paymentType): BackendServiceInterface
     {
-        $paymentTypeId = $paymentType->getIdentifier();
+        $paymentTypeId = $paymentType->getClientType();
 
         $backend = $this->services[$paymentTypeId] ?? null;
         if ($backend === null) {

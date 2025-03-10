@@ -83,6 +83,11 @@ class PaymentType
      */
     private $reportingConfig;
 
+    /**
+     * @var string
+     */
+    private $clientType;
+
     public function getIdentifier(): string
     {
         return $this->identifier;
@@ -277,6 +282,7 @@ class PaymentType
     {
         $paymentType = new PaymentType();
         $paymentType->setIdentifier((string) $identifier);
+        $paymentType->setClientType((string) $config['client_type']);
         $paymentType->setAuthRequired((bool) $config['auth_required']);
         $paymentType->setReturnUrlOverride($config['return_url_override'] ?? null);
         $paymentType->setReturnUrlExpression((string) $config['return_url_expression']);
@@ -311,5 +317,15 @@ class PaymentType
     public function __toString()
     {
         return $this->identifier;
+    }
+
+    public function getClientType(): string
+    {
+        return $this->clientType;
+    }
+
+    public function setClientType(string $clientType): void
+    {
+        $this->clientType = $clientType;
     }
 }
