@@ -28,11 +28,6 @@ class ConfigurationServiceTest extends TestCase
                 ],
             ],
             'payment_session_timeout' => 'PT1234S',
-            'payment_contracts' => [
-                'somecontract' => [
-                    'service' => 'bla',
-                ],
-            ],
             'payment_types' => [
                 'sometype' => [
                     'client_type' => 'foo',
