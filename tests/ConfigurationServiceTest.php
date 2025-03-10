@@ -49,6 +49,7 @@ class ConfigurationServiceTest extends TestCase
                         [
                             'identifier' => 'quux',
                             'contract' => 'somecontract',
+                            'method' => 'somemethod',
                             'name' => 'somename',
                             'image' => 'bar.svg',
                             'demo_mode' => true,
@@ -73,6 +74,7 @@ class ConfigurationServiceTest extends TestCase
         $this->assertSame('bar.svg', $methods[0]->getImage());
         $this->assertSame(' (DEMO)', $methods[0]->getName());
         $this->assertSame('somecontract', $methods[0]->getContract());
+        $this->assertSame('somemethod', $methods[0]->getMethod());
 
         $this->assertSame('sometype', $service->getPaymentTypeByType('sometype')->getIdentifier());
 

@@ -98,8 +98,8 @@ class PaymentService implements LoggerAwareInterface
             $methods = $this->configurationService->getPaymentMethodsByType($paymentType->getIdentifier());
             foreach ($methods as $method) {
                 $inst = $this->paymentServiceProviderServiceRegistry->getByPaymentMethod($method);
-                if (!in_array($method->getIdentifier(), $inst->getPaymentMethods($method->getContract()), true)) {
-                    throw new \RuntimeException($method->getIdentifier().' is not a valid payment method provided by '.$method->getContract());
+                if (!in_array($method->getMethod(), $inst->getPaymentMethods($method->getContract()), true)) {
+                    throw new \RuntimeException($method->getMethod().' is not a valid payment method provided by '.$method->getContract());
                 }
             }
 
@@ -452,7 +452,7 @@ class PaymentService implements LoggerAwareInterface
 
         $paymentServiceProvider = $this->paymentServiceProviderServiceRegistry->getByPaymentMethod($paymentMethod);
         try {
-            $startResponse = $paymentServiceProvider->start($paymentMethod->getContract(), $paymentMethod->getIdentifier(), $paymentPersistence);
+            $startResponse = $paymentServiceProvider->start($paymentMethod->getContract(), $paymentMethod->getMethod(), $paymentPersistence);
         } finally {
             try {
                 $this->em->persist($paymentPersistence);
