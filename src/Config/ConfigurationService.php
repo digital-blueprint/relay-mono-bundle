@@ -93,7 +93,7 @@ class ConfigurationService
 
     private function adjustPaymentMethodConfig(array $paymentMethodConfig): array
     {
-        $paymentMethodConfig['name'] = $this->translator->trans($paymentMethodConfig['name']);
+        $paymentMethodConfig['name'] = $this->translator->trans($paymentMethodConfig['name'], domain: 'dbp_relay_mono');
         if ($paymentMethodConfig['demo_mode']) {
             $paymentMethodConfig['name'] .= ' (DEMO)';
         }

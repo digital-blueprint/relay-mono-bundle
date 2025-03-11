@@ -1,4 +1,4 @@
-dbp_relay_mono:
+payment_methods:
   credit_card: Debit card or credit card
   apple_pay: Apple Pay
   google_pay: Google Pay
