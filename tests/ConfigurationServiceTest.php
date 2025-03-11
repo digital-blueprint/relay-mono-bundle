@@ -9,16 +9,15 @@ use Dbp\Relay\MonoBundle\Config\PaymentType;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\UrlHelper;
-use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Component\Translation\IdentityTranslator;
 
 class ConfigurationServiceTest extends TestCase
 {
     public function test()
     {
-        $translator = $this->createMock(TranslatorInterface::class);
         $stack = new RequestStack();
         $urlHelper = new UrlHelper($stack);
-        $service = new ConfigurationService($translator, $urlHelper);
+        $service = new ConfigurationService(new IdentityTranslator(), $urlHelper);
         $service->setConfig([
             'database_url' => 'bla',
             'cleanup' => [
@@ -72,7 +71,7 @@ class ConfigurationServiceTest extends TestCase
         $methods = $service->getPaymentMethodsByType($paymentTypes[0]->getIdentifier());
         $this->assertCount(1, $methods);
         $this->assertSame('bar.svg', $methods[0]->getImage());
-        $this->assertSame(' (DEMO)', $methods[0]->getName());
+        $this->assertSame('somename (DEMO)', $methods[0]->getName());
         $this->assertSame('somecontract', $methods[0]->getContract());
         $this->assertSame('somemethod', $methods[0]->getMethod());
 
@@ -82,6 +81,8 @@ class ConfigurationServiceTest extends TestCase
         $this->assertNull($service->getPaymentMethodByTypeAndPaymentMethod('sometype', 'nope'));
         $method = $service->getPaymentMethodByTypeAndPaymentMethod('sometype', 'quux');
         $this->assertSame('quux', $method->getIdentifier());
+        $this->assertSame('bar.svg', $method->getImage());
+        $this->assertSame('somename (DEMO)', $method->getName());
     }
 
     public function testPaymentTypeExpressions()

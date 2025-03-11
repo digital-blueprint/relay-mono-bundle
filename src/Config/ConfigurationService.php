@@ -91,6 +91,19 @@ class ConfigurationService
         return $paymentType;
     }
 
+    private function adjustPaymentMethodConfig(array $paymentMethodConfig): array
+    {
+        $paymentMethodConfig['name'] = $this->translator->trans($paymentMethodConfig['name']);
+        if ($paymentMethodConfig['demo_mode']) {
+            $paymentMethodConfig['name'] .= ' (DEMO)';
+        }
+        if (array_key_exists('image', $paymentMethodConfig)) {
+            $paymentMethodConfig['image'] = $this->urlHelper->getAbsoluteUrl($paymentMethodConfig['image']);
+        }
+
+        return $paymentMethodConfig;
+    }
+
     /**
      * @return PaymentMethod[]
      */
@@ -102,15 +115,7 @@ class ConfigurationService
             $paymentTypeConfig = $this->config['payment_types'][$type];
             $paymentMethodsConfig = $paymentTypeConfig['payment_methods'];
             foreach ($paymentMethodsConfig as $paymentMethodConfig) {
-                if (array_key_exists('name', $paymentMethodConfig)) {
-                    $paymentMethodConfig['name'] = $this->translator->trans($paymentMethodConfig['name']);
-                }
-                if ($paymentMethodConfig['demo_mode']) {
-                    $paymentMethodConfig['name'] .= ' (DEMO)';
-                }
-                if (array_key_exists('image', $paymentMethodConfig)) {
-                    $paymentMethodConfig['image'] = $this->urlHelper->getAbsoluteUrl($paymentMethodConfig['image']);
-                }
+                $paymentMethodConfig = $this->adjustPaymentMethodConfig($paymentMethodConfig);
                 $paymentMethod = PaymentMethod::fromConfig($paymentMethodConfig);
                 $paymentMethods[] = $paymentMethod;
             }
@@ -124,6 +129,7 @@ class ConfigurationService
         if (array_key_exists($type, $this->config['payment_types'])) {
             $paymentMethodsConfig = $this->config['payment_types'][$type]['payment_methods'];
             foreach ($paymentMethodsConfig as $paymentMethodConfig) {
+                $paymentMethodConfig = $this->adjustPaymentMethodConfig($paymentMethodConfig);
                 $paymentMethodObject = PaymentMethod::fromConfig($paymentMethodConfig);
                 if ($paymentMethodObject->getIdentifier() === $paymentMethod) {
                     return $paymentMethodObject;
