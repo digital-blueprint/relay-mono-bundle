@@ -98,7 +98,7 @@ class PaymentService implements LoggerAwareInterface
             $methods = $this->configurationService->getPaymentMethodsByType($paymentType->getIdentifier());
             foreach ($methods as $method) {
                 $inst = $this->paymentServiceProviderServiceRegistry->getByPaymentMethod($method);
-                if (!in_array($method->getMethod(), $inst->getPaymentMethods($method->getContract()), true)) {
+                if (!in_array($method->getMethod(), $inst->getPspMethods($method->getContract()), true)) {
                     throw new \RuntimeException($method->getMethod().' is not a valid payment method provided by '.$method->getContract());
                 }
             }

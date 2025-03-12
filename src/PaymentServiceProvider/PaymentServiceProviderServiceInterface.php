@@ -13,14 +13,14 @@ interface PaymentServiceProviderServiceInterface
      *
      * @return string[]
      */
-    public function getPaymentContracts(): array;
+    public function getPspContracts(): array;
 
     /**
      * Returns a list of payment method IDs for a given contract.
      *
      * @return string[]
      */
-    public function getPaymentMethods(string $pspContract): array;
+    public function getPspMethods(string $pspContract): array;
 
     /**
      * Gets called with a filled out payment entry to start a payment with the PSP.

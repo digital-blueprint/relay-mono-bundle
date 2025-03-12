@@ -20,7 +20,7 @@ class PaymentServiceProviderTest extends KernelTestCase
         $method->setContract('quux');
         $service = $psp->getByPaymentmethod($method);
         $this->assertTrue($service instanceof DummyPaymentServiceProviderService);
-        $this->assertSame(['quux'], $service->getPaymentContracts());
-        $this->assertSame(['baz'], $service->getPaymentMethods('quux'));
+        $this->assertSame(['quux'], $service->getPspContracts());
+        $this->assertSame(['baz'], $service->getPspMethods('quux'));
     }
 }

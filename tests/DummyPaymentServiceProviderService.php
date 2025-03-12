@@ -33,12 +33,12 @@ class DummyPaymentServiceProviderService implements PaymentServiceProviderServic
         return null;
     }
 
-    public function getPaymentContracts(): array
+    public function getPspContracts(): array
     {
         return ['quux'];
     }
 
-    public function getPaymentMethods(string $pspContract): array
+    public function getPspMethods(string $pspContract): array
     {
         if ($pspContract === 'quux') {
             return ['baz'];

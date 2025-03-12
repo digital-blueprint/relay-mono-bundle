@@ -26,7 +26,7 @@ class PaymentServiceProviderServiceRegistry
 
     public function addService(PaymentServiceProviderServiceInterface $service): void
     {
-        foreach ($service->getPaymentContracts() as $contractId) {
+        foreach ($service->getPspContracts() as $contractId) {
             if (array_key_exists($contractId, $this->mapping)) {
                 throw new \RuntimeException("$contractId already registered");
             }
