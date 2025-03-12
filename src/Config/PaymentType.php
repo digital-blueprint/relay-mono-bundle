@@ -86,7 +86,7 @@ class PaymentType
     /**
      * @var string
      */
-    private $clientType;
+    private $backendType;
 
     public function getIdentifier(): string
     {
@@ -282,7 +282,7 @@ class PaymentType
     {
         $paymentType = new PaymentType();
         $paymentType->setIdentifier((string) $identifier);
-        $paymentType->setClientType((string) $config['client_type']);
+        $paymentType->setBackendType((string) $config['backend_type']);
         $paymentType->setAuthRequired((bool) $config['auth_required']);
         $paymentType->setReturnUrlOverride($config['return_url_override'] ?? null);
         $paymentType->setReturnUrlExpression((string) $config['return_url_expression']);
@@ -319,13 +319,13 @@ class PaymentType
         return $this->identifier;
     }
 
-    public function getClientType(): string
+    public function getBackendType(): string
     {
-        return $this->clientType;
+        return $this->backendType;
     }
 
-    public function setClientType(string $clientType): void
+    public function setBackendType(string $backendType): void
     {
-        $this->clientType = $clientType;
+        $this->backendType = $backendType;
     }
 }

@@ -29,7 +29,7 @@ class ConfigurationServiceTest extends TestCase
             'payment_session_timeout' => 'PT1234S',
             'payment_types' => [
                 'sometype' => [
-                    'client_type' => 'foo',
+                    'backend_type' => 'foo',
                     'service' => 'bla',
                     'auth_required' => false,
                     'return_url_expression' => 'true',

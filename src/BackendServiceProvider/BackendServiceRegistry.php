@@ -20,7 +20,7 @@ class BackendServiceRegistry
 
     public function addService(BackendServiceInterface $service): void
     {
-        foreach ($service->getPaymentClientTypes() as $paymentTypeId) {
+        foreach ($service->getPaymentBackendTypes() as $paymentTypeId) {
             if (array_key_exists($paymentTypeId, $this->services)) {
                 throw new \RuntimeException("$paymentTypeId already registered");
             }
@@ -30,7 +30,7 @@ class BackendServiceRegistry
 
     public function getByPaymentType(PaymentType $paymentType): BackendServiceInterface
     {
-        $paymentTypeId = $paymentType->getClientType();
+        $paymentTypeId = $paymentType->getBackendType();
 
         $backend = $this->services[$paymentTypeId] ?? null;
         if ($backend === null) {

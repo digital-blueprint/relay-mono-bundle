@@ -17,7 +17,7 @@ class BackendServiceTest extends KernelTestCase
 
         $backend = $container->get(BackendServiceRegistry::class);
         $paymentType = new PaymentType();
-        $paymentType->setClientType('foobar');
+        $paymentType->setBackendType('foobar');
         $backendService = $backend->getByPaymentType($paymentType);
         $this->assertTrue($backendService instanceof DummyBackendService);
     }
