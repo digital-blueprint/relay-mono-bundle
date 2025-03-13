@@ -29,13 +29,15 @@ class PaymentPersistenceRepository extends EntityRepository
             ->getOneOrNullResult();
     }
 
-    public function countConcurrent(): int
+    public function countConcurrent(string $type): int
     {
         $now = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
         $qb = $this->createQueryBuilder('p');
         $qb->select('count(p.identifier)')
-            ->where('p.timeoutAt >= :timeoutAt')
+            ->where('p.type = :type')
+            ->andWhere('p.timeoutAt >= :timeoutAt')
             ->andWhere('p.completedAt IS NULL')
+            ->setParameter('type', $type)
             ->setParameter('timeoutAt', $now, Types::DATETIME_IMMUTABLE);
 
         $query = $qb->getQuery();
@@ -45,14 +47,16 @@ class PaymentPersistenceRepository extends EntityRepository
         return $count;
     }
 
-    public function countAuthConcurrent(?string $userIdentifier = null): int
+    public function countAuthConcurrent(string $type, ?string $userIdentifier = null): int
     {
         $now = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
         $qb = $this->createQueryBuilder('p')
             ->select('count(p.identifier)')
-            ->where('p.timeoutAt >= :timeoutAt')
+            ->where('p.type = :type')
+            ->andWhere('p.timeoutAt >= :timeoutAt')
             ->andWhere('p.completedAt IS NULL')
             ->andWhere('p.userIdentifier IS NOT NULL')
+            ->setParameter('type', $type)
             ->setParameter('timeoutAt', $now, Types::DATETIME_IMMUTABLE);
 
         if ($userIdentifier !== null) {
@@ -67,14 +71,16 @@ class PaymentPersistenceRepository extends EntityRepository
         return $count;
     }
 
-    public function countUnauthConcurrent(?string $clientIp = null): int
+    public function countUnauthConcurrent(string $type, ?string $clientIp = null): int
     {
         $now = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
         $qb = $this->createQueryBuilder('p')
             ->select('count(p.identifier)')
-            ->where('p.timeoutAt >= :timeoutAt')
+            ->where('p.type = :type')
+            ->andWhere('p.timeoutAt >= :timeoutAt')
             ->andWhere('p.completedAt IS NULL')
             ->andWhere('p.userIdentifier IS NULL')
+            ->setParameter('type', $type)
             ->setParameter('timeoutAt', $now, Types::DATETIME_IMMUTABLE);
 
         if ($clientIp !== null) {
@@ -105,7 +111,7 @@ class PaymentPersistenceRepository extends EntityRepository
         return $items;
     }
 
-    public function findUnnotifiedByTypeCompletedSince($type, \DateTimeInterface $completedSince)
+    public function findUnnotifiedByTypeCompletedSince(string $type, \DateTimeInterface $completedSince)
     {
         $qb = $this->createQueryBuilder('p');
         $qb->where('p.type = :type')

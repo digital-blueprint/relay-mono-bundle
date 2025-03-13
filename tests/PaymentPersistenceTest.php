@@ -93,14 +93,15 @@ class PaymentPersistenceTest extends KernelTestCase
 
     public function testCountConcurrent()
     {
-        $this->assertSame(0, $this->repo->countConcurrent());
+        $this->assertSame(0, $this->repo->countConcurrent('type'));
 
         $payment = $this->getPayment('some-id');
         $payment->setTimeoutAt((new \DateTimeImmutable())->modify('+10 minutes'));
         $this->em->persist($payment);
         $this->em->flush();
 
-        $this->assertSame(1, $this->repo->countConcurrent());
+        $this->assertSame(1, $this->repo->countConcurrent('type'));
+        $this->assertSame(0, $this->repo->countConcurrent('othertype'));
     }
 
     public function testDateTime()
@@ -124,8 +125,8 @@ class PaymentPersistenceTest extends KernelTestCase
 
     public function testCountAuthConcurrent()
     {
-        $this->assertSame(0, $this->repo->countAuthConcurrent());
-        $this->assertSame(0, $this->repo->countAuthConcurrent('some-user'));
+        $this->assertSame(0, $this->repo->countAuthConcurrent('type'));
+        $this->assertSame(0, $this->repo->countAuthConcurrent('type', 'some-user'));
 
         $payment = $this->getPayment('some-id');
         $payment->setUserIdentifier('user-id');
@@ -133,15 +134,16 @@ class PaymentPersistenceTest extends KernelTestCase
         $this->em->persist($payment);
         $this->em->flush();
 
-        $this->assertSame(1, $this->repo->countAuthConcurrent());
-        $this->assertSame(0, $this->repo->countAuthConcurrent('other-id'));
-        $this->assertSame(1, $this->repo->countAuthConcurrent('user-id'));
+        $this->assertSame(1, $this->repo->countAuthConcurrent('type'));
+        $this->assertSame(0, $this->repo->countAuthConcurrent('type', 'other-id'));
+        $this->assertSame(1, $this->repo->countAuthConcurrent('type', 'user-id'));
+        $this->assertSame(0, $this->repo->countAuthConcurrent('othertype', 'user-id'));
     }
 
     public function testCountUnauthConcurrent()
     {
-        $this->assertSame(0, $this->repo->countUnauthConcurrent());
-        $this->assertSame(0, $this->repo->countUnauthConcurrent('127.0.0.1'));
+        $this->assertSame(0, $this->repo->countUnauthConcurrent('type'));
+        $this->assertSame(0, $this->repo->countUnauthConcurrent('type', '127.0.0.1'));
 
         $payment = $this->getPayment('some-id');
         $payment->setClientIp('127.0.0.1');
@@ -149,9 +151,10 @@ class PaymentPersistenceTest extends KernelTestCase
         $this->em->persist($payment);
         $this->em->flush();
 
-        $this->assertSame(1, $this->repo->countUnauthConcurrent());
-        $this->assertSame(1, $this->repo->countUnauthConcurrent('127.0.0.1'));
-        $this->assertSame(0, $this->repo->countUnauthConcurrent('127.0.0.2'));
+        $this->assertSame(1, $this->repo->countUnauthConcurrent('type'));
+        $this->assertSame(1, $this->repo->countUnauthConcurrent('type', '127.0.0.1'));
+        $this->assertSame(0, $this->repo->countUnauthConcurrent('type', '127.0.0.2'));
+        $this->assertSame(0, $this->repo->countUnauthConcurrent('othertype', '127.0.0.1'));
     }
 
     public function testFindUnnotified()

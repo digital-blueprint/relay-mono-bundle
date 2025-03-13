@@ -162,27 +162,27 @@ class PaymentService implements LoggerAwareInterface
         if (
             (
                 $paymentType->getMaxConcurrentPayments() !== null
-                && $repo->countConcurrent() >= $paymentType->getMaxConcurrentPayments()
+                && $repo->countConcurrent($type) >= $paymentType->getMaxConcurrentPayments()
             )
             || (
                 $userIdentifier
                 && $paymentType->getMaxConcurrentAuthPayments() !== null
-                && $repo->countAuthConcurrent() >= $paymentType->getMaxConcurrentAuthPayments()
+                && $repo->countAuthConcurrent($type) >= $paymentType->getMaxConcurrentAuthPayments()
             )
             || (
                 $userIdentifier
                 && $paymentType->getMaxConcurrentAuthPaymentsPerUser() !== null
-                && $repo->countAuthConcurrent($userIdentifier) >= $paymentType->getMaxConcurrentAuthPaymentsPerUser()
+                && $repo->countAuthConcurrent($type, $userIdentifier) >= $paymentType->getMaxConcurrentAuthPaymentsPerUser()
             )
             || (
                 !$userIdentifier
                 && $paymentType->getMaxConcurrentUnauthPayments() !== null
-                && $repo->countUnauthConcurrent() >= $paymentType->getMaxConcurrentUnauthPayments()
+                && $repo->countUnauthConcurrent($type) >= $paymentType->getMaxConcurrentUnauthPayments()
             )
             || (
                 !$userIdentifier
                 && $paymentType->getMaxConcurrentUnauthPaymentsPerIp() !== null
-                && $repo->countUnauthConcurrent($payment->getClientIp()) >= $paymentType->getMaxConcurrentUnauthPaymentsPerIp()
+                && $repo->countUnauthConcurrent($type, $payment->getClientIp()) >= $paymentType->getMaxConcurrentUnauthPaymentsPerIp()
             )
         ) {
             throw ApiError::withDetails(Response::HTTP_TOO_MANY_REQUESTS, 'Too many requests!', 'mono:too-many-requests');
