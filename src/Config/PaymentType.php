@@ -317,14 +317,6 @@ class PaymentType
         return $paymentType;
     }
 
-    /**
-     * @return string
-     */
-    public function __toString()
-    {
-        return $this->identifier;
-    }
-
     public function getBackendType(): string
     {
         return $this->backendType;

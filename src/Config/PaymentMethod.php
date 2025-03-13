@@ -104,14 +104,6 @@ class PaymentMethod implements \JsonSerializable
         ];
     }
 
-    /**
-     * @return string
-     */
-    public function __toString()
-    {
-        return $this->identifier;
-    }
-
     public function getContract(): string
     {
         return $this->contract;
