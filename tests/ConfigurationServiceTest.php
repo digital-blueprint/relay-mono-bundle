@@ -26,12 +26,12 @@ class ConfigurationServiceTest extends TestCase
                     'timeout_before' => 'P1D',
                 ],
             ],
-            'payment_session_timeout' => 'PT1234S',
             'payment_types' => [
                 'sometype' => [
                     'backend_type' => 'foo',
                     'service' => 'bla',
                     'auth_required' => false,
+                    'session_timeout' => 'PT1234S',
                     'return_url_expression' => 'true',
                     'return_url_override' => 'true',
                     'notify_url_expression' => 'true',
@@ -60,13 +60,13 @@ class ConfigurationServiceTest extends TestCase
 
         $service->checkConfig();
 
-        $this->assertSame('PT1234S', $service->getPaymentSessionTimeout());
         $this->assertSame('P1D', $service->getCleanupTimeout('started'));
         $this->assertNull($service->getCleanupTimeout('nope'));
 
         $paymentTypes = $service->getPaymentTypes();
         $this->assertCount(1, $paymentTypes);
         $this->assertSame(42, $paymentTypes[0]->getMaxConcurrentPayments());
+        $this->assertSame('PT1234S', $paymentTypes[0]->getSessionTimeout());
 
         $methods = $service->getPaymentMethodsByType($paymentTypes[0]->getIdentifier());
         $this->assertCount(1, $methods);

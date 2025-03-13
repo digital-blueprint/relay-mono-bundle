@@ -48,11 +48,6 @@ class ConfigurationService
         return $this->config;
     }
 
-    public function getPaymentSessionTimeout(): string
-    {
-        return $this->config['payment_session_timeout'];
-    }
-
     public function checkConfig(): void
     {
         foreach ($this->getPaymentTypes() as $paymentType) {

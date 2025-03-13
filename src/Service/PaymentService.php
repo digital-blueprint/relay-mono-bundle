@@ -200,9 +200,8 @@ class PaymentService implements LoggerAwareInterface
         }
         $paymentPersistence->setDataProtectionDeclarationUrl($paymentType->getDataProtectionDeclarationUrl());
 
-        $sessionTimeout = $this->configurationService->getPaymentSessionTimeout();
         $now = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
-        $timeoutAt = $now->add(new \DateInterval($sessionTimeout));
+        $timeoutAt = $now->add(new \DateInterval($paymentType->getSessionTimeout()));
         $paymentPersistence->setTimeoutAt($timeoutAt);
 
         try {
@@ -443,9 +442,8 @@ class PaymentService implements LoggerAwareInterface
 
         $paymentPersistence->setPaymentStatus(PaymentStatus::STARTED);
 
-        $sessionTimeout = $this->configurationService->getPaymentSessionTimeout();
         $now = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
-        $timeoutAt = $now->add(new \DateInterval($sessionTimeout));
+        $timeoutAt = $now->add(new \DateInterval($paymentType->getSessionTimeout()));
         $paymentPersistence->setTimeoutAt($timeoutAt);
 
         $paymentPersistence->setStartedAt($now);

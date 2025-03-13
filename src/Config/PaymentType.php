@@ -88,6 +88,11 @@ class PaymentType
      */
     private $backendType;
 
+    /**
+     * @var string
+     */
+    private $sessionTimeout;
+
     public function getIdentifier(): string
     {
         return $this->identifier;
@@ -290,6 +295,7 @@ class PaymentType
         $paymentType->setPspReturnUrlExpression((string) $config['psp_return_url_expression']);
         $paymentType->setDataProtectionDeclarationUrl($config['data_protection_declaration_url'] ?? null);
         $paymentType->setRecipient($config['recipient'] ?? null);
+        $paymentType->setSessionTimeout((string) $config['session_timeout']);
 
         $concurrencyLimits = $config['concurrency_limits'];
         $paymentType->setMaxConcurrentPayments($concurrencyLimits['max_concurrent_payments'] ?? null);
@@ -327,5 +333,15 @@ class PaymentType
     public function setBackendType(string $backendType): void
     {
         $this->backendType = $backendType;
+    }
+
+    public function getSessionTimeout(): string
+    {
+        return $this->sessionTimeout;
+    }
+
+    public function setSessionTimeout(string $sessionTimeout): void
+    {
+        $this->sessionTimeout = $sessionTimeout;
     }
 }
