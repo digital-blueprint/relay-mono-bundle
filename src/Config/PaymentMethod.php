@@ -85,10 +85,10 @@ class PaymentMethod
     /**
      * @param mixed[] $config
      */
-    public static function fromConfig(array $config): PaymentMethod
+    public static function fromConfig(string $identifier, array $config): PaymentMethod
     {
         $paymentMethod = new PaymentMethod();
-        $paymentMethod->setIdentifier($config['identifier']);
+        $paymentMethod->setIdentifier($identifier);
         $paymentMethod->setContract($config['contract']);
         $paymentMethod->setMethod($config['method']);
         $paymentMethod->setName($config['name']);

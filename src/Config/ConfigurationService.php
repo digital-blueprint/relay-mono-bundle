@@ -107,9 +107,9 @@ class ConfigurationService
         if (array_key_exists($type, $this->config['payment_types'])) {
             $paymentTypeConfig = $this->config['payment_types'][$type];
             $paymentMethodsConfig = $paymentTypeConfig['payment_methods'];
-            foreach ($paymentMethodsConfig as $paymentMethodConfig) {
+            foreach ($paymentMethodsConfig as $identifier => $paymentMethodConfig) {
                 $paymentMethodConfig = $this->adjustPaymentMethodConfig($paymentMethodConfig);
-                $paymentMethod = PaymentMethod::fromConfig($paymentMethodConfig);
+                $paymentMethod = PaymentMethod::fromConfig($identifier, $paymentMethodConfig);
                 $paymentMethods[] = $paymentMethod;
             }
         }
@@ -121,9 +121,9 @@ class ConfigurationService
     {
         if (array_key_exists($type, $this->config['payment_types'])) {
             $paymentMethodsConfig = $this->config['payment_types'][$type]['payment_methods'];
-            foreach ($paymentMethodsConfig as $paymentMethodConfig) {
+            foreach ($paymentMethodsConfig as $identifier => $paymentMethodConfig) {
                 $paymentMethodConfig = $this->adjustPaymentMethodConfig($paymentMethodConfig);
-                $paymentMethodObject = PaymentMethod::fromConfig($paymentMethodConfig);
+                $paymentMethodObject = PaymentMethod::fromConfig($identifier, $paymentMethodConfig);
                 if ($paymentMethodObject->getIdentifier() === $paymentMethod) {
                     return $paymentMethodObject;
                 }

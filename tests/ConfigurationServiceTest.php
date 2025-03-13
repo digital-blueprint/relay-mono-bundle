@@ -46,16 +46,14 @@ class ConfigurationServiceTest extends TestCase
                         'max_concurrent_unauth_payments_per_ip' => 5,
                     ],
                     'payment_methods' => [
-                        [
-                            'identifier' => 'quux',
+                        'quux' => [
                             'contract' => 'somecontract',
                             'method' => 'somemethod',
                             'name' => 'somename',
                             'image' => 'bar.svg',
                             'demo_mode' => true,
                         ],
-                        [
-                            'identifier' => 'baz',
+                        'baz' => [
                             'contract' => 'somecontract',
                             'method' => 'somemethod',
                             'name' => 'somename2',
