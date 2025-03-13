@@ -347,9 +347,7 @@ class PaymentService implements LoggerAwareInterface
         }
 
         $payment = self::createPaymentcreatePaymentFromPaymentPersistence($paymentPersistence);
-        $paymentMethods = $this->configurationService->getPaymentMethodsByType($type);
-        $paymentMethod = json_encode($paymentMethods);
-        $payment->setPaymentMethod($paymentMethod);
+        $payment->setPaymentMethod($this->configurationService->createJsonForMethods($type));
         $recipient = $paymentType->getRecipient();
         $payment->setRecipient($recipient);
 

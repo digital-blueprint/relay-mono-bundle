@@ -150,4 +150,19 @@ class ConfigurationService
 
         return null;
     }
+
+    public function createJsonForMethods(string $type): string
+    {
+        $paymentMethods = $this->getPaymentMethodsByType($type);
+        $payload = [];
+        foreach ($paymentMethods as $paymentMethod) {
+            $payload[] = [
+                'identifier' => $paymentMethod->getIdentifier(),
+                'name' => $paymentMethod->getName(),
+                'image' => $paymentMethod->getImage(),
+            ];
+        }
+
+        return json_encode($payload, JSON_THROW_ON_ERROR);
+    }
 }

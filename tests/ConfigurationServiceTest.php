@@ -53,6 +53,14 @@ class ConfigurationServiceTest extends TestCase
                             'image' => 'bar.svg',
                             'demo_mode' => true,
                         ],
+                        [
+                            'identifier' => 'baz',
+                            'contract' => 'somecontract',
+                            'method' => 'somemethod',
+                            'name' => 'somename2',
+                            'image' => 'bar2.svg',
+                            'demo_mode' => false,
+                        ],
                     ],
                 ],
             ],
@@ -69,7 +77,7 @@ class ConfigurationServiceTest extends TestCase
         $this->assertSame('PT1234S', $paymentTypes[0]->getSessionTimeout());
 
         $methods = $service->getPaymentMethodsByType($paymentTypes[0]->getIdentifier());
-        $this->assertCount(1, $methods);
+        $this->assertCount(2, $methods);
         $this->assertSame('bar.svg', $methods[0]->getImage());
         $this->assertSame('somename (DEMO)', $methods[0]->getName());
         $this->assertSame('somecontract', $methods[0]->getContract());
@@ -83,6 +91,12 @@ class ConfigurationServiceTest extends TestCase
         $this->assertSame('quux', $method->getIdentifier());
         $this->assertSame('bar.svg', $method->getImage());
         $this->assertSame('somename (DEMO)', $method->getName());
+
+        $this->assertSame(
+            '[{"identifier":"quux","name":"somename (DEMO)","image":"bar.svg"},{"identifier":"baz","name":"somename2","image":"bar2.svg"}]',
+            $service->createJsonForMethods('sometype'));
+
+        $this->assertSame('[]', $service->createJsonForMethods('someothertype'));
     }
 
     public function testPaymentTypeExpressions()

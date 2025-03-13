@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Dbp\Relay\MonoBundle\Config;
 
-class PaymentMethod implements \JsonSerializable
+class PaymentMethod
 {
     /**
      * @var string
@@ -93,15 +93,6 @@ class PaymentMethod implements \JsonSerializable
         $paymentMethod->setDemoMode($config['demo_mode']);
 
         return $paymentMethod;
-    }
-
-    public function jsonSerialize(): array
-    {
-        return [
-            'identifier' => $this->identifier,
-            'name' => $this->name,
-            'image' => $this->image,
-        ];
     }
 
     public function getContract(): string
