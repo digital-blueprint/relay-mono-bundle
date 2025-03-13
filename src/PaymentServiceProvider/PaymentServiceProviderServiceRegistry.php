@@ -45,7 +45,7 @@ class PaymentServiceProviderServiceRegistry
 
     public function getByPaymentMethod(PaymentMethod $paymentMethod): PaymentServiceProviderServiceInterface
     {
-        $contractId = $paymentMethod->getContract();
+        $contractId = $paymentMethod->getPspContract();
 
         $backend = $this->mapping[$contractId] ?? null;
         if ($backend === null) {

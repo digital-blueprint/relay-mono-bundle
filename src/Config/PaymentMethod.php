@@ -14,12 +14,12 @@ class PaymentMethod
     /**
      * @var string
      */
-    private $contract;
+    private $pspContract;
 
     /**
      * @var string
      */
-    private $method;
+    private $pspMethod;
 
     /**
      * @var string
@@ -89,8 +89,8 @@ class PaymentMethod
     {
         $paymentMethod = new PaymentMethod();
         $paymentMethod->setIdentifier($identifier);
-        $paymentMethod->setContract($config['contract']);
-        $paymentMethod->setMethod($config['method']);
+        $paymentMethod->setPspContract($config['contract']);
+        $paymentMethod->setPspMethod($config['method']);
         $paymentMethod->setName($config['name']);
         $paymentMethod->setImage($config['image']);
         $paymentMethod->setDemoMode($config['demo_mode']);
@@ -98,23 +98,23 @@ class PaymentMethod
         return $paymentMethod;
     }
 
-    public function getContract(): string
+    public function getPspContract(): string
     {
-        return $this->contract;
+        return $this->pspContract;
     }
 
-    public function setContract(string $contract): void
+    public function setPspContract(string $pspContract): void
     {
-        $this->contract = $contract;
+        $this->pspContract = $pspContract;
     }
 
-    public function getMethod(): string
+    public function getPspMethod(): string
     {
-        return $this->method;
+        return $this->pspMethod;
     }
 
-    public function setMethod(string $method): void
+    public function setPspMethod(string $pspMethod): void
     {
-        $this->method = $method;
+        $this->pspMethod = $pspMethod;
     }
 }

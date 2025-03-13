@@ -79,8 +79,8 @@ class ConfigurationServiceTest extends TestCase
         $this->assertCount(2, $methods);
         $this->assertSame('bar.svg', $methods[0]->getImage());
         $this->assertSame('somename (DEMO)', $methods[0]->getName());
-        $this->assertSame('somecontract', $methods[0]->getContract());
-        $this->assertSame('somemethod', $methods[0]->getMethod());
+        $this->assertSame('somecontract', $methods[0]->getPspContract());
+        $this->assertSame('somemethod', $methods[0]->getPspMethod());
 
         $this->assertSame('sometype', $service->getPaymentTypeByType('sometype')->getIdentifier());
 

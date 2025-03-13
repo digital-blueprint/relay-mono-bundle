@@ -98,8 +98,8 @@ class PaymentService implements LoggerAwareInterface
             $methods = $this->configurationService->getPaymentMethodsByType($paymentType->getIdentifier());
             foreach ($methods as $method) {
                 $inst = $this->paymentServiceProviderServiceRegistry->getByPaymentMethod($method);
-                if (!in_array($method->getMethod(), $inst->getPspMethods($method->getContract()), true)) {
-                    throw new \RuntimeException($method->getMethod().' is not a valid payment method provided by '.$method->getContract());
+                if (!in_array($method->getPspMethod(), $inst->getPspMethods($method->getPspContract()), true)) {
+                    throw new \RuntimeException($method->getPspMethod().' is not a valid payment method provided by '.$method->getPspContract());
                 }
             }
 
@@ -452,7 +452,7 @@ class PaymentService implements LoggerAwareInterface
 
         $paymentServiceProvider = $this->paymentServiceProviderServiceRegistry->getByPaymentMethod($paymentMethod);
         try {
-            $startResponse = $paymentServiceProvider->start($paymentMethod->getContract(), $paymentMethod->getMethod(), $paymentPersistence);
+            $startResponse = $paymentServiceProvider->start($paymentMethod->getPspContract(), $paymentMethod->getPspMethod(), $paymentPersistence);
         } finally {
             try {
                 $this->em->persist($paymentPersistence);
@@ -504,7 +504,7 @@ class PaymentService implements LoggerAwareInterface
 
         $paymentServiceProvider = $this->paymentServiceProviderServiceRegistry->getByPaymentMethod($paymentMethod);
         try {
-            $completeResponse = $paymentServiceProvider->complete($paymentMethod->getContract(), $paymentPersistence);
+            $completeResponse = $paymentServiceProvider->complete($paymentMethod->getPspContract(), $paymentPersistence);
         } finally {
             try {
                 $this->em->persist($paymentPersistence);
@@ -563,7 +563,7 @@ class PaymentService implements LoggerAwareInterface
 
                     $paymentServiceProvider = $this->paymentServiceProviderServiceRegistry->getByPaymentMethod($paymentMethod);
                     try {
-                        $cleanupWorked = $paymentServiceProvider->cleanup($paymentMethod->getContract(), $paymentPersistence);
+                        $cleanupWorked = $paymentServiceProvider->cleanup($paymentMethod->getPspContract(), $paymentPersistence);
                     } catch (\Exception $e) {
                         $this->logger->error('PSP cleanup failed', $this->getLoggingContext($paymentPersistence, ['exception' => $e]));
                         $cleanupWorked = false;

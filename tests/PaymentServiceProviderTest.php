@@ -17,7 +17,7 @@ class PaymentServiceProviderTest extends KernelTestCase
         $psp = $container->get(PaymentServiceProviderServiceRegistry::class);
         assert($psp instanceof PaymentServiceProviderServiceRegistry);
         $method = new PaymentMethod();
-        $method->setContract('quux');
+        $method->setPspContract('quux');
         $service = $psp->getByPaymentmethod($method);
         $this->assertTrue($service instanceof DummyPaymentServiceProviderService);
         $this->assertSame(['quux'], $service->getPspContracts());
