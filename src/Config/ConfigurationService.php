@@ -92,7 +92,8 @@ class ConfigurationService
         if ($paymentMethodConfig['demo_mode']) {
             $paymentMethodConfig['name'] .= ' (DEMO)';
         }
-        if (array_key_exists('image', $paymentMethodConfig)) {
+
+        if ($paymentMethodConfig['image'] !== null) {
             $paymentMethodConfig['image'] = $this->urlHelper->getAbsoluteUrl($paymentMethodConfig['image']);
         }
 

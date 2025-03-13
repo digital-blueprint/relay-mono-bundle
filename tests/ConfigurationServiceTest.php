@@ -36,6 +36,7 @@ class ConfigurationServiceTest extends TestCase
                     'return_url_override' => 'true',
                     'notify_url_expression' => 'true',
                     'psp_return_url_expression' => 'true',
+                    'data_protection_declaration_url' => null,
                     'recipient' => '',
                     'concurrency_limits' => [
                         'max_concurrent_payments' => 42,

@@ -286,23 +286,23 @@ class PaymentType
     public static function fromConfig(string $identifier, array $config): PaymentType
     {
         $paymentType = new PaymentType();
-        $paymentType->setIdentifier((string) $identifier);
-        $paymentType->setBackendType((string) $config['backend_type']);
-        $paymentType->setAuthRequired((bool) $config['auth_required']);
-        $paymentType->setReturnUrlOverride($config['return_url_override'] ?? null);
-        $paymentType->setReturnUrlExpression((string) $config['return_url_expression']);
-        $paymentType->setNotifyUrlExpression((string) $config['notify_url_expression']);
-        $paymentType->setPspReturnUrlExpression((string) $config['psp_return_url_expression']);
-        $paymentType->setDataProtectionDeclarationUrl($config['data_protection_declaration_url'] ?? null);
-        $paymentType->setRecipient($config['recipient'] ?? null);
-        $paymentType->setSessionTimeout((string) $config['session_timeout']);
+        $paymentType->setIdentifier($identifier);
+        $paymentType->setBackendType($config['backend_type']);
+        $paymentType->setAuthRequired($config['auth_required']);
+        $paymentType->setReturnUrlOverride($config['return_url_override']);
+        $paymentType->setReturnUrlExpression($config['return_url_expression']);
+        $paymentType->setNotifyUrlExpression($config['notify_url_expression']);
+        $paymentType->setPspReturnUrlExpression($config['psp_return_url_expression']);
+        $paymentType->setDataProtectionDeclarationUrl($config['data_protection_declaration_url']);
+        $paymentType->setRecipient($config['recipient']);
+        $paymentType->setSessionTimeout($config['session_timeout']);
 
         $concurrencyLimits = $config['concurrency_limits'];
-        $paymentType->setMaxConcurrentPayments($concurrencyLimits['max_concurrent_payments'] ?? null);
-        $paymentType->setMaxConcurrentAuthPayments($concurrencyLimits['max_concurrent_auth_payments'] ?? null);
-        $paymentType->setMaxConcurrentAuthPaymentsPerUser($concurrencyLimits['max_concurrent_auth_payments_per_user'] ?? null);
+        $paymentType->setMaxConcurrentPayments($concurrencyLimits['max_concurrent_payments']);
+        $paymentType->setMaxConcurrentAuthPayments($concurrencyLimits['max_concurrent_auth_payments']);
+        $paymentType->setMaxConcurrentAuthPaymentsPerUser($concurrencyLimits['max_concurrent_auth_payments_per_user']);
         $paymentType->setMaxConcurrentUnauthPayments($concurrencyLimits['max_concurrent_unauth_payments']);
-        $paymentType->setMaxConcurrentUnauthPaymentsPerIp($concurrencyLimits['max_concurrent_unauth_payments_per_ip'] ?? null);
+        $paymentType->setMaxConcurrentUnauthPaymentsPerIp($concurrencyLimits['max_concurrent_unauth_payments_per_ip']);
 
         $notifyErrorConfig = $config['notify_error'] ?? null;
         if ($notifyErrorConfig !== null) {

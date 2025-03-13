@@ -27,7 +27,7 @@ class PaymentMethod
     private $name;
 
     /**
-     * @var string
+     * @var ?string
      */
     private $image;
 
@@ -60,12 +60,12 @@ class PaymentMethod
         return $this;
     }
 
-    public function getImage(): string
+    public function getImage(): ?string
     {
         return $this->image;
     }
 
-    public function setImage(string $image): self
+    public function setImage(?string $image): self
     {
         $this->image = $image;
 
@@ -85,11 +85,11 @@ class PaymentMethod
     public static function fromConfig(array $config): PaymentMethod
     {
         $paymentMethod = new PaymentMethod();
-        $paymentMethod->setIdentifier((string) $config['identifier']);
-        $paymentMethod->setContract((string) $config['contract']);
-        $paymentMethod->setMethod((string) $config['method']);
-        $paymentMethod->setName((string) $config['name']);
-        $paymentMethod->setImage((string) $config['image']);
+        $paymentMethod->setIdentifier($config['identifier']);
+        $paymentMethod->setContract($config['contract']);
+        $paymentMethod->setMethod($config['method']);
+        $paymentMethod->setName($config['name']);
+        $paymentMethod->setImage($config['image']);
         $paymentMethod->setDemoMode($config['demo_mode']);
 
         return $paymentMethod;
