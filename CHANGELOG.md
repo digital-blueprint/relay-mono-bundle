@@ -2,6 +2,19 @@
 
 ## Unreleased
 
+## v0.5.0
+
+* config: Various bundle config cleanups (better defaults, more validation)
+* config: No longer reference connector services by class name, but by custom
+  connector ID. backend service is referenced via "backend_type", psp
+  contract/method is referenced via payment_method.contract/method.
+* config: Don't require the payment types/contracts/methods to be named the same
+  in the connectors.
+* Move bundle translations into a custom "dbp_relay_mono" domain
+* config: move "payment_session_timeout" to "session_timeout" for each payment
+  type
+* limits: correctly limit the number of payments per payment type instead of globally
+
 ## v0.4.14
 
 * Fixes for newer phpstan
