@@ -32,7 +32,7 @@ class PaymentMethod
     private $image;
 
     /**
-     * @property bool $demoMode
+     * @var bool
      */
     private $demoMode;
 
@@ -82,6 +82,9 @@ class PaymentMethod
         $this->demoMode = $demoMode;
     }
 
+    /**
+     * @param mixed[] $config
+     */
     public static function fromConfig(array $config): PaymentMethod
     {
         $paymentMethod = new PaymentMethod();

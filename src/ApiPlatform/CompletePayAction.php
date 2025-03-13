@@ -8,6 +8,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 class CompletePayAction
 {
+    /**
+     * @var string
+     */
     #[Groups(['MonoPayment:output'])]
     private $identifier;
 

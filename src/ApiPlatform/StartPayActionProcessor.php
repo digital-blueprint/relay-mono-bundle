@@ -11,6 +11,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
  * @psalm-suppress MissingTemplateParam
+ *
+ * @implements ProcessorInterface<StartPayAction,StartPayAction>
  */
 class StartPayActionProcessor extends AbstractController implements ProcessorInterface
 {

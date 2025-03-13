@@ -12,7 +12,7 @@ use Doctrine\ORM\EntityRepository;
  */
 class PaymentPersistenceRepository extends EntityRepository
 {
-    public function findOneActive($identifier): ?PaymentPersistence
+    public function findOneActive(string $identifier): ?PaymentPersistence
     {
         $now = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
         $qb = $this->createQueryBuilder('p')
@@ -111,7 +111,10 @@ class PaymentPersistenceRepository extends EntityRepository
         return $items;
     }
 
-    public function findUnnotifiedByTypeCompletedSince(string $type, \DateTimeInterface $completedSince)
+    /**
+     * @return PaymentPersistence[]
+     */
+    public function findUnnotifiedByTypeCompletedSince(string $type, \DateTimeInterface $completedSince): array
     {
         $qb = $this->createQueryBuilder('p');
         $qb->where('p.type = :type')

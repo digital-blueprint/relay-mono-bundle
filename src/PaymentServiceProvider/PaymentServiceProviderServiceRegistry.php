@@ -9,7 +9,7 @@ use Dbp\Relay\MonoBundle\Config\PaymentMethod;
 class PaymentServiceProviderServiceRegistry
 {
     /**
-     * @var array<class-string,PaymentServiceProviderServiceInterface>
+     * @var array<string,PaymentServiceProviderServiceInterface>
      */
     private array $mapping;
 

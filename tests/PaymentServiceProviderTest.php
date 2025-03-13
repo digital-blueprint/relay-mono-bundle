@@ -10,7 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class PaymentServiceProviderTest extends KernelTestCase
 {
-    public function testBackendService()
+    public function testBackendService(): void
     {
         self::bootKernel();
         $container = self::getContainer();

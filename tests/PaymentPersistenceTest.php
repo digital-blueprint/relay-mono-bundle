@@ -8,6 +8,7 @@ use Dbp\Relay\MonoBundle\ApiPlatform\Payment;
 use Dbp\Relay\MonoBundle\Persistence\PaymentPersistence;
 use Dbp\Relay\MonoBundle\Persistence\PaymentPersistenceRepository;
 use Dbp\Relay\MonoBundle\Persistence\PaymentStatus;
+use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\SchemaTool;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -21,7 +22,11 @@ class PaymentPersistenceTest extends KernelTestCase
     public function setUp(): void
     {
         $container = $this->getContainer();
-        $this->em = $container->get('doctrine')->getManager('dbp_relay_mono_bundle');
+        $registry = $container->get('doctrine');
+        assert($registry instanceof Registry);
+        $em = $registry->getManager('dbp_relay_mono_bundle');
+        assert($em instanceof EntityManager);
+        $this->em = $em;
         $this->em->clear();
         $metaData = $this->em->getMetadataFactory()->getAllMetadata();
         $schemaTool = new SchemaTool($this->em);
@@ -67,7 +72,7 @@ class PaymentPersistenceTest extends KernelTestCase
         return $payment;
     }
 
-    public function testFromPayment()
+    public function testFromPayment(): void
     {
         $payment = new Payment();
         $payment->setIdentifier('id');
@@ -81,7 +86,7 @@ class PaymentPersistenceTest extends KernelTestCase
         $this->assertSame(PaymentStatus::PREPARED, $paymentPersistence->getPaymentStatus());
     }
 
-    public function testFindOneActive()
+    public function testFindOneActive(): void
     {
         $payment = $this->getPayment('some-id');
         $payment->setTimeoutAt((new \DateTimeImmutable())->modify('+10 minutes'));
@@ -91,7 +96,7 @@ class PaymentPersistenceTest extends KernelTestCase
         $this->assertNotNull($this->repo->findOneActive('some-id'));
     }
 
-    public function testCountConcurrent()
+    public function testCountConcurrent(): void
     {
         $this->assertSame(0, $this->repo->countConcurrent('type'));
 
@@ -104,7 +109,7 @@ class PaymentPersistenceTest extends KernelTestCase
         $this->assertSame(0, $this->repo->countConcurrent('othertype'));
     }
 
-    public function testDateTime()
+    public function testDateTime(): void
     {
         $payment = $this->getPayment('some-id');
         $payment->setTimeoutAt(new \DateTime());
@@ -123,7 +128,7 @@ class PaymentPersistenceTest extends KernelTestCase
         $this->assertTrue(true);
     }
 
-    public function testCountAuthConcurrent()
+    public function testCountAuthConcurrent(): void
     {
         $this->assertSame(0, $this->repo->countAuthConcurrent('type'));
         $this->assertSame(0, $this->repo->countAuthConcurrent('type', 'some-user'));
@@ -140,7 +145,7 @@ class PaymentPersistenceTest extends KernelTestCase
         $this->assertSame(0, $this->repo->countAuthConcurrent('othertype', 'user-id'));
     }
 
-    public function testCountUnauthConcurrent()
+    public function testCountUnauthConcurrent(): void
     {
         $this->assertSame(0, $this->repo->countUnauthConcurrent('type'));
         $this->assertSame(0, $this->repo->countUnauthConcurrent('type', '127.0.0.1'));
@@ -157,7 +162,7 @@ class PaymentPersistenceTest extends KernelTestCase
         $this->assertSame(0, $this->repo->countUnauthConcurrent('othertype', '127.0.0.1'));
     }
 
-    public function testFindUnnotified()
+    public function testFindUnnotified(): void
     {
         $this->assertCount(0, $this->repo->findUnnotified());
 
@@ -169,7 +174,7 @@ class PaymentPersistenceTest extends KernelTestCase
         $this->assertCount(1, $this->repo->findUnnotified());
     }
 
-    public function testFindUnnotifiedByTypeCompletedSince()
+    public function testFindUnnotifiedByTypeCompletedSince(): void
     {
         $this->assertCount(0, $this->repo->findUnnotifiedByTypeCompletedSince('some_type', new \DateTimeImmutable()));
 
@@ -184,7 +189,7 @@ class PaymentPersistenceTest extends KernelTestCase
         $this->assertCount(1, $this->repo->findUnnotifiedByTypeCompletedSince('some_type', $time));
     }
 
-    public function testFindByPaymentStatusTimeoutBefore()
+    public function testFindByPaymentStatusTimeoutBefore(): void
     {
         $this->assertCount(0, $this->repo->findByPaymentStatusTimeoutBefore(PaymentStatus::COMPLETED, new \DateTimeImmutable()));
 
@@ -197,7 +202,7 @@ class PaymentPersistenceTest extends KernelTestCase
         $this->assertCount(1, $this->repo->findByPaymentStatusTimeoutBefore(PaymentStatus::COMPLETED, new \DateTimeImmutable()));
     }
 
-    public function testCountByTypeCreatedSince()
+    public function testCountByTypeCreatedSince(): void
     {
         $this->assertCount(0, $this->repo->countByTypeCreatedSince('some_type', new \DateTimeImmutable()));
 
@@ -211,7 +216,7 @@ class PaymentPersistenceTest extends KernelTestCase
         $this->assertSame([PaymentStatus::COMPLETED => 1], $this->repo->countByTypeCreatedSince('some_type', new \DateTimeImmutable()));
     }
 
-    public function testPaymentWas()
+    public function testPaymentWas(): void
     {
         $payment = new PaymentPersistence();
         $this->assertFalse($payment->wasNotified());

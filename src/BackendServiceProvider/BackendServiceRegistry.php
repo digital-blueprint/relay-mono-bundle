@@ -9,7 +9,7 @@ use Dbp\Relay\MonoBundle\Config\PaymentType;
 class BackendServiceRegistry
 {
     /**
-     * @var array<class-string,BackendServiceInterface>
+     * @var array<string,BackendServiceInterface>
      */
     private array $services;
 

@@ -42,7 +42,7 @@ abstract class EntityManagerMigration extends AbstractMigration implements Conta
         return $res;
     }
 
-    private function skipInvalidDB()
+    private function skipInvalidDB(): void
     {
         $em = self::EM_NAME;
         $this->skipIf(!($this->platform instanceof AbstractMySQLPlatform), 'Wrong DB platform');

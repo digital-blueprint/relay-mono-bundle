@@ -8,7 +8,7 @@ use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 
 class ApiTest extends ApiTestCase
 {
-    public function testIndex()
+    public function testIndex(): void
     {
         $client = self::createClient();
         $this->assertNotNull($client);

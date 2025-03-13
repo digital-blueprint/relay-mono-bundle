@@ -13,7 +13,7 @@ use Symfony\Component\Translation\IdentityTranslator;
 
 class ConfigurationServiceTest extends TestCase
 {
-    public function test()
+    public function test(): void
     {
         $stack = new RequestStack();
         $urlHelper = new UrlHelper($stack);
@@ -100,7 +100,7 @@ class ConfigurationServiceTest extends TestCase
         $this->assertSame('[]', $service->createJsonForMethods('someothertype'));
     }
 
-    public function testPaymentTypeExpressions()
+    public function testPaymentTypeExpressions(): void
     {
         $paymentType = new PaymentType();
         $paymentType->setReturnUrlExpression('relay.str_starts_with(url, "https://return.com/")');

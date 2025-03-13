@@ -11,6 +11,9 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: PaymentPersistenceRepository::class)]
 class PaymentPersistence
 {
+    /**
+     * @var string
+     */
     #[ORM\Id]
     #[ORM\Column(type: 'string', length: 36, unique: true)]
     private $identifier;

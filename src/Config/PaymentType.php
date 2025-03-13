@@ -266,7 +266,7 @@ class PaymentType
         return $this->notifyErrorConfig;
     }
 
-    public function setNotifyErrorConfig(?NotifyErrorConfig $notifyErrorConfig)
+    public function setNotifyErrorConfig(?NotifyErrorConfig $notifyErrorConfig): void
     {
         $this->notifyErrorConfig = $notifyErrorConfig;
     }
@@ -283,6 +283,9 @@ class PaymentType
         return $this;
     }
 
+    /**
+     * @param mixed[] $config
+     */
     public static function fromConfig(string $identifier, array $config): PaymentType
     {
         $paymentType = new PaymentType();

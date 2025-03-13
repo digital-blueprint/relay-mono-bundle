@@ -37,12 +37,12 @@ class Kernel extends BaseKernel
         yield new DbpRelayCoreBundle();
     }
 
-    protected function configureRoutes(RoutingConfigurator $routes)
+    protected function configureRoutes(RoutingConfigurator $routes): void
     {
         $routes->import('@DbpRelayCoreBundle/Resources/config/routing.yaml');
     }
 
-    protected function configureContainer(ContainerConfigurator $container)
+    protected function configureContainer(ContainerConfigurator $container): void
     {
         $container->services()->set(DummyBackendService::class)->public()->autoconfigure();
         $container->services()->set(DummyPaymentServiceProviderService::class)->public()->autoconfigure();

@@ -16,6 +16,9 @@ class DbpRelayMonoExtension extends ConfigurableExtension implements PrependExte
 {
     use ExtensionTrait;
 
+    /**
+     * @param mixed[] $mergedConfig
+     */
     public function loadInternal(array $mergedConfig, ContainerBuilder $container): void
     {
         $this->addPathToHide($container, '/mono/start-pay-actions/{identifier}');

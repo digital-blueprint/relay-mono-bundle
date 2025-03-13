@@ -11,10 +11,12 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
  * @psalm-suppress MissingTemplateParam
+ *
+ * @implements ProcessorInterface<CompletePayAction, CompletePayAction>
  */
 class CompletePayActionProcessor extends AbstractController implements ProcessorInterface
 {
-    private $api;
+    private PaymentService $api;
 
     public function __construct(PaymentService $api)
     {

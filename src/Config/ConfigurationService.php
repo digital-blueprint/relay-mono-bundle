@@ -10,7 +10,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class ConfigurationService
 {
     /**
-     * @var array
+     * @var mixed[]
      */
     private $config = [];
 
@@ -33,19 +33,11 @@ class ConfigurationService
     }
 
     /**
-     * @return void
+     * @param mixed[] $config
      */
-    public function setConfig(array $config)
+    public function setConfig(array $config): void
     {
         $this->config = $config;
-    }
-
-    /**
-     * @return array
-     */
-    public function getConfig()
-    {
-        return $this->config;
     }
 
     public function checkConfig(): void
@@ -86,6 +78,11 @@ class ConfigurationService
         return $paymentType;
     }
 
+    /**
+     * @param mixed[] $paymentMethodConfig
+     *
+     * @return mixed[]
+     */
     private function adjustPaymentMethodConfig(array $paymentMethodConfig): array
     {
         $paymentMethodConfig['name'] = $this->translator->trans($paymentMethodConfig['name'], domain: 'dbp_relay_mono');

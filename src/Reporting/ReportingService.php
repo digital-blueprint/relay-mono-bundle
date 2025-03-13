@@ -39,7 +39,7 @@ class ReportingService implements LoggerAwareInterface
         $this->logger = new NullLogger();
     }
 
-    public function sendAllReporting(?string $overrideEmail = null)
+    public function sendAllReporting(?string $overrideEmail = null): void
     {
         $paymentTypes = $this->configurationService->getPaymentTypes();
 
@@ -48,7 +48,7 @@ class ReportingService implements LoggerAwareInterface
         }
     }
 
-    public function sendReporting(PaymentType $paymentType, ?string $overrideEmail = null)
+    public function sendReporting(PaymentType $paymentType, ?string $overrideEmail = null): void
     {
         $reportingConfig = $paymentType->getReportingConfig();
         if ($reportingConfig === null) {
@@ -77,7 +77,7 @@ class ReportingService implements LoggerAwareInterface
         $this->sendEmail($reportingConfig, $context, $overrideEmail);
     }
 
-    public function sendNotifyError(PaymentType $paymentType)
+    public function sendNotifyError(PaymentType $paymentType): void
     {
         $notifyErrorConfig = $paymentType->getNotifyErrorConfig();
         if ($notifyErrorConfig === null) {
@@ -106,7 +106,10 @@ class ReportingService implements LoggerAwareInterface
         }
     }
 
-    private function sendEmail(EmailConfig $config, array $context, ?string $overrideEmail = null)
+    /**
+     * @param mixed[] $context
+     */
+    private function sendEmail(EmailConfig $config, array $context, ?string $overrideEmail = null): void
     {
         $loader = new FilesystemLoader(dirname(__FILE__).'/../Resources/views/');
         $twig = new Environment($loader);

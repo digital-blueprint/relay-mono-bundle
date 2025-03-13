@@ -6,8 +6,14 @@ namespace Dbp\Relay\MonoBundle\Config;
 
 class EmailConfig
 {
+    /**
+     * @var mixed[]
+     */
     protected array $config;
 
+    /**
+     * @param mixed[] $config
+     */
     public function __construct(array $config)
     {
         $this->config = $config;

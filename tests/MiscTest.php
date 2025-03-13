@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 
 class MiscTest extends TestCase
 {
-    public function testCompleteResponse()
+    public function testCompleteResponse(): void
     {
         $response = new CompleteResponse('http://foo');
         $this->assertSame('http://foo', $response->getReturnUrl());

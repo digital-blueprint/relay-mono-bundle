@@ -86,7 +86,7 @@ class PaymentService implements LoggerAwareInterface
         $this->lockFactory = $lockFactory;
     }
 
-    public function checkConnection()
+    public function checkConnection(): void
     {
         $this->em->getConnection()->getNativeConnection();
     }
@@ -118,6 +118,11 @@ class PaymentService implements LoggerAwareInterface
         return $this->lockFactory->createLock($resourceKey, 60, true);
     }
 
+    /**
+     * @param mixed[] $extra
+     *
+     * @return mixed[]
+     */
     private function getLoggingContext(PaymentPersistence $payment, array $extra = []): array
     {
         return array_merge(['relay-mono-payment-id' => $payment->getIdentifier()], $extra);
@@ -242,7 +247,7 @@ class PaymentService implements LoggerAwareInterface
         return $paymentPersistences;
     }
 
-    public function notifyIfCompleted(PaymentPersistence $paymentPersistence)
+    public function notifyIfCompleted(PaymentPersistence $paymentPersistence): void
     {
         // Only notify if the payment is completed
         if ($paymentPersistence->getPaymentStatus() !== PaymentStatus::COMPLETED) {
@@ -516,7 +521,7 @@ class PaymentService implements LoggerAwareInterface
         return $completeResponse;
     }
 
-    public function cleanup()
+    public function cleanup(): void
     {
         $repo = $this->em->getRepository(PaymentPersistence::class);
         assert($repo instanceof PaymentPersistenceRepository);

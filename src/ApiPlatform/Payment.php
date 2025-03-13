@@ -8,6 +8,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 class Payment
 {
+    /**
+     * @var string
+     */
     #[Groups(['MonoPayment:output'])]
     private $identifier;
 
@@ -369,7 +372,7 @@ class Payment
         return $this->paymentMethod;
     }
 
-    public function setPaymentMethod(?string $paymentMethod): self
+    public function setPaymentMethod(string $paymentMethod): self
     {
         $this->paymentMethod = $paymentMethod;
 
