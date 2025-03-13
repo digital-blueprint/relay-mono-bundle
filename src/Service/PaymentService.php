@@ -441,7 +441,6 @@ class PaymentService implements LoggerAwareInterface
         if ($paymentMethod === null) {
             throw new \RuntimeException('No payment method found!');
         }
-        $paymentPersistence->setPaymentContract($paymentMethod->getContract());
 
         $paymentPersistence->setPaymentStatus(PaymentStatus::STARTED);
 

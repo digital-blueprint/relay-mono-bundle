@@ -64,7 +64,6 @@ class PaymentPersistenceTest extends KernelTestCase
         $payment->setHonorificSuffix('honorific');
         $payment->setRecipient('recipient');
         $payment->setPaymentMethod('method');
-        $payment->setPaymentContract('contract');
         $payment->setDataProtectionDeclarationUrl('https://data');
         $payment->setDataUpdatedAt(new \DateTimeImmutable());
         $payment->setPaymentStatus(PaymentStatus::PREPARED);
