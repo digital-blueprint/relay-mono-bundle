@@ -2,11 +2,10 @@
 
 ## Database Migration
 
-Run this script to migrate the database. Run this script after installation of the bundle and
-after every update to adapt the database to the new source code.
+This bundle uses a database and requires migrations to be run after installation and on updates:
 
 ```bash
-php bin/console doctrine:migrations:migrate --em=dbp_relay_mono_bundle
+php bin/console dbp:relay:core:migrate
 ```
 
 ## CLI Commands

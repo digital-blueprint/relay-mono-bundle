@@ -6,7 +6,7 @@ Created via `./bin/console config:dump-reference DbpRelayMonoBundle | sed '/^$/d
 # Default configuration for "DbpRelayMonoBundle"
 dbp_relay_mono:
   database_url:         '%env(resolve:DATABASE_URL)%' # Required
-  # A list of payment type configurations. A payment type is a combination of a payment client configuration and a payment service provider configuration.
+  # A list of payment type configurations. A payment type is a combination of a payment backend configuration and a payment service provider configuration.
   payment_types:
     # Prototype
     identifier:
@@ -40,7 +40,7 @@ dbp_relay_mono:
           name:                 ~ # Required
           # Path to the image - can be an absolute URL, absolute path, or path relative to public directory
           image:                null
-          # If enabled the payment client will not be notified when a payment is completed
+          # If enabled the payment backend will not be notified when a payment is completed
           demo_mode:            false
       # Various limits for how many payments can be active at the same time
       concurrency_limits:
@@ -91,3 +91,63 @@ dbp_relay_mono:
       # Time after the payment has expired (see payment_session_timeout) when the payment will be considered for cleanup. In ISO duration format.
       timeout_before:       ~ # Required
 ```
+
+## Example Configuration
+
+```yaml
+dbp_relay_mono:
+  database_url: '%env(MONO_DATABASE_URL)'
+  payment_types:
+    tuition_fee:
+      backend_type: 'tuition_fee_co'
+      auth_required: true
+      session_timeout: 'PT1800S'
+      recipient: 'Meine Universität'
+      return_url_override: '%env(MONO_RETURN_URL)%'
+      psp_return_url_expression: '%env(MONO_PSP_RETURN_URL_EXPRESSION)%'
+      payment_methods:
+        payunity_creditcard:
+          contract: 'payunity_flex'
+          method: 'creditcard'
+          name: payment_methods.credit_card
+          image: '/bundles/dbprelaymono/svg/credit-cards.svg'
+      concurrency_limits:
+        max_concurrent_payments: 100
+        max_concurrent_auth_payments: 100
+        max_concurrent_unauth_payments: 25
+        max_concurrent_auth_payments_per_user: 5
+        max_concurrent_unauth_payments_per_ip: 5
+      notify_error:
+        dsn: '%env(MAILER_TRANSPORT_DSN)%'
+        from: 'noreply@myuni.at'
+        to: '%env(MONO_REPORTING_EMAIL_TO)%'
+        subject: 'Fehler bei der Weitermeldung in CAMPUSonline'
+      reporting:
+        dsn: '%env(MAILER_TRANSPORT_DSN)%'
+        from: 'noreply@myuni.at'
+        to: '%env(MONO_REPORTING_EMAIL_TO)%'
+        subject: 'Zusammenfassung der elektronischen Studienbeitragszahlungen'
+```
+
+## Builtin Translations
+
+For `payment_methods.identifier.name` this bundle provides the following list of
+builtin translations in the `dbp_relay_mono` domain:
+
+* `payment_methods.credit_card`
+* `payment_methods.apple_pay`
+* `payment_methods.google_pay`
+* `payment_methods.sofortueberweisung`
+
+See `./bin/console debug:translation de --domain dbp_relay_mono` for details.
+
+## Builtin Icons
+
+For `payment_methods.identifier.image` this bundle provides the following list
+of builtin icons:
+
+* `/bundles/dbprelaymono/svg/apple-pay.svg`
+* `/bundles/dbprelaymono/svg/google-pay.svg`
+* `/bundles/dbprelaymono/svg/klarna-pay.svg`
+* `/bundles/dbprelaymono/svg/klarna.svg`
+* `/bundles/dbprelaymono/svg/sofortueberweisung.svg`
