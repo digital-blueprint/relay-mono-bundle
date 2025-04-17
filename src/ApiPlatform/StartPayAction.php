@@ -18,16 +18,12 @@ use Symfony\Component\Serializer\Annotation\Groups;
     operations: [
         new GetCollection(
             uriTemplate: '/start-pay-actions',
-            openapi: new Operation(
-                tags: ['Electronic Payment']
-            ),
+            openapi: false,
             provider: DummyProvider::class
         ),
         new Get(
             uriTemplate: '/start-pay-actions/{identifier}',
-            openapi: new Operation(
-                tags: ['Electronic Payment']
-            ),
+            openapi: false,
             provider: DummyProvider::class
         ),
         new Post(

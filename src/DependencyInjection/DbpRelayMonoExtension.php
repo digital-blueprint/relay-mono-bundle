@@ -23,12 +23,6 @@ class DbpRelayMonoExtension extends ConfigurableExtension implements PrependExte
     {
         $this->addResourceClassDirectory($container, __DIR__.'/../ApiPlatform');
 
-        $this->addPathToHide($container, '/mono/start-pay-actions/{identifier}');
-        $this->addPathToHide($container, '/mono/start-pay-actions');
-        $this->addPathToHide($container, '/mono/complete-pay-actions');
-        $this->addPathToHide($container, '/mono/complete-pay-actions/{identifier}');
-        $this->addPathToHide($container, '/mono/payments');
-
         $loader = new YamlFileLoader(
             $container,
             new FileLocator(__DIR__.'/../Resources/config')
