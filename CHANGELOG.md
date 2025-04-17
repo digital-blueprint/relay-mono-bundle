@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## v0.5.1
+
+* Drop support for PHP 8.1
+* Remove legacy/undocumented "/mono/payment" endpoint
+* Add support for api-platform 4.1+ and drop support for <3.4
+
 ## v0.5.0
 
 * config: Various bundle config cleanups (better defaults, more validation)
