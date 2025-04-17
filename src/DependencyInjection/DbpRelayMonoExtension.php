@@ -21,6 +21,8 @@ class DbpRelayMonoExtension extends ConfigurableExtension implements PrependExte
      */
     public function loadInternal(array $mergedConfig, ContainerBuilder $container): void
     {
+        $this->addResourceClassDirectory($container, __DIR__.'/../ApiPlatform');
+
         $this->addPathToHide($container, '/mono/start-pay-actions/{identifier}');
         $this->addPathToHide($container, '/mono/start-pay-actions');
         $this->addPathToHide($container, '/mono/complete-pay-actions');

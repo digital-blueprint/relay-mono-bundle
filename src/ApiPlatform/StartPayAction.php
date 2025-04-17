@@ -4,49 +4,96 @@ declare(strict_types=1);
 
 namespace Dbp\Relay\MonoBundle\ApiPlatform;
 
+use ApiPlatform\Metadata\ApiProperty;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\OpenApi\Model\Operation;
 use Symfony\Component\Serializer\Annotation\Groups;
 
+#[ApiResource(
+    shortName: 'MonoStartPayAction',
+    types: ['https://schema.digital-blueprint.org/StartPayAction'],
+    operations: [
+        new GetCollection(
+            uriTemplate: '/start-pay-actions',
+            openapi: new Operation(
+                tags: ['Electronic Payment']
+            ),
+            provider: DummyProvider::class
+        ),
+        new Get(
+            uriTemplate: '/start-pay-actions/{identifier}',
+            openapi: new Operation(
+                tags: ['Electronic Payment']
+            ),
+            provider: DummyProvider::class
+        ),
+        new Post(
+            uriTemplate: '/start-pay-actions',
+            openapi: new Operation(
+                tags: ['Electronic Payment']
+            ),
+            processor: StartPayActionProcessor::class
+        ),
+    ],
+    routePrefix: '/mono',
+    normalizationContext: [
+        'groups' => ['MonoPayment:output'],
+    ],
+    denormalizationContext: [
+        'groups' => ['MonoPayment:input'],
+    ]
+)]
 class StartPayAction
 {
     /**
      * @var string
      */
+    #[ApiProperty(identifier: true)]
     #[Groups(['MonoPayment:input'])]
     private $identifier;
 
     /**
      * @var string
      */
+    #[ApiProperty(iris: ['https://schema.org/Text'])]
     #[Groups(['MonoPayment:input'])]
     private $paymentMethod;
 
     /**
      * @var string
      */
+    #[ApiProperty(iris: ['https://schema.org/URL'])]
     #[Groups(['MonoPayment:input'])]
     private $pspReturnUrl;
 
     /**
      * @var bool
      */
+    #[ApiProperty(iris: ['https://schema.org/Boolean'])]
     #[Groups(['MonoPayment:input'])]
     private $consent;
 
     /**
      * @var string
      */
+    #[ApiProperty(iris: ['https://schema.org/URL'])]
     #[Groups(['MonoPayment:output'])]
     private $widgetUrl;
 
     /**
      * @var string|null
      */
+    #[ApiProperty(iris: ['https://schema.org/Text'])]
     #[Groups(['MonoPayment:output'])]
     private $pspData;
 
     /**
      * @var string|null
      */
+    #[ApiProperty(iris: ['https://schema.org/Text'])]
     #[Groups(['MonoPayment:output'])]
     private $pspError;
 
