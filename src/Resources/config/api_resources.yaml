@@ -28,30 +28,6 @@ resources:
         openapiContext:
           tags: ["Electronic Payment"]
 
-      legacy_GetCollection:
-        class: ApiPlatform\Metadata\GetCollection
-        method: GET
-        provider: Dbp\Relay\MonoBundle\ApiPlatform\DummyProvider
-        uriTemplate: "/payment"
-        openapiContext:
-          tags: ["Electronic Payment"]
-
-      legacy_Get:
-        class: ApiPlatform\Metadata\Get
-        method: GET
-        provider: Dbp\Relay\MonoBundle\ApiPlatform\PaymentProvider
-        uriTemplate: "/payment/{identifier}"
-        openapiContext:
-          tags: ["Electronic Payment"]
-
-      legacy_Post:
-        class: ApiPlatform\Metadata\Post
-        method: POST
-        processor: Dbp\Relay\MonoBundle\ApiPlatform\PaymentProcessor
-        uriTemplate: "/payment"
-        openapiContext:
-          tags: ["Electronic Payment"]
-
     properties:
       identifier:
         identifier: true
