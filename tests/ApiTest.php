@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace Dbp\Relay\MonoBundle\Tests;
 
-use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
-class ApiTest extends ApiTestCase
+class ApiTest extends KernelTestCase
 {
     public function testIndex(): void
     {
-        $client = self::createClient();
-        $this->assertNotNull($client);
+        $this->assertNotNull($this->getContainer());
     }
 }
