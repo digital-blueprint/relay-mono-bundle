@@ -12,5 +12,9 @@
   },
   "constraintsFiltering": "strict",
   "packageRules": [
+    {
+      "matchPackagePrefixes": ["symfony/"],
+      "allowedVersions": "<7"
+    }
   ]
 }
