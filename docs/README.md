@@ -29,8 +29,8 @@ We currently provide the following PB connectors:
 
 We currently provide the following PSP connectors:
 
-* [PayUnity Connector](../mono-connector-payunity/index.md): For processing the payment
-  via https://www.payunity.com
+* [PAYONE Connector](../mono-connector-payone/index.md): For processing the payment
+  via https://www.payone.com
 
 You can find more information about each specific connector in their respective
 bundle documentation.

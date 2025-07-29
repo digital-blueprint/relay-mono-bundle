@@ -106,8 +106,8 @@ dbp_relay_mono:
       return_url_override: '%env(MONO_RETURN_URL)%'
       psp_return_url_expression: '%env(MONO_PSP_RETURN_URL_EXPRESSION)%'
       payment_methods:
-        payunity_creditcard:
-          contract: 'payunity_flex'
+        payone_creditcard:
+          contract: 'payone_contract'
           method: 'creditcard'
           name: payment_methods.credit_card
           image: '/bundles/dbprelaymono/svg/credit-cards.svg'
