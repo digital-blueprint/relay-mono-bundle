@@ -28,7 +28,7 @@ class CompletePayActionProcessor extends AbstractController implements Processor
         $pspData = $completePayAction->getPspData();
         $identifier = $this->api->completeGetPaymentId($pspData);
 
-        $completeResponse = $this->api->completePayAction($identifier);
+        $completeResponse = $this->api->completePayActionApi($identifier);
 
         $completePayAction->setIdentifier($identifier);
         $completePayAction->setReturnUrl($completeResponse->getReturnUrl());

@@ -489,11 +489,8 @@ class PaymentService implements LoggerAwareInterface
         throw new ApiError(Response::HTTP_BAD_REQUEST, 'PSP data not handled');
     }
 
-    public function completePayAction(
-        string $identifier
-    ): CompleteResponseInterface {
-        $paymentPersistence = $this->getPaymentPersistenceByIdentifier($identifier);
-
+    public function completePayment(PaymentPersistence $paymentPersistence): CompleteResponseInterface
+    {
         $this->auditLogger->debug('Trying to complete payment', $this->getLoggingContext($paymentPersistence));
 
         $type = $paymentPersistence->getType();
@@ -517,6 +514,29 @@ class PaymentService implements LoggerAwareInterface
         $this->notifyIfCompleted($paymentPersistence);
 
         return $completeResponse;
+    }
+
+    /**
+     * Internal completion API without any extra checks which is used by the connectors.
+     * For example when they get a webhook request.
+     */
+    public function completePayAction(string $identifier): CompleteResponseInterface
+    {
+        $paymentPersistence = $this->getPaymentPersistenceByIdentifier($identifier);
+
+        return $this->completePayment($paymentPersistence);
+    }
+
+    public function completePayActionApi(string $identifier): CompleteResponseInterface
+    {
+        $paymentPersistence = $this->getPaymentPersistenceByIdentifier($identifier);
+
+        $now = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
+        if ($now >= $paymentPersistence->getTimeoutAt()) {
+            throw ApiError::withDetails(Response::HTTP_GONE, 'Payment timeout exceeded!', 'mono:payment-timeout-exceeded');
+        }
+
+        return $this->completePayment($paymentPersistence);
     }
 
     public function cleanup(): void
