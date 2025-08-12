@@ -225,8 +225,7 @@ class PaymentService implements LoggerAwareInterface
     {
         $repo = $this->em->getRepository(PaymentPersistence::class);
         assert($repo instanceof PaymentPersistenceRepository);
-        /** @var ?PaymentPersistence $paymentPersistence */
-        $paymentPersistence = $repo->findOneActive($identifier);
+        $paymentPersistence = $repo->findOne($identifier);
 
         if (!$paymentPersistence) {
             throw ApiError::withDetails(Response::HTTP_NOT_FOUND, 'Payment was not found!', 'mono:payment-not-found');

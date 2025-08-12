@@ -12,14 +12,11 @@ use Doctrine\ORM\EntityRepository;
  */
 class PaymentPersistenceRepository extends EntityRepository
 {
-    public function findOneActive(string $identifier): ?PaymentPersistence
+    public function findOne(string $identifier): ?PaymentPersistence
     {
-        $now = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
         $qb = $this->createQueryBuilder('p')
             ->where('p.identifier = :identifier')
-            ->andWhere('p.timeoutAt >= :timeoutAt')
-            ->setParameter('identifier', $identifier)
-            ->setParameter('timeoutAt', $now, Types::DATETIME_IMMUTABLE);
+            ->setParameter('identifier', $identifier);
 
         $query = $qb->getQuery();
 

@@ -85,14 +85,14 @@ class PaymentPersistenceTest extends KernelTestCase
         $this->assertSame(PaymentStatus::PREPARED, $paymentPersistence->getPaymentStatus());
     }
 
-    public function testFindOneActive(): void
+    public function testFindOne(): void
     {
         $payment = $this->getPayment('some-id');
-        $payment->setTimeoutAt((new \DateTimeImmutable())->modify('+10 minutes'));
+        $payment->setTimeoutAt((new \DateTimeImmutable())->modify('-10 minutes'));
         $this->em->persist($payment);
         $this->em->flush();
-        $this->assertNull($this->repo->findOneActive('some-other-id'));
-        $this->assertNotNull($this->repo->findOneActive('some-id'));
+        $this->assertNull($this->repo->findOne('some-other-id'));
+        $this->assertNotNull($this->repo->findOne('some-id'));
     }
 
     public function testCountConcurrent(): void
