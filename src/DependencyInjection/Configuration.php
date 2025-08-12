@@ -37,7 +37,7 @@ class Configuration implements ConfigurationInterface
                                 ->end()
                                 ->scalarNode('session_timeout')
                                     ->info('Time after which a created or started payment can no longer be continued. In ISO duration format.')
-                                    ->defaultValue('PT1800S')
+                                    ->defaultValue('PT3600S')
                                 ->end()
                                 ->scalarNode('return_url_override')
                                     ->defaultNull()
