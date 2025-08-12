@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+## v0.5.2
+
+* Fix a case where a payment would fail to complete if a webhook would request
+  the completion after the session timeout (30min by default).
+* Add a new `dbp:relay:mono:complete-payment` command to complete a payment
+  manually, e.g. in case the webhook failed.
+* config: bump the default session timeout to 60 minutes, to avoid hitting
+  the timeout in valid use cases.
+
 ## v0.5.1
 
 * Drop support for PHP 8.1
