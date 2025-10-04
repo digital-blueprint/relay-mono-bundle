@@ -229,16 +229,16 @@
         },
         {
             "name": "dbp/relay-core-bundle",
-            "version": "v0.1.219",
+            "version": "v0.1.220",
             "source": {
                 "type": "git",
                 "url": "https://github.com/digital-blueprint/relay-core-bundle.git",
-                "reference": "a264001a49f6da6d6fb2870ad07cb18363bde8ef"
+                "reference": "719009c265a78cd16ba9c973d75473ad8ecacc9c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/digital-blueprint/relay-core-bundle/zipball/a264001a49f6da6d6fb2870ad07cb18363bde8ef",
-                "reference": "a264001a49f6da6d6fb2870ad07cb18363bde8ef",
+                "url": "https://api.github.com/repos/digital-blueprint/relay-core-bundle/zipball/719009c265a78cd16ba9c973d75473ad8ecacc9c",
+                "reference": "719009c265a78cd16ba9c973d75473ad8ecacc9c",
                 "shasum": ""
             },
             "require": {
@@ -253,7 +253,7 @@
                 "ext-json": "*",
                 "guzzlehttp/guzzle": "^7.5",
                 "kekos/multipart-form-data-parser": "^1.1",
-                "kevinrob/guzzle-cache-middleware": "^4.0 || ^5.0 || ^6.0",
+                "kevinrob/guzzle-cache-middleware": "^5.0 || ^6.0 || ^7.0",
                 "monolog/monolog": "^3.2",
                 "nelmio/cors-bundle": "^2.2",
                 "nyholm/psr7": "^1.8",
@@ -333,9 +333,9 @@
             "description": "The core bundle of the Relay API gateway",
             "support": {
                 "issues": "https://github.com/digital-blueprint/relay-core-bundle/issues",
-                "source": "https://github.com/digital-blueprint/relay-core-bundle/tree/v0.1.219"
+                "source": "https://github.com/digital-blueprint/relay-core-bundle/tree/v0.1.220"
             },
-            "time": "2025-07-30T09:26:46+00:00"
+            "time": "2025-09-29T11:11:45+00:00"
         },
         {
             "name": "doctrine/collections",
