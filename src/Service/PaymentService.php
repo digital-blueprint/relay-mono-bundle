@@ -539,7 +539,7 @@ class PaymentService implements LoggerAwareInterface
         return $this->completePayment($paymentPersistence);
     }
 
-    public function cleanupPaymentBackend(PaymentPersistence $paymentPersistence): bool
+    public function cleanupPaymentBackend(PaymentPersistence $paymentPersistence, bool $dryRun): bool
     {
         $type = $paymentPersistence->getType();
         $paymentType = $this->configurationService->getPaymentTypeByType($type);
@@ -557,12 +557,16 @@ class PaymentService implements LoggerAwareInterface
             return false;
         }
 
-        try {
-            $cleanupWorked = $backendService->cleanup($paymentType->getBackendType(), $paymentPersistence);
-        } catch (\Exception $e) {
-            $this->logger->error('Backend cleanup failed', $this->getLoggingContext($paymentPersistence, ['exception' => $e]));
+        if ($dryRun) {
+            $cleanupWorked = true;
+        } else {
+            try {
+                $cleanupWorked = $backendService->cleanup($paymentType->getBackendType(), $paymentPersistence);
+            } catch (\Exception $e) {
+                $this->logger->error('Backend cleanup failed', $this->getLoggingContext($paymentPersistence, ['exception' => $e]));
 
-            return false;
+                return false;
+            }
         }
 
         if ($cleanupWorked !== true) {
@@ -574,7 +578,7 @@ class PaymentService implements LoggerAwareInterface
         return true;
     }
 
-    public function cleanupPaymentServiceProvider(PaymentPersistence $paymentPersistence): bool
+    public function cleanupPaymentServiceProvider(PaymentPersistence $paymentPersistence, bool $dryRun): bool
     {
         $paymentMethodId = $paymentPersistence->getPaymentMethod();
         $paymentStatus = $paymentPersistence->getPaymentStatus();
@@ -599,12 +603,17 @@ class PaymentService implements LoggerAwareInterface
         }
 
         $paymentServiceProvider = $this->paymentServiceProviderServiceRegistry->getByPaymentMethod($paymentMethod);
-        try {
-            $cleanupWorked = $paymentServiceProvider->cleanup($paymentMethod->getPspContract(), $paymentPersistence);
-        } catch (\Exception $e) {
-            $this->logger->error('PSP cleanup failed', $this->getLoggingContext($paymentPersistence, ['exception' => $e]));
 
-            return false;
+        if ($dryRun) {
+            $cleanupWorked = true;
+        } else {
+            try {
+                $cleanupWorked = $paymentServiceProvider->cleanup($paymentMethod->getPspContract(), $paymentPersistence);
+            } catch (\Exception $e) {
+                $this->logger->error('PSP cleanup failed', $this->getLoggingContext($paymentPersistence, ['exception' => $e]));
+
+                return false;
+            }
         }
 
         if ($cleanupWorked !== true) {
@@ -616,7 +625,7 @@ class PaymentService implements LoggerAwareInterface
         return true;
     }
 
-    public function cleanup(): void
+    public function cleanup(bool $dryRun = false): void
     {
         $repo = $this->em->getRepository(PaymentPersistence::class);
         assert($repo instanceof PaymentPersistenceRepository);
@@ -634,22 +643,24 @@ class PaymentService implements LoggerAwareInterface
             $paymentPersistences = $repo->findByPaymentStatusTimeoutBefore($paymentStatus, $timeoutBefore);
             foreach ($paymentPersistences as $paymentPersistence) {
                 $skip = false;
-                if (!$this->cleanupPaymentBackend($paymentPersistence)) {
+                if (!$this->cleanupPaymentBackend($paymentPersistence, $dryRun)) {
                     $this->logger->error('Backend cleanup failed, skipping payment cleanup', $this->getLoggingContext($paymentPersistence));
                     $skip = true;
                 }
 
-                if (!$this->cleanupPaymentServiceProvider($paymentPersistence)) {
+                if (!$this->cleanupPaymentServiceProvider($paymentPersistence, $dryRun)) {
                     $this->logger->error('PSP cleanup failed, skipping payment cleanup', $this->getLoggingContext($paymentPersistence));
                     $skip = true;
                 }
 
-                if ($skip) {
+                if ($skip || $dryRun) {
                     continue;
                 }
                 $this->em->remove($paymentPersistence);
             }
         }
-        $this->em->flush();
+        if (!$dryRun) {
+            $this->em->flush();
+        }
     }
 }
