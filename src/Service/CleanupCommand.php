@@ -41,15 +41,20 @@ class CleanupCommand extends Command
         $dryRun = $input->getOption('dry-run');
         $io->info('Starting Mono cleanup...');
 
-        try {
-            $this->paymentService->cleanup($dryRun);
-            $io->success('Cleanup completed successfully!');
+        $payments = $this->paymentService->collectPaymentsForCleanup();
+
+        $count = count($payments);
+        $io->warning(sprintf('Found %d payment(s) to be cleaned up.', $count));
+
+        if (!$dryRun && !$io->confirm('Do you want to continue?', true)) {
+            $io->note('Cleanup cancelled by user.');
 
             return Command::SUCCESS;
-        } catch (\Exception $e) {
-            $io->error('Cleanup failed: '.$e->getMessage());
-
-            return Command::FAILURE;
         }
+
+        $this->paymentService->executeCleanup($payments, $dryRun);
+        $io->success('Cleanup completed successfully!');
+
+        return Command::SUCCESS;
     }
 }

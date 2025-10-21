@@ -625,42 +625,92 @@ class PaymentService implements LoggerAwareInterface
         return true;
     }
 
-    public function cleanup(bool $dryRun = false): void
+    /**
+     * Collect payments that are eligible for cleanup.
+     *
+     * @return PaymentPersistence[]
+     */
+    public function collectPaymentsForCleanup(): array
     {
         $repo = $this->em->getRepository(PaymentPersistence::class);
         assert($repo instanceof PaymentPersistenceRepository);
 
-        $this->logger->debug('Running cleanup');
+        $this->logger->debug('Collecting payments for cleanup');
 
+        $paymentsToCleanup = [];
         $now = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
-        $paymentStatuses = [PaymentStatus::PREPARED, PaymentStatus::STARTED, PaymentStatus::PENDING, PaymentStatus::COMPLETED, PaymentStatus::FAILED];
+        $paymentStatuses = [
+            PaymentStatus::PREPARED,
+            PaymentStatus::STARTED,
+            PaymentStatus::PENDING,
+            PaymentStatus::COMPLETED,
+            PaymentStatus::FAILED,
+        ];
+
         foreach ($paymentStatuses as $paymentStatus) {
             $cleanupTimeout = $this->configurationService->getCleanupTimeout($paymentStatus);
             if ($cleanupTimeout === null) {
                 continue;
             }
+
             $timeoutBefore = $now->sub(new \DateInterval($cleanupTimeout));
             $paymentPersistences = $repo->findByPaymentStatusTimeoutBefore($paymentStatus, $timeoutBefore);
+
             foreach ($paymentPersistences as $paymentPersistence) {
-                $skip = false;
-                if (!$this->cleanupPaymentBackend($paymentPersistence, $dryRun)) {
-                    $this->logger->error('Backend cleanup failed, skipping payment cleanup', $this->getLoggingContext($paymentPersistence));
-                    $skip = true;
-                }
-
-                if (!$this->cleanupPaymentServiceProvider($paymentPersistence, $dryRun)) {
-                    $this->logger->error('PSP cleanup failed, skipping payment cleanup', $this->getLoggingContext($paymentPersistence));
-                    $skip = true;
-                }
-
-                if ($skip || $dryRun) {
+                if (!$this->cleanupPaymentBackend($paymentPersistence, true)) {
+                    $this->logger->warning('Backend cleanup validation failed', $this->getLoggingContext($paymentPersistence));
                     continue;
                 }
-                $this->em->remove($paymentPersistence);
+
+                if (!$this->cleanupPaymentServiceProvider($paymentPersistence, true)) {
+                    $this->logger->warning('PSP cleanup validation failed', $this->getLoggingContext($paymentPersistence));
+                    continue;
+                }
+
+                $paymentsToCleanup[] = $paymentPersistence;
             }
         }
+
+        return $paymentsToCleanup;
+    }
+
+    /**
+     * Execute cleanup for the given payments.
+     *
+     * @param PaymentPersistence[] $payments
+     */
+    public function executeCleanup(array $payments, bool $dryRun = false): void
+    {
+        $this->logger->info('Executing cleanup', ['count' => count($payments)]);
+
+        foreach ($payments as $paymentPersistence) {
+            $skip = false;
+
+            if (!$this->cleanupPaymentBackend($paymentPersistence, $dryRun)) {
+                $this->logger->error('Backend cleanup failed, skipping payment cleanup', $this->getLoggingContext($paymentPersistence));
+                $skip = true;
+            }
+
+            if (!$this->cleanupPaymentServiceProvider($paymentPersistence, $dryRun)) {
+                $this->logger->error('PSP cleanup failed, skipping payment cleanup', $this->getLoggingContext($paymentPersistence));
+                $skip = true;
+            }
+
+            if ($skip || $dryRun) {
+                continue;
+            }
+
+            $this->em->remove($paymentPersistence);
+        }
+
         if (!$dryRun) {
             $this->em->flush();
         }
+        $this->logger->info('Cleanup completed');
+    }
+
+    public function cleanup(): void
+    {
+        $this->executeCleanup($this->collectPaymentsForCleanup(), false);
     }
 }
