@@ -539,6 +539,83 @@ class PaymentService implements LoggerAwareInterface
         return $this->completePayment($paymentPersistence);
     }
 
+    public function cleanupPaymentBackend(PaymentPersistence $paymentPersistence): bool
+    {
+        $type = $paymentPersistence->getType();
+        $paymentType = $this->configurationService->getPaymentTypeByType($type);
+        if ($paymentType !== null) {
+            try {
+                $backendService = $this->backendServiceRegistry->getByPaymentType($paymentType);
+            } catch (\Exception) {
+                $this->logger->error("Can't find backend for payment type '$type'. Can't clean up entry.", $this->getLoggingContext($paymentPersistence));
+
+                return false;
+            }
+        } else {
+            $this->logger->error("Can't find payment type '$type'. Can't clean up entry.", $this->getLoggingContext($paymentPersistence));
+
+            return false;
+        }
+
+        try {
+            $cleanupWorked = $backendService->cleanup($paymentType->getBackendType(), $paymentPersistence);
+        } catch (\Exception $e) {
+            $this->logger->error('Backend cleanup failed', $this->getLoggingContext($paymentPersistence, ['exception' => $e]));
+
+            return false;
+        }
+
+        if ($cleanupWorked !== true) {
+            $this->logger->error('Backend cleanup failed', $this->getLoggingContext($paymentPersistence));
+
+            return false;
+        }
+
+        return true;
+    }
+
+    public function cleanupPaymentServiceProvider(PaymentPersistence $paymentPersistence): bool
+    {
+        $paymentMethodId = $paymentPersistence->getPaymentMethod();
+        $paymentStatus = $paymentPersistence->getPaymentStatus();
+
+        if ($paymentMethodId === null) {
+            // We only have a payment method once the payment was started
+            if ($paymentStatus === PaymentStatus::PREPARED) {
+                return true;
+            }
+            throw new \RuntimeException('Payment method missing');
+        }
+
+        $type = $paymentPersistence->getType();
+        $paymentMethod = $this->configurationService->getPaymentMethodByTypeAndPaymentMethod($type, $paymentMethodId);
+        if ($paymentMethod === null) {
+            // in case the config is wrong, better not delete the entry from the DB if some related data could
+            // be still stored somewhere that needs to be cleaned up
+
+            $this->logger->error("Can't find payment contract for method '$paymentMethodId'. Can't clean up entry.", $this->getLoggingContext($paymentPersistence));
+
+            return false;
+        }
+
+        $paymentServiceProvider = $this->paymentServiceProviderServiceRegistry->getByPaymentMethod($paymentMethod);
+        try {
+            $cleanupWorked = $paymentServiceProvider->cleanup($paymentMethod->getPspContract(), $paymentPersistence);
+        } catch (\Exception $e) {
+            $this->logger->error('PSP cleanup failed', $this->getLoggingContext($paymentPersistence, ['exception' => $e]));
+
+            return false;
+        }
+
+        if ($cleanupWorked !== true) {
+            $this->logger->error('Payment provider cleanup failed, skipping further cleanup', $this->getLoggingContext($paymentPersistence));
+
+            return false;
+        }
+
+        return true;
+    }
+
     public function cleanup(): void
     {
         $repo = $this->em->getRepository(PaymentPersistence::class);
@@ -556,44 +633,20 @@ class PaymentService implements LoggerAwareInterface
             $timeoutBefore = $now->sub(new \DateInterval($cleanupTimeout));
             $paymentPersistences = $repo->findByPaymentStatusTimeoutBefore($paymentStatus, $timeoutBefore);
             foreach ($paymentPersistences as $paymentPersistence) {
-                $type = $paymentPersistence->getType();
-                $paymentType = $this->configurationService->getPaymentTypeByType($type);
+                $skip = false;
+                if (!$this->cleanupPaymentBackend($paymentPersistence)) {
+                    $this->logger->error('Backend cleanup failed, skipping payment cleanup', $this->getLoggingContext($paymentPersistence));
+                    $skip = true;
+                }
 
-                $backendService = $this->backendServiceRegistry->getByPaymentType($paymentType);
-                $cleanupWorked = $backendService->cleanup($paymentType->getBackendType(), $paymentPersistence);
-                if ($cleanupWorked !== true) {
-                    $this->logger->error('Backend cleanup failed, skipping further cleanup', $this->getLoggingContext($paymentPersistence));
+                if (!$this->cleanupPaymentServiceProvider($paymentPersistence)) {
+                    $this->logger->error('PSP cleanup failed, skipping payment cleanup', $this->getLoggingContext($paymentPersistence));
+                    $skip = true;
+                }
+
+                if ($skip) {
                     continue;
                 }
-
-                $paymentMethodId = $paymentPersistence->getPaymentMethod();
-                // We only have a payment method once the payment was started
-                assert($paymentMethodId !== null || $paymentStatus === PaymentStatus::PREPARED);
-
-                if ($paymentMethodId !== null) {
-                    $paymentMethod = $this->configurationService->getPaymentMethodByTypeAndPaymentMethod($type, $paymentMethodId);
-                    if ($paymentMethod === null) {
-                        // in case the config is wrong, better not delete the entry from the DB if some related data could
-                        // be still stored somewhere that needs to be cleaned up
-
-                        $this->logger->error("Can't find payment contract for method '$paymentMethodId'. Can't clean up entry.", $this->getLoggingContext($paymentPersistence));
-                        continue;
-                    }
-
-                    $paymentServiceProvider = $this->paymentServiceProviderServiceRegistry->getByPaymentMethod($paymentMethod);
-                    try {
-                        $cleanupWorked = $paymentServiceProvider->cleanup($paymentMethod->getPspContract(), $paymentPersistence);
-                    } catch (\Exception $e) {
-                        $this->logger->error('PSP cleanup failed', $this->getLoggingContext($paymentPersistence, ['exception' => $e]));
-                        $cleanupWorked = false;
-                    }
-
-                    if ($cleanupWorked !== true) {
-                        $this->logger->error('Payment provider cleanup failed, skipping further cleanup', $this->getLoggingContext($paymentPersistence));
-                        continue;
-                    }
-                }
-
                 $this->em->remove($paymentPersistence);
             }
         }
