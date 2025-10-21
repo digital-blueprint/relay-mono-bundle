@@ -13,6 +13,7 @@ use Dbp\Relay\MonoBundle\PaymentServiceProvider\PaymentServiceProviderServiceReg
 use Dbp\Relay\MonoBundle\Reporting\ReportingCommand;
 use Dbp\Relay\MonoBundle\Reporting\ReportingCronJob;
 use Dbp\Relay\MonoBundle\Reporting\ReportingService;
+use Dbp\Relay\MonoBundle\Service\CleanupCommand;
 use Dbp\Relay\MonoBundle\Service\CompletePaymentCommand;
 use Dbp\Relay\MonoBundle\Service\HealthCheck;
 use Dbp\Relay\MonoBundle\Service\PaymentService;
@@ -72,6 +73,10 @@ return static function (ContainerConfigurator $configurator) {
         ->autoconfigure();
 
     $services->set(CompletePaymentCommand::class)
+        ->autowire()
+        ->autoconfigure();
+
+    $services->set(CleanupCommand::class)
         ->autowire()
         ->autoconfigure();
 };
