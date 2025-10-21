@@ -9,7 +9,7 @@ use Dbp\Relay\MonoBundle\Config\ConfigurationService;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
-use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\ConfigurableExtension;
 
 class DbpRelayMonoExtension extends ConfigurableExtension implements PrependExtensionInterface
@@ -23,11 +23,11 @@ class DbpRelayMonoExtension extends ConfigurableExtension implements PrependExte
     {
         $this->addResourceClassDirectory($container, __DIR__.'/../ApiPlatform');
 
-        $loader = new YamlFileLoader(
+        $loader = new PhpFileLoader(
             $container,
             new FileLocator(__DIR__.'/../Resources/config')
         );
-        $loader->load('services.yaml');
+        $loader->load('services.php');
 
         $definition = $container->getDefinition(ConfigurationService::class);
         $definition->addMethodCall('setConfig', [$mergedConfig]);
