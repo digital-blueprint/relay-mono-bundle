@@ -12,7 +12,7 @@ php bin/console dbp:relay:core:migrate
 
 ```bash
 # Send reports to a custom email address foo@bar.com
-./bin/console dbp:relay-mono:reporting --email foo@bar.com
+./bin/console dbp:relay:mono:reporting --email foo@bar.com
 ```
 
 

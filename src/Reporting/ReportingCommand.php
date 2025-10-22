@@ -29,7 +29,8 @@ class ReportingCommand extends Command
      */
     protected function configure()
     {
-        $this->setName('dbp:relay-mono:reporting');
+        $this->setName('dbp:relay:mono:reporting');
+        $this->setAliases(['dbp:relay-mono:reporting']);
         $this
             ->setDescription('Reporting command')
             ->addOption('email', null, InputOption::VALUE_REQUIRED, 'Override email address to send report to');
