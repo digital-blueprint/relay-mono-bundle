@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## v0.5.3
+
+* Add new `dbp:relay:mono:cleanup` for manually cleaning up old payment data.
+
 ## v0.5.2
 
 * Fix a case where a payment would fail to complete if a webhook would request
