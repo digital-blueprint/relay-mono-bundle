@@ -539,20 +539,27 @@ class PaymentService implements LoggerAwareInterface
         return $this->completePayment($paymentPersistence);
     }
 
-    public function cleanupPaymentBackend(PaymentPersistence $paymentPersistence, bool $dryRun): bool
+    public function cleanupPaymentBackend(PaymentPersistence $paymentPersistence, bool $dryRun, bool $forceUnknown): bool
     {
         $type = $paymentPersistence->getType();
         $paymentType = $this->configurationService->getPaymentTypeByType($type);
+        $backendService = null;
         if ($paymentType !== null) {
             try {
                 $backendService = $this->backendServiceRegistry->getByPaymentType($paymentType);
             } catch (\Exception) {
                 $this->logger->error("Can't find backend for payment type '$type'. Can't clean up entry.", $this->getLoggingContext($paymentPersistence));
-
-                return false;
             }
         } else {
             $this->logger->error("Can't find payment type '$type'. Can't clean up entry.", $this->getLoggingContext($paymentPersistence));
+        }
+
+        if ($backendService === null) {
+            if ($forceUnknown) {
+                $this->logger->warning('Reporting success since force-unknown was passed');
+
+                return true;
+            }
 
             return false;
         }
@@ -578,7 +585,7 @@ class PaymentService implements LoggerAwareInterface
         return true;
     }
 
-    public function cleanupPaymentServiceProvider(PaymentPersistence $paymentPersistence, bool $dryRun): bool
+    public function cleanupPaymentServiceProvider(PaymentPersistence $paymentPersistence, bool $dryRun, bool $forceUnknown): bool
     {
         $paymentMethodId = $paymentPersistence->getPaymentMethod();
         $paymentStatus = $paymentPersistence->getPaymentStatus();
@@ -592,17 +599,31 @@ class PaymentService implements LoggerAwareInterface
         }
 
         $type = $paymentPersistence->getType();
+        $paymentServiceProvider = null;
         $paymentMethod = $this->configurationService->getPaymentMethodByTypeAndPaymentMethod($type, $paymentMethodId);
         if ($paymentMethod === null) {
             // in case the config is wrong, better not delete the entry from the DB if some related data could
             // be still stored somewhere that needs to be cleaned up
 
             $this->logger->error("Can't find payment contract for method '$paymentMethodId'. Can't clean up entry.", $this->getLoggingContext($paymentPersistence));
+        } else {
+            try {
+                $paymentServiceProvider = $this->paymentServiceProviderServiceRegistry->getByPaymentMethod($paymentMethod);
+            } catch (\Exception) {
+                $contractId = $paymentMethod->getPspContract();
+                $this->logger->error("Can't find payment service provider for contract ID '$contractId'. Can't clean up entry.", $this->getLoggingContext($paymentPersistence));
+            }
+        }
+
+        if ($paymentMethod === null || $paymentServiceProvider === null) {
+            if ($forceUnknown) {
+                $this->logger->warning('Reporting success since force-unknown was passed');
+
+                return true;
+            }
 
             return false;
         }
-
-        $paymentServiceProvider = $this->paymentServiceProviderServiceRegistry->getByPaymentMethod($paymentMethod);
 
         if ($dryRun) {
             $cleanupWorked = true;
@@ -630,7 +651,7 @@ class PaymentService implements LoggerAwareInterface
      *
      * @return PaymentPersistence[]
      */
-    public function collectPaymentsForCleanup(): array
+    public function collectPaymentsForCleanup(bool $forceUnknown = false): array
     {
         $repo = $this->em->getRepository(PaymentPersistence::class);
         assert($repo instanceof PaymentPersistenceRepository);
@@ -657,12 +678,12 @@ class PaymentService implements LoggerAwareInterface
             $paymentPersistences = $repo->findByPaymentStatusTimeoutBefore($paymentStatus, $timeoutBefore);
 
             foreach ($paymentPersistences as $paymentPersistence) {
-                if (!$this->cleanupPaymentBackend($paymentPersistence, true)) {
+                if (!$this->cleanupPaymentBackend($paymentPersistence, true, $forceUnknown)) {
                     $this->logger->warning('Backend cleanup validation failed', $this->getLoggingContext($paymentPersistence));
                     continue;
                 }
 
-                if (!$this->cleanupPaymentServiceProvider($paymentPersistence, true)) {
+                if (!$this->cleanupPaymentServiceProvider($paymentPersistence, true, $forceUnknown)) {
                     $this->logger->warning('PSP cleanup validation failed', $this->getLoggingContext($paymentPersistence));
                     continue;
                 }
@@ -679,19 +700,19 @@ class PaymentService implements LoggerAwareInterface
      *
      * @param PaymentPersistence[] $payments
      */
-    public function executeCleanup(array $payments, bool $dryRun = false): void
+    public function executeCleanup(array $payments, bool $dryRun = false, bool $forceUnknown = false): void
     {
         $this->logger->info('Executing cleanup', ['count' => count($payments)]);
 
         foreach ($payments as $paymentPersistence) {
             $skip = false;
 
-            if (!$this->cleanupPaymentBackend($paymentPersistence, $dryRun)) {
+            if (!$this->cleanupPaymentBackend($paymentPersistence, $dryRun, $forceUnknown)) {
                 $this->logger->error('Backend cleanup failed, skipping payment cleanup', $this->getLoggingContext($paymentPersistence));
                 $skip = true;
             }
 
-            if (!$this->cleanupPaymentServiceProvider($paymentPersistence, $dryRun)) {
+            if (!$this->cleanupPaymentServiceProvider($paymentPersistence, $dryRun, $forceUnknown)) {
                 $this->logger->error('PSP cleanup failed, skipping payment cleanup', $this->getLoggingContext($paymentPersistence));
                 $skip = true;
             }

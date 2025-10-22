@@ -33,15 +33,23 @@ class CleanupCommand extends Command
             InputOption::VALUE_NONE,
             "Don't delete anything"
         );
+        $this->addOption(
+            'force-unknown',
+            null,
+            InputOption::VALUE_NONE,
+            'Force cleanup even if there are unknown backend types and payment providers'
+        );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
         $dryRun = $input->getOption('dry-run');
+        $forceUnknown = $input->getOption('force-unknown');
+
         $io->info('Starting Mono cleanup...');
 
-        $payments = $this->paymentService->collectPaymentsForCleanup();
+        $payments = $this->paymentService->collectPaymentsForCleanup($forceUnknown);
 
         $count = count($payments);
         $io->warning(sprintf('Found %d payment(s) to be cleaned up.', $count));
@@ -52,7 +60,7 @@ class CleanupCommand extends Command
             return Command::SUCCESS;
         }
 
-        $this->paymentService->executeCleanup($payments, $dryRun);
+        $this->paymentService->executeCleanup($payments, $dryRun, $forceUnknown);
         $io->success('Cleanup completed successfully!');
 
         return Command::SUCCESS;
