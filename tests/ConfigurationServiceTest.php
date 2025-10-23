@@ -21,11 +21,11 @@ class ConfigurationServiceTest extends TestCase
         $service->setConfig([
             'database_url' => 'bla',
             'cleanup' => [
-                'default_retention_period' => null,
+                'default_retention_duration' => null,
                 'statuses' => [
                     [
                         'payment_status' => 'started',
-                        'retention_period' => 'P1D',
+                        'retention_duration' => 'P1D',
                     ],
                 ],
             ],

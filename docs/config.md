@@ -85,14 +85,14 @@ dbp_relay_mono:
   # Configuration for when a payment is pruned from the database (after the session has expired). By default, none are pruned.
   cleanup:
     # Default retention period for payment statuses not explicitly configured. In ISO duration format. Null means no cleanup.
-    default_retention_period: null
+    default_retention_duration: null
     # Retention period configuration for specific payment statuses
     statuses:
       # Prototype
       -
         payment_status:       ~ # One of "prepared"; "started"; "pending"; "failed"; "completed", Required
         # How long to retain the payment after expiration. In ISO duration format. Null means no cleanup.
-        retention_period:     null
+        retention_duration:   null
 ```
 
 ## Example Configuration

@@ -142,11 +142,11 @@ class ConfigurationService
         $cleanupConfigs = $this->config['cleanup'];
         foreach ($cleanupConfigs['statuses'] as $cleanupConfig) {
             if ($paymentStatus === $cleanupConfig['payment_status']) {
-                return $cleanupConfig['retention_period'];
+                return $cleanupConfig['retention_duration'];
             }
         }
 
-        return $cleanupConfigs['default_retention_period'];
+        return $cleanupConfigs['default_retention_duration'];
     }
 
     public function createJsonForMethods(string $type): string
