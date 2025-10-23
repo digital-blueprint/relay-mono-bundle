@@ -82,14 +82,17 @@ dbp_relay_mono:
         html_template:        emails/reporting.html.twig
         # The report includes all payments that have been created in the last "created_begin" interval (e.g., P1D for 1 day).
         created_begin:        P1D
-  # Configuration for when a payment is pruned from the database. By default none are pruned.
+  # Configuration for when a payment is pruned from the database (after the session has expired). By default, none are pruned.
   cleanup:
-    # Prototype
-    -
-      # Payment status for which the provided "timeout_before" is used
-      payment_status:       ~ # One of "prepared"; "started"; "pending"; "failed"; "completed", Required
-      # Time after the payment has expired (see payment_session_timeout) when the payment will be considered for cleanup. In ISO duration format.
-      timeout_before:       ~ # Required
+    # Default retention period for payment statuses not explicitly configured. In ISO duration format. Null means no cleanup.
+    default_retention_period: null
+    # Retention period configuration for specific payment statuses
+    statuses:
+      # Prototype
+      -
+        payment_status:       ~ # One of "prepared"; "started"; "pending"; "failed"; "completed", Required
+        # How long to retain the payment after expiration. In ISO duration format. Null means no cleanup.
+        retention_period:     null
 ```
 
 ## Example Configuration

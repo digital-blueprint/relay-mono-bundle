@@ -140,13 +140,13 @@ class ConfigurationService
     public function getCleanupTimeout(string $paymentStatus): ?string
     {
         $cleanupConfigs = $this->config['cleanup'];
-        foreach ($cleanupConfigs as $cleanupConfig) {
+        foreach ($cleanupConfigs['statuses'] as $cleanupConfig) {
             if ($paymentStatus === $cleanupConfig['payment_status']) {
-                return $cleanupConfig['timeout_before'];
+                return $cleanupConfig['retention_period'];
             }
         }
 
-        return null;
+        return $cleanupConfigs['default_retention_period'];
     }
 
     public function createJsonForMethods(string $type): string

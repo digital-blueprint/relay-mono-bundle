@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Dbp\Relay\MonoBundle\Service;
 
+use Dbp\Relay\MonoBundle\Config\ConfigurationService;
+use Dbp\Relay\MonoBundle\Persistence\PaymentStatus;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -17,12 +19,9 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 )]
 class CleanupCommand extends Command
 {
-    private PaymentService $paymentService;
-
-    public function __construct(PaymentService $paymentService)
+    public function __construct(private PaymentService $paymentService, private ConfigurationService $configurationService)
     {
         parent::__construct();
-        $this->paymentService = $paymentService;
     }
 
     protected function configure(): void
@@ -48,6 +47,25 @@ class CleanupCommand extends Command
         $forceUnknown = $input->getOption('force-unknown');
 
         $io->info('Starting Mono cleanup...');
+
+        $paymentStatuses = [
+            PaymentStatus::PREPARED,
+            PaymentStatus::STARTED,
+            PaymentStatus::PENDING,
+            PaymentStatus::COMPLETED,
+            PaymentStatus::FAILED,
+        ];
+
+        $rows = [];
+        foreach ($paymentStatuses as $paymentStatus) {
+            $cleanupTimeout = $this->configurationService->getCleanupTimeout($paymentStatus) ?? '-';
+            $rows[] = [$paymentStatus, $cleanupTimeout];
+        }
+
+        $io->table(
+            ['Payment Status', 'Cleanup Timeout'],
+            $rows
+        );
 
         $payments = $this->paymentService->collectPaymentsForCleanup($forceUnknown);
 
