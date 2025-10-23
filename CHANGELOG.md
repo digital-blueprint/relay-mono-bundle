@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+## v0.5.4
+
+* Rework "cleanup" section in the bundle config:
+  * New `default_retention_duration` option, which, if set, is used as a default
+  * Renamed "cleanup" to "cleanup.statuses"
+  * Rename "cleanup.timeout_before" to "cleanup.statuses.retention_duration"
+  * Allow "retention_duration" to be null, to override "default_retention_duration"
+
 ## v0.5.3
 
 * Add new `dbp:relay:mono:cleanup` for manually cleaning up old payment data.
