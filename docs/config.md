@@ -15,7 +15,7 @@ dbp_relay_mono:
       # If starting the payment process requires the client to be authenticated
       auth_required:        false
       # Time after which a created or started payment can no longer be continued. In ISO duration format.
-      session_timeout:      PT1800S
+      session_timeout:      PT3600S
       # An URL to which to redirect the user to after the process is finished. This overrides any return URL passed by the payment initiator and is not affected by "return_url_expression"
       return_url_override:  null
       # A Symfony expression for validating the return url provided by the initiator. Gets passed an "url" variable. Should return true if the URL is valid.
