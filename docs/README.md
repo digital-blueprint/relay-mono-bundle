@@ -43,4 +43,5 @@ bundle documentation.
 
 * [Logging](./logging.md)
 * [Configuration](./config.md)
+* [Payment Data Cleanup](./cleanup.md)
 * [Miscellaneous](./misc.md)
