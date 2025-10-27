@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## v0.5.5
+
+* docs: add section about payment data retention and cleanup
+* config: add option to disable specific payment types and methods, so they are
+  not available for new payments.
+
 ## v0.5.4
 
 * Rework "cleanup" section in the bundle config:
