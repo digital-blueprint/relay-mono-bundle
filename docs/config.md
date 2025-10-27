@@ -28,6 +28,8 @@ dbp_relay_mono:
       data_protection_declaration_url: null
       # The name of the payment recipient, if any.
       recipient:            null
+      # If set then it's no longer possible to start a payment for this type. Already active payments using this type are not affected.
+      disabled:             false
       # A list of payment methods that are provided to the user
       payment_methods:
         # Prototype
@@ -40,6 +42,8 @@ dbp_relay_mono:
           name:                 ~ # Required
           # Path to the image - can be an absolute URL, absolute path, or path relative to public directory
           image:                null
+          # If set then it's no longer possible to start a payment with this method and they are also not presented to the user. Already active payments using this method are not affected.
+          disabled:             false
           # If enabled the payment backend will not be notified when a payment is completed
           demo_mode:            false
       # Various limits for how many payments can be active at the same time
@@ -154,3 +158,12 @@ of builtin icons:
 * `/bundles/dbprelaymono/svg/klarna-pay.svg`
 * `/bundles/dbprelaymono/svg/klarna.svg`
 * `/bundles/dbprelaymono/svg/sofortueberweisung.svg`
+
+## Disabling Payment Types and Methods
+
+You can disable entire payment types or individual payment methods by setting
+the `disabled` option to `true`. This prevents new payments from being started
+with the disabled type or method, while existing and ongoing payments are not
+affected. For users this means that disabled payment methods are not shown in
+the payment selection UI, and attempts to start a payment with a disabled type
+or method will result in an error as if the type or method did not exist.

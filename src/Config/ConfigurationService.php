@@ -154,6 +154,9 @@ class ConfigurationService
         $paymentMethods = $this->getPaymentMethodsByType($type);
         $payload = [];
         foreach ($paymentMethods as $paymentMethod) {
+            if ($paymentMethod->isDisabled()) {
+                continue;
+            }
             $payload[] = [
                 'identifier' => $paymentMethod->getIdentifier(),
                 'name' => $paymentMethod->getName(),

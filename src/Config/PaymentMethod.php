@@ -34,6 +34,11 @@ class PaymentMethod
     /**
      * @var bool
      */
+    private $disabled;
+
+    /**
+     * @var bool
+     */
     private $demoMode;
 
     public function getIdentifier(): string
@@ -93,6 +98,7 @@ class PaymentMethod
         $paymentMethod->setPspMethod($config['method']);
         $paymentMethod->setName($config['name']);
         $paymentMethod->setImage($config['image']);
+        $paymentMethod->setDisabled($config['disabled']);
         $paymentMethod->setDemoMode($config['demo_mode']);
 
         return $paymentMethod;
@@ -116,5 +122,15 @@ class PaymentMethod
     public function setPspMethod(string $pspMethod): void
     {
         $this->pspMethod = $pspMethod;
+    }
+
+    public function isDisabled(): bool
+    {
+        return $this->disabled;
+    }
+
+    public function setDisabled(bool $disabled): void
+    {
+        $this->disabled = $disabled;
     }
 }

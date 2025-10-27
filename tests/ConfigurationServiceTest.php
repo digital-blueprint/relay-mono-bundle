@@ -41,6 +41,7 @@ class ConfigurationServiceTest extends TestCase
                     'psp_return_url_expression' => 'true',
                     'data_protection_declaration_url' => null,
                     'recipient' => '',
+                    'disabled' => false,
                     'concurrency_limits' => [
                         'max_concurrent_payments' => 42,
                         'max_concurrent_auth_payments' => 2,
@@ -54,6 +55,7 @@ class ConfigurationServiceTest extends TestCase
                             'method' => 'somemethod',
                             'name' => 'somename',
                             'image' => 'bar.svg',
+                            'disabled' => false,
                             'demo_mode' => true,
                         ],
                         'baz' => [
@@ -61,6 +63,7 @@ class ConfigurationServiceTest extends TestCase
                             'method' => 'somemethod',
                             'name' => 'somename2',
                             'image' => 'bar2.svg',
+                            'disabled' => false,
                             'demo_mode' => false,
                         ],
                     ],

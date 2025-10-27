@@ -132,7 +132,7 @@ class PaymentService implements LoggerAwareInterface
     {
         $type = $payment->getType();
         $paymentType = $this->configurationService->getPaymentTypeByType($type);
-        if ($paymentType === null) {
+        if ($paymentType === null || $paymentType->isDisabled()) {
             throw ApiError::withDetails(Response::HTTP_BAD_REQUEST, 'Unknown payment type', 'mono:unknown-payment-type');
         }
 
@@ -411,7 +411,7 @@ class PaymentService implements LoggerAwareInterface
 
         $type = $paymentPersistence->getType();
         $paymentType = $this->configurationService->getPaymentTypeByType($type);
-        if ($paymentType === null) {
+        if ($paymentType === null || $paymentType->isDisabled()) {
             throw ApiError::withDetails(Response::HTTP_BAD_REQUEST, 'Unknown payment type', 'mono:start-payment-unknown-payment-type');
         }
 
@@ -437,7 +437,7 @@ class PaymentService implements LoggerAwareInterface
         $paymentPersistence->setPaymentMethod($paymentMethodId);
 
         $paymentMethod = $this->configurationService->getPaymentMethodByTypeAndPaymentMethod($type, $paymentMethodId);
-        if ($paymentMethod === null) {
+        if ($paymentMethod === null || $paymentMethod->isDisabled()) {
             throw new \RuntimeException('No payment method found!');
         }
 

@@ -93,6 +93,11 @@ class PaymentType
      */
     private $sessionTimeout;
 
+    /**
+     * @var bool
+     */
+    private $disabled;
+
     public function getIdentifier(): string
     {
         return $this->identifier;
@@ -299,6 +304,7 @@ class PaymentType
         $paymentType->setDataProtectionDeclarationUrl($config['data_protection_declaration_url']);
         $paymentType->setRecipient($config['recipient']);
         $paymentType->setSessionTimeout($config['session_timeout']);
+        $paymentType->setDisabled($config['disabled']);
 
         $concurrencyLimits = $config['concurrency_limits'];
         $paymentType->setMaxConcurrentPayments($concurrencyLimits['max_concurrent_payments']);
@@ -338,5 +344,15 @@ class PaymentType
     public function setSessionTimeout(string $sessionTimeout): void
     {
         $this->sessionTimeout = $sessionTimeout;
+    }
+
+    public function isDisabled(): bool
+    {
+        return $this->disabled;
+    }
+
+    public function setDisabled(bool $disabled): void
+    {
+        $this->disabled = $disabled;
     }
 }
