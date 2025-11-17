@@ -406,7 +406,7 @@ class PaymentService implements LoggerAwareInterface
         }
 
         $status = $paymentPersistence->getPaymentStatus();
-        if (!in_array($status, [PaymentStatus::PREPARED, PaymentStatus::STARTED, PaymentStatus::FAILED], true)) {
+        if (!in_array($status, [PaymentStatus::PREPARED, PaymentStatus::STARTED], true)) {
             throw new ApiError(Response::HTTP_BAD_REQUEST, "Can't (re)start payment with status: ".$status);
         }
 
