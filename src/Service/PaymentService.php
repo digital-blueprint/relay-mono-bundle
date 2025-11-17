@@ -313,7 +313,12 @@ class PaymentService implements LoggerAwareInterface
         }
 
         $now = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
-        if ($now >= $paymentPersistence->getTimeoutAt()) {
+        $sessionHasExpired = ($now >= $paymentPersistence->getTimeoutAt());
+        $paymentStatus = $paymentPersistence->getPaymentStatus();
+
+        // We allow fetching the payment even after the session has timed out in case we are in a final state where the user
+        // can't change anything from their side anymore. This allows users to check the status of the payment at a later time.
+        if ($sessionHasExpired && $paymentStatus !== PaymentStatus::COMPLETED && $paymentStatus !== PaymentStatus::FAILED && $paymentStatus !== PaymentStatus::PENDING) {
             throw ApiError::withDetails(Response::HTTP_GONE, 'Payment timeout exceeded!', 'mono:payment-timeout-exceeded');
         }
 
@@ -335,7 +340,8 @@ class PaymentService implements LoggerAwareInterface
         $backendService = $this->backendServiceRegistry->getByPaymentType($paymentType);
 
         // We allow the backend to update the payment data as long as we are in the prepared state
-        if ($paymentPersistence->getPaymentStatus() === PaymentStatus::PREPARED) {
+        if ($paymentStatus === PaymentStatus::PREPARED) {
+            assert(!$sessionHasExpired);
             $isDataUpdated = $backendService->updateData($paymentType->getBackendType(), $paymentPersistence);
             if ($isDataUpdated) {
                 $now = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
