@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Symfony\Component\DependencyInjection\Loader\Configurator;
+namespace Dbp\Relay\MonoBundle\Resources\config;
 
 use Dbp\Relay\MonoBundle\BackendServiceProvider\BackendServiceRegistry;
 use Dbp\Relay\MonoBundle\Config\ConfigurationService;
@@ -17,6 +17,9 @@ use Dbp\Relay\MonoBundle\Service\CleanupCommand;
 use Dbp\Relay\MonoBundle\Service\CompletePaymentCommand;
 use Dbp\Relay\MonoBundle\Service\HealthCheck;
 use Dbp\Relay\MonoBundle\Service\PaymentService;
+use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
+
+use function Symfony\Component\DependencyInjection\Loader\Configurator\service;
 
 return static function (ContainerConfigurator $configurator) {
     $services = $configurator->services();
