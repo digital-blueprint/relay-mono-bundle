@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+## v0.5.7
+
+* Drop support for api-platform 3
+* Dependency cleanups
+
 ## v0.5.6
 
 * Allow read only access for users to payments after the session timeout in case
