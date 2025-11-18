@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+## v0.5.6
+
+* Allow read only access for users to payments after the session timeout in case
+  they are in a state the user can not change anymore. This allows users to see
+  the final status of their payment even after the session timed out.
+* Better error message in case a failed payment is tried to be restarted.
+
 ## v0.5.5
 
 * docs: add section about payment data retention and cleanup
