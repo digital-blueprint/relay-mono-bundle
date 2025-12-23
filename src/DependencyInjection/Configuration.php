@@ -19,7 +19,6 @@ class Configuration implements ConfigurationInterface
                     ->scalarNode('database_url')
                         ->isRequired()
                         ->cannotBeEmpty()
-                        ->defaultValue('%env(resolve:DATABASE_URL)%')
                     ->end()
                     ->arrayNode('payment_types')
                         ->info('A list of payment type configurations. A payment type is a combination of a payment backend configuration and a payment service provider configuration.')

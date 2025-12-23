@@ -5,7 +5,7 @@ Created via `./bin/console config:dump-reference DbpRelayMonoBundle | sed '/^$/d
 ```yaml
 # Default configuration for "DbpRelayMonoBundle"
 dbp_relay_mono:
-  database_url:         '%env(resolve:DATABASE_URL)%' # Required
+  database_url:         ~ # Required
   # A list of payment type configurations. A payment type is a combination of a payment backend configuration and a payment service provider configuration.
   payment_types:
     # Prototype
