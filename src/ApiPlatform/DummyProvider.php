@@ -25,8 +25,8 @@ class DummyProvider extends AbstractController implements ProviderInterface
     {
         if ($operation instanceof CollectionOperationInterface) {
             return [];
-        } else {
-            return null;
         }
+
+        return null;
     }
 }
