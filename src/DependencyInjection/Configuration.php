@@ -146,7 +146,7 @@ class Configuration implements ConfigurationInterface
                                         ->end()
                                         ->scalarNode('html_template')
                                             ->info('The Twig template path for the HTML version of the reporting email')
-                                            ->defaultValue('emails/reporting.html.twig')
+                                            ->defaultValue('emails/notify-error.html.twig')
                                         ->end()
                                         ->scalarNode('completed_begin')
                                             ->info('The report includes all payments that have been completed in the last "completed_begin" interval (e.g., P1D for 1 day) but have not been notified yet')

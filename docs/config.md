@@ -69,7 +69,7 @@ dbp_relay_mono:
         # The subject line for the reporting emails
         subject:              ~ # Required
         # The Twig template path for the HTML version of the reporting email
-        html_template:        emails/reporting.html.twig
+        html_template:        emails/notify-error.html.twig
         # The report includes all payments that have been completed in the last "completed_begin" interval (e.g., P1D for 1 day) but have not been notified yet
         completed_begin:      P1D
       # Configuration for recurring email reporting about which payments happened recently.
