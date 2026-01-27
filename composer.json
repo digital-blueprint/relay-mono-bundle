@@ -16,6 +16,7 @@
         "doctrine/migrations": "^3.5",
         "doctrine/orm": "^2.18 || ^3.2",
         "psr/log": "^1.1.4 || ^2.0.0 || ^3.0.0",
+        "symfony/clock": "^6.4 || ^7.4",
         "symfony/config": "^6.4 || ^7.4",
         "symfony/console": "^6.4 || ^7.4",
         "symfony/dependency-injection": "^6.4 || ^7.4",
