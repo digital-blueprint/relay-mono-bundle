@@ -35,7 +35,7 @@ class NotifyErrorCronJob implements CronJobInterface
 
     public function getInterval(): string
     {
-        return '0 * * * *';
+        return '0 */12 * * *';
     }
 
     public function run(CronOptions $options): void
