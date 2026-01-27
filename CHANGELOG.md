@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## v0.5.9
+
+* config: Fix default email template for error reports. The summary report was used instead.
+
 ## v0.5.8
 
 * Add support for Symfony 7.4
