@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## v0.5.10
+
 * Use UTC time for summary reports instead of the server's default timezone
 
 ## v0.5.9
