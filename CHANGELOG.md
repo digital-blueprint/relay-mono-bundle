@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+* Use UTC time for summary reports instead of the server's default timezone
+
 ## v0.5.9
 
 * config: Fix default email template for error reports. The summary report was used instead.

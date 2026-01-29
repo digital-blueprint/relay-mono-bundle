@@ -1,6 +1,6 @@
 <html>
 <body>
-    <h2>Payments from {{ createdSince|date("d.m.Y H:i:s") }} to {{ createdTo|date("d.m.Y H:i:s") }}</h2>
+    <h2>Payments from {{ createdSince|date("d.m.Y H:i:s", "UTC") }} UTC to {{ createdTo|date("d.m.Y H:i:s", "UTC") }} UTC</h2>
     <table>
         <tr>
             <th>Prepared</th>

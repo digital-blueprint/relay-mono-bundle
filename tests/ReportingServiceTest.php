@@ -106,7 +106,7 @@ class ReportingServiceTest extends KernelTestCase
             ],
         ]);
 
-        $clock = new MockClock('2024-03-15 14:30:00 UTC');
+        $clock = new MockClock('2024-03-15 14:30:00', 'UTC');
         $payment1 = $this->createPaymentPersistence('payment-1', 'test-payment', $clock);
         $payment1->setPaymentStatus(PaymentStatus::COMPLETED);
         $payment1->setCreatedAt($clock->now()->modify('-2 hours'));
@@ -135,7 +135,7 @@ class ReportingServiceTest extends KernelTestCase
         $expectedHtml = <<<'HTML'
             <html>
             <body>
-                <h2>Payments from 14.03.2024 14:30:00 to 15.03.2024 14:30:00</h2>
+                <h2>Payments from 14.03.2024 14:30:00 UTC to 15.03.2024 14:30:00 UTC</h2>
                 <table>
                     <tr>
                         <th>Prepared</th>
