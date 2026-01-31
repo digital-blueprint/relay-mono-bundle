@@ -399,16 +399,16 @@
         },
         {
             "name": "api-platform/metadata",
-            "version": "v4.2.14",
+            "version": "v4.2.15",
             "source": {
                 "type": "git",
                 "url": "https://github.com/api-platform/metadata.git",
-                "reference": "590195d1038e66a039f1847b43040b7e6b78475f"
+                "reference": "4d10dbd7b8f036d24df35eb3ec02c0f0befcf397"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/api-platform/metadata/zipball/590195d1038e66a039f1847b43040b7e6b78475f",
-                "reference": "590195d1038e66a039f1847b43040b7e6b78475f",
+                "url": "https://api.github.com/repos/api-platform/metadata/zipball/4d10dbd7b8f036d24df35eb3ec02c0f0befcf397",
+                "reference": "4d10dbd7b8f036d24df35eb3ec02c0f0befcf397",
                 "shasum": ""
             },
             "require": {
@@ -491,22 +491,22 @@
                 "swagger"
             ],
             "support": {
-                "source": "https://github.com/api-platform/metadata/tree/v4.2.14"
+                "source": "https://github.com/api-platform/metadata/tree/v4.2.15"
             },
-            "time": "2026-01-12T13:36:15+00:00"
+            "time": "2026-01-27T07:12:16+00:00"
         },
         {
             "name": "api-platform/openapi",
-            "version": "v4.2.14",
+            "version": "v4.2.15",
             "source": {
                 "type": "git",
                 "url": "https://github.com/api-platform/openapi.git",
-                "reference": "39ed78187a4a8e7c1c1fc9b5a3ef3913e3e914e3"
+                "reference": "59c13717f63e21f98d4ed4e4d7122b0bade72e2e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/api-platform/openapi/zipball/39ed78187a4a8e7c1c1fc9b5a3ef3913e3e914e3",
-                "reference": "39ed78187a4a8e7c1c1fc9b5a3ef3913e3e914e3",
+                "url": "https://api.github.com/repos/api-platform/openapi/zipball/59c13717f63e21f98d4ed4e4d7122b0bade72e2e",
+                "reference": "59c13717f63e21f98d4ed4e4d7122b0bade72e2e",
                 "shasum": ""
             },
             "require": {
@@ -581,9 +581,9 @@
                 "swagger"
             ],
             "support": {
-                "source": "https://github.com/api-platform/openapi/tree/v4.2.14"
+                "source": "https://github.com/api-platform/openapi/tree/v4.2.15"
             },
-            "time": "2026-01-17T19:34:53+00:00"
+            "time": "2026-01-26T15:38:30+00:00"
         },
         {
             "name": "api-platform/serializer",
@@ -680,16 +680,16 @@
         },
         {
             "name": "api-platform/state",
-            "version": "v4.2.14",
+            "version": "v4.2.15",
             "source": {
                 "type": "git",
                 "url": "https://github.com/api-platform/state.git",
-                "reference": "fa3e7b41bcb54e7ba6d3078de224620e422d6732"
+                "reference": "89c0999206b4885c2e55204751b4db07061f3fd3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/api-platform/state/zipball/fa3e7b41bcb54e7ba6d3078de224620e422d6732",
-                "reference": "fa3e7b41bcb54e7ba6d3078de224620e422d6732",
+                "url": "https://api.github.com/repos/api-platform/state/zipball/89c0999206b4885c2e55204751b4db07061f3fd3",
+                "reference": "89c0999206b4885c2e55204751b4db07061f3fd3",
                 "shasum": ""
             },
             "require": {
@@ -771,9 +771,9 @@
                 "swagger"
             ],
             "support": {
-                "source": "https://github.com/api-platform/state/tree/v4.2.14"
+                "source": "https://github.com/api-platform/state/tree/v4.2.15"
             },
-            "time": "2026-01-12T13:36:15+00:00"
+            "time": "2026-01-26T15:38:30+00:00"
         },
         {
             "name": "api-platform/symfony",
@@ -981,16 +981,16 @@
         },
         {
             "name": "dbp/relay-core-bundle",
-            "version": "v0.1.227",
+            "version": "v0.1.228",
             "source": {
                 "type": "git",
                 "url": "https://github.com/digital-blueprint/relay-core-bundle.git",
-                "reference": "1e079830ead1e034f046abbf59348d4cb6ef0094"
+                "reference": "aa8b13b9c26a7bf7448f9b4fa6fbd5486383d09a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/digital-blueprint/relay-core-bundle/zipball/1e079830ead1e034f046abbf59348d4cb6ef0094",
-                "reference": "1e079830ead1e034f046abbf59348d4cb6ef0094",
+                "url": "https://api.github.com/repos/digital-blueprint/relay-core-bundle/zipball/aa8b13b9c26a7bf7448f9b4fa6fbd5486383d09a",
+                "reference": "aa8b13b9c26a7bf7448f9b4fa6fbd5486383d09a",
                 "shasum": ""
             },
             "require": {
@@ -1034,7 +1034,7 @@
                 "symfony/messenger": "^6.4 || ^7.4",
                 "symfony/mime": "^6.4 || ^7.4",
                 "symfony/monolog-bundle": "^3.8 || ^4.0",
-                "symfony/process": "^6.4 || ^7.4",
+                "symfony/process": "^6.4 || ^7.4.5",
                 "symfony/property-info": "^6.4 || ^7.4",
                 "symfony/psr-http-message-bridge": "^6.4 || ^7.4",
                 "symfony/routing": "^6.4 || ^7.4",
@@ -1087,9 +1087,9 @@
             "description": "The core bundle of the Relay API gateway",
             "support": {
                 "issues": "https://github.com/digital-blueprint/relay-core-bundle/issues",
-                "source": "https://github.com/digital-blueprint/relay-core-bundle/tree/v0.1.227"
+                "source": "https://github.com/digital-blueprint/relay-core-bundle/tree/v0.1.228"
             },
-            "time": "2025-12-09T10:49:41+00:00"
+            "time": "2026-01-29T07:50:36+00:00"
         },
         {
             "name": "doctrine/collections",
@@ -6540,16 +6540,16 @@
         },
         {
             "name": "symfony/process",
-            "version": "v7.4.4",
+            "version": "v7.4.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/process.git",
-                "reference": "626f07a53f4b4e2f00e11824cc29f928d797783b"
+                "reference": "608476f4604102976d687c483ac63a79ba18cc97"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/process/zipball/626f07a53f4b4e2f00e11824cc29f928d797783b",
-                "reference": "626f07a53f4b4e2f00e11824cc29f928d797783b",
+                "url": "https://api.github.com/repos/symfony/process/zipball/608476f4604102976d687c483ac63a79ba18cc97",
+                "reference": "608476f4604102976d687c483ac63a79ba18cc97",
                 "shasum": ""
             },
             "require": {
@@ -6581,7 +6581,7 @@
             "description": "Executes commands in sub-processes",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/process/tree/v7.4.4"
+                "source": "https://github.com/symfony/process/tree/v7.4.5"
             },
             "funding": [
                 {
@@ -6601,7 +6601,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-01-20T09:23:51+00:00"
+            "time": "2026-01-26T15:07:59+00:00"
         },
         {
             "name": "symfony/property-access",
@@ -8785,16 +8785,16 @@
     "packages-dev": [
         {
             "name": "captainhook/captainhook",
-            "version": "5.27.4",
+            "version": "5.27.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/captainhook-git/captainhook.git",
-                "reference": "f4485d2a5db16a37053ffe7916f0808f619b430d"
+                "reference": "ed04a64bbeb0da94865a15e74e8d0c97dcc0b987"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/captainhook-git/captainhook/zipball/f4485d2a5db16a37053ffe7916f0808f619b430d",
-                "reference": "f4485d2a5db16a37053ffe7916f0808f619b430d",
+                "url": "https://api.github.com/repos/captainhook-git/captainhook/zipball/ed04a64bbeb0da94865a15e74e8d0c97dcc0b987",
+                "reference": "ed04a64bbeb0da94865a15e74e8d0c97dcc0b987",
                 "shasum": ""
             },
             "require": {
@@ -8805,7 +8805,7 @@
                 "php": ">=8.0",
                 "sebastianfeldmann/camino": "^0.9.2",
                 "sebastianfeldmann/cli": "^3.3",
-                "sebastianfeldmann/git": "^3.15.3",
+                "sebastianfeldmann/git": "^3.16.0",
                 "symfony/console": "^2.7 || ^3.0 || ^4.0 || ^5.0 || ^6.0 || ^7.0 || ^8.0",
                 "symfony/filesystem": "^2.7 || ^3.0 || ^4.0 || ^5.0 || ^6.0 || ^7.0 || ^8.0",
                 "symfony/process": "^2.7 || ^3.0 || ^4.0 || ^5.0 || ^6.0 || ^7.0 || ^8.0"
@@ -8857,7 +8857,7 @@
             ],
             "support": {
                 "issues": "https://github.com/captainhook-git/captainhook/issues",
-                "source": "https://github.com/captainhook-git/captainhook/tree/5.27.4"
+                "source": "https://github.com/captainhook-git/captainhook/tree/5.27.5"
             },
             "funding": [
                 {
@@ -8865,7 +8865,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-12-12T10:35:01+00:00"
+            "time": "2026-01-26T21:55:28+00:00"
         },
         {
             "name": "captainhook/secrets",
@@ -11973,16 +11973,16 @@
         },
         {
             "name": "sebastianfeldmann/git",
-            "version": "3.15.3",
+            "version": "3.16.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianfeldmann/git.git",
-                "reference": "601fd0fbb7d1a784e009a4f8f40975e777ad334a"
+                "reference": "40a5cc043f0957228767f639e370ec92590e940f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianfeldmann/git/zipball/601fd0fbb7d1a784e009a4f8f40975e777ad334a",
-                "reference": "601fd0fbb7d1a784e009a4f8f40975e777ad334a",
+                "url": "https://api.github.com/repos/sebastianfeldmann/git/zipball/40a5cc043f0957228767f639e370ec92590e940f",
+                "reference": "40a5cc043f0957228767f639e370ec92590e940f",
                 "shasum": ""
             },
             "require": {
@@ -12023,7 +12023,7 @@
             ],
             "support": {
                 "issues": "https://github.com/sebastianfeldmann/git/issues",
-                "source": "https://github.com/sebastianfeldmann/git/tree/3.15.3"
+                "source": "https://github.com/sebastianfeldmann/git/tree/3.16.0"
             },
             "funding": [
                 {
@@ -12031,7 +12031,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-11-20T21:33:45+00:00"
+            "time": "2026-01-26T20:59:18+00:00"
         },
         {
             "name": "staabm/side-effects-detector",
