@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Dbp\Relay\MonoBundle\DependencyInjection;
 
+use Dbp\Relay\CoreBundle\Doctrine\DateTimeImmutableUtcType;
 use Dbp\Relay\CoreBundle\Extension\ExtensionTrait;
 use Dbp\Relay\MonoBundle\Config\ConfigurationService;
 use Symfony\Component\Config\FileLocator;
@@ -31,6 +32,11 @@ class DbpRelayMonoExtension extends ConfigurableExtension implements PrependExte
 
         $definition = $container->getDefinition(ConfigurationService::class);
         $definition->addMethodCall('setConfig', [$mergedConfig]);
+
+        $typeDefinition = $container->getParameter('doctrine.dbal.connection_factory.types');
+        assert(is_array($typeDefinition));
+        $typeDefinition['relay_mono_datetime_immutable_utc'] = ['class' => DateTimeImmutableUtcType::class];
+        $container->setParameter('doctrine.dbal.connection_factory.types', $typeDefinition);
     }
 
     public function prepend(ContainerBuilder $container): void

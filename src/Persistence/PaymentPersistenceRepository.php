@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Dbp\Relay\MonoBundle\Persistence;
 
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\EntityRepository;
 
 /**
@@ -12,6 +11,8 @@ use Doctrine\ORM\EntityRepository;
  */
 class PaymentPersistenceRepository extends EntityRepository
 {
+    private const DATETIME_TYPE = 'relay_mono_datetime_immutable_utc';
+
     public function findOne(string $identifier): ?PaymentPersistence
     {
         $qb = $this->createQueryBuilder('p')
@@ -35,7 +36,7 @@ class PaymentPersistenceRepository extends EntityRepository
             ->andWhere('p.timeoutAt >= :timeoutAt')
             ->andWhere('p.completedAt IS NULL')
             ->setParameter('type', $type)
-            ->setParameter('timeoutAt', $now, Types::DATETIME_IMMUTABLE);
+            ->setParameter('timeoutAt', $now, self::DATETIME_TYPE);
 
         $query = $qb->getQuery();
 
@@ -54,7 +55,7 @@ class PaymentPersistenceRepository extends EntityRepository
             ->andWhere('p.completedAt IS NULL')
             ->andWhere('p.userIdentifier IS NOT NULL')
             ->setParameter('type', $type)
-            ->setParameter('timeoutAt', $now, Types::DATETIME_IMMUTABLE);
+            ->setParameter('timeoutAt', $now, self::DATETIME_TYPE);
 
         if ($userIdentifier !== null) {
             $qb->andWhere('p.userIdentifier = :userIdentifier');
@@ -78,7 +79,7 @@ class PaymentPersistenceRepository extends EntityRepository
             ->andWhere('p.completedAt IS NULL')
             ->andWhere('p.userIdentifier IS NULL')
             ->setParameter('type', $type)
-            ->setParameter('timeoutAt', $now, Types::DATETIME_IMMUTABLE);
+            ->setParameter('timeoutAt', $now, self::DATETIME_TYPE);
 
         if ($clientIp !== null) {
             $qb->andWhere('p.clientIp = :clientIp');
@@ -120,7 +121,7 @@ class PaymentPersistenceRepository extends EntityRepository
             ->andWhere($qb->expr()->isNull('p.notifiedAt'))
             ->setParameter('type', $type)
             ->setParameter('paymentStatus', PaymentStatus::COMPLETED)
-            ->setParameter('completedSince', \DateTimeImmutable::createFromInterface($completedSince), Types::DATETIME_IMMUTABLE);
+            ->setParameter('completedSince', \DateTimeImmutable::createFromInterface($completedSince), self::DATETIME_TYPE);
 
         $query = $qb->getQuery();
         $items = $query->getResult();
@@ -137,7 +138,7 @@ class PaymentPersistenceRepository extends EntityRepository
         $qb->where('p.paymentStatus = :paymentStatus')
             ->andWhere('p.timeoutAt < :timeoutBefore')
             ->setParameter('paymentStatus', $paymentStatus)
-            ->setParameter('timeoutBefore', \DateTimeImmutable::createFromInterface($timeoutBefore), Types::DATETIME_IMMUTABLE);
+            ->setParameter('timeoutBefore', \DateTimeImmutable::createFromInterface($timeoutBefore), self::DATETIME_TYPE);
 
         $query = $qb->getQuery();
         $items = $query->getResult();
@@ -156,7 +157,7 @@ class PaymentPersistenceRepository extends EntityRepository
             ->andWhere('p.createdAt >= :createdSince')
             ->groupBy('p.paymentStatus')
             ->setParameter('type', $type)
-            ->setParameter('createdSince', \DateTimeImmutable::createFromInterface($createdSince), Types::DATETIME_IMMUTABLE);
+            ->setParameter('createdSince', \DateTimeImmutable::createFromInterface($createdSince), self::DATETIME_TYPE);
 
         $query = $qb->getQuery();
         $rows = $query->execute();
