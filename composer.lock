@@ -399,7 +399,7 @@
         },
         {
             "name": "api-platform/metadata",
-            "version": "v4.2.19",
+            "version": "v4.2.20",
             "source": {
                 "type": "git",
                 "url": "https://github.com/api-platform/metadata.git",
@@ -491,22 +491,22 @@
                 "swagger"
             ],
             "support": {
-                "source": "https://github.com/api-platform/metadata/tree/v4.2.19"
+                "source": "https://github.com/api-platform/metadata/tree/v4.2.20"
             },
             "time": "2026-02-25T15:52:40+00:00"
         },
         {
             "name": "api-platform/openapi",
-            "version": "v4.2.19",
+            "version": "v4.2.20",
             "source": {
                 "type": "git",
                 "url": "https://github.com/api-platform/openapi.git",
-                "reference": "59c13717f63e21f98d4ed4e4d7122b0bade72e2e"
+                "reference": "dcab93037834665f16cd226dbd867022057c3a7e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/api-platform/openapi/zipball/59c13717f63e21f98d4ed4e4d7122b0bade72e2e",
-                "reference": "59c13717f63e21f98d4ed4e4d7122b0bade72e2e",
+                "url": "https://api.github.com/repos/api-platform/openapi/zipball/dcab93037834665f16cd226dbd867022057c3a7e",
+                "reference": "dcab93037834665f16cd226dbd867022057c3a7e",
                 "shasum": ""
             },
             "require": {
@@ -581,9 +581,9 @@
                 "swagger"
             ],
             "support": {
-                "source": "https://github.com/api-platform/openapi/tree/v4.2.19"
+                "source": "https://github.com/api-platform/openapi/tree/v4.2.20"
             },
-            "time": "2026-01-26T15:38:30+00:00"
+            "time": "2026-03-01T17:00:49+00:00"
         },
         {
             "name": "api-platform/serializer",
@@ -680,7 +680,7 @@
         },
         {
             "name": "api-platform/state",
-            "version": "v4.2.19",
+            "version": "v4.2.20",
             "source": {
                 "type": "git",
                 "url": "https://github.com/api-platform/state.git",
@@ -771,7 +771,7 @@
                 "swagger"
             ],
             "support": {
-                "source": "https://github.com/api-platform/state/tree/v4.2.19"
+                "source": "https://github.com/api-platform/state/tree/v4.2.20"
             },
             "time": "2026-02-17T09:18:17+00:00"
         },
@@ -981,16 +981,16 @@
         },
         {
             "name": "dbp/relay-core-bundle",
-            "version": "v0.1.230",
+            "version": "v0.1.231",
             "source": {
                 "type": "git",
                 "url": "https://github.com/digital-blueprint/relay-core-bundle.git",
-                "reference": "811e47b067589140794b33a754ff33a3b7450f21"
+                "reference": "ff8968f5f092004dcc2e8e9796b3c2168f56dd08"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/digital-blueprint/relay-core-bundle/zipball/811e47b067589140794b33a754ff33a3b7450f21",
-                "reference": "811e47b067589140794b33a754ff33a3b7450f21",
+                "url": "https://api.github.com/repos/digital-blueprint/relay-core-bundle/zipball/ff8968f5f092004dcc2e8e9796b3c2168f56dd08",
+                "reference": "ff8968f5f092004dcc2e8e9796b3c2168f56dd08",
                 "shasum": ""
             },
             "require": {
@@ -1087,9 +1087,9 @@
             "description": "The core bundle of the Relay API gateway",
             "support": {
                 "issues": "https://github.com/digital-blueprint/relay-core-bundle/issues",
-                "source": "https://github.com/digital-blueprint/relay-core-bundle/tree/v0.1.230"
+                "source": "https://github.com/digital-blueprint/relay-core-bundle/tree/v0.1.231"
             },
-            "time": "2026-03-02T13:32:50+00:00"
+            "time": "2026-03-03T09:57:07+00:00"
         },
         {
             "name": "doctrine/collections",
