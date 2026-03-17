@@ -9,7 +9,7 @@
         "api-platform/metadata": "^4.1",
         "api-platform/state": "^4.1",
         "api-platform/openapi": "^4.1",
-        "dbp/relay-core-bundle": "^0.1.230",
+        "dbp/relay-core-bundle": "^0.1.233",
         "doctrine/dbal": "^3.8 || ^4.0",
         "doctrine/doctrine-bundle": "^2.12",
         "doctrine/doctrine-migrations-bundle": "^3.3",
