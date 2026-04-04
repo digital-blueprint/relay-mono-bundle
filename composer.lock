@@ -983,16 +983,16 @@
         },
         {
             "name": "dbp/relay-core-bundle",
-            "version": "v0.1.235",
+            "version": "v0.1.236",
             "source": {
                 "type": "git",
                 "url": "https://github.com/digital-blueprint/relay-core-bundle.git",
-                "reference": "510ac1efdfee6af30de55d8963e05ee925c3d841"
+                "reference": "e09ec3f5a3708fed75dba3866a15d4a0f8029cff"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/digital-blueprint/relay-core-bundle/zipball/510ac1efdfee6af30de55d8963e05ee925c3d841",
-                "reference": "510ac1efdfee6af30de55d8963e05ee925c3d841",
+                "url": "https://api.github.com/repos/digital-blueprint/relay-core-bundle/zipball/e09ec3f5a3708fed75dba3866a15d4a0f8029cff",
+                "reference": "e09ec3f5a3708fed75dba3866a15d4a0f8029cff",
                 "shasum": ""
             },
             "require": {
@@ -1090,9 +1090,9 @@
             "description": "The core bundle of the Relay API gateway",
             "support": {
                 "issues": "https://github.com/digital-blueprint/relay-core-bundle/issues",
-                "source": "https://github.com/digital-blueprint/relay-core-bundle/tree/v0.1.235"
+                "source": "https://github.com/digital-blueprint/relay-core-bundle/tree/v0.1.236"
             },
-            "time": "2026-03-25T14:55:00+00:00"
+            "time": "2026-03-31T10:27:01+00:00"
         },
         {
             "name": "doctrine/collections",
