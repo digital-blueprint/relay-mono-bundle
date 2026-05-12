@@ -23,13 +23,13 @@ methods which can be used via the HTTP API.
 
 We currently provide the following PB connectors:
 
-* [CAMPUSOnline Connector](../mono-connector-campusonline/index.md): For paying tuition fees
-* [Generic Connector](../mono-connector-generic/index.md): For other services which
+* [CAMPUSOnline Connector](../../../components/api/mono-connector-campusonline/index.md): For paying tuition fees
+* [Generic Connector](../../../components/api/mono-connector-generic/index.md): For other services which
   implement the generic interface
 
 We currently provide the following PSP connectors:
 
-* [PAYONE Connector](../mono-connector-payone/index.md): For processing the payment
+* [PAYONE Connector](../../../components/api/mono-connector-payone/index.md): For processing the payment
   via https://www.payone.com
 
 You can find more information about each specific connector in their respective
