@@ -682,16 +682,16 @@
         },
         {
             "name": "api-platform/state",
-            "version": "v4.3.10",
+            "version": "v4.3.13",
             "source": {
                 "type": "git",
                 "url": "https://github.com/api-platform/state.git",
-                "reference": "06067bf0efae09badc618fac8add67191f12f1e3"
+                "reference": "3bb76df0857dd1a6e706dd1c5c4b574432a2fa8d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/api-platform/state/zipball/06067bf0efae09badc618fac8add67191f12f1e3",
-                "reference": "06067bf0efae09badc618fac8add67191f12f1e3",
+                "url": "https://api.github.com/repos/api-platform/state/zipball/3bb76df0857dd1a6e706dd1c5c4b574432a2fa8d",
+                "reference": "3bb76df0857dd1a6e706dd1c5c4b574432a2fa8d",
                 "shasum": ""
             },
             "require": {
@@ -704,7 +704,7 @@
                 "symfony/translation-contracts": "^3.0"
             },
             "require-dev": {
-                "api-platform/serializer": "^4.3",
+                "api-platform/serializer": "^4.3.12",
                 "api-platform/validator": "^4.3.1",
                 "phpunit/phpunit": "^11.5 || ^12.2",
                 "symfony/http-foundation": "^6.4.14 || ^7.0 || ^8.0",
@@ -773,9 +773,9 @@
                 "swagger"
             ],
             "support": {
-                "source": "https://github.com/api-platform/state/tree/v4.3.10"
+                "source": "https://github.com/api-platform/state/tree/v4.3.13"
             },
-            "time": "2026-06-05T15:16:47+00:00"
+            "time": "2026-06-13T05:11:46+00:00"
         },
         {
             "name": "api-platform/symfony",
