@@ -984,16 +984,16 @@
         },
         {
             "name": "dbp/relay-core-bundle",
-            "version": "v0.1.247",
+            "version": "v0.1.248",
             "source": {
                 "type": "git",
                 "url": "https://github.com/digital-blueprint/relay-core-bundle.git",
-                "reference": "30b4eea93e2471b5478b969802740915682d7cfe"
+                "reference": "77366fae491abb8e273cff232308467d977e46c4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/digital-blueprint/relay-core-bundle/zipball/30b4eea93e2471b5478b969802740915682d7cfe",
-                "reference": "30b4eea93e2471b5478b969802740915682d7cfe",
+                "url": "https://api.github.com/repos/digital-blueprint/relay-core-bundle/zipball/77366fae491abb8e273cff232308467d977e46c4",
+                "reference": "77366fae491abb8e273cff232308467d977e46c4",
                 "shasum": ""
             },
             "require": {
@@ -1010,14 +1010,15 @@
                 "ext-filter": "*",
                 "ext-intl": "*",
                 "ext-json": "*",
-                "guzzlehttp/guzzle": "^7.5",
+                "guzzlehttp/guzzle": "^7.5 || ^8.0",
                 "kekos/multipart-form-data-parser": "^1.1",
-                "kevinrob/guzzle-cache-middleware": "^5.0 || ^6.0 || ^7.0",
+                "kevinrob/guzzle-cache-middleware": "^6.0 || ^7.0 || ^8.0",
                 "monolog/monolog": "^3.2",
                 "nelmio/cors-bundle": "^2.2",
                 "nyholm/psr7": "^1.8",
                 "php": ">=8.2",
                 "psr/cache": "^1.0.1 || ^2.0.0 || ^3.0.0",
+                "psr/http-client": "^1.0",
                 "psr/http-message": "^1.0 || ^2.0",
                 "psr/log": "^1.1.4 || ^2.0.0 || ^3.0.0",
                 "symfony/asset": "^6.4 || ^7.4",
@@ -1091,9 +1092,9 @@
             "description": "The core bundle of the Relay API gateway",
             "support": {
                 "issues": "https://github.com/digital-blueprint/relay-core-bundle/issues",
-                "source": "https://github.com/digital-blueprint/relay-core-bundle/tree/v0.1.247"
+                "source": "https://github.com/digital-blueprint/relay-core-bundle/tree/v0.1.248"
             },
-            "time": "2026-07-21T07:17:53+00:00"
+            "time": "2026-08-04T09:18:02+00:00"
         },
         {
             "name": "doctrine/collections",
