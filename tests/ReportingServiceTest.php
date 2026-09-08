@@ -150,10 +150,6 @@ class ReportingServiceTest extends KernelTestCase
                         <td>1</td>
                     </tr>
                     <tr>
-                        <th>Cancelled</th>
-                        <td>0</td>
-                    </tr>
-                    <tr>
                         <th>Pending</th>
                         <td>0</td>
                     </tr>
