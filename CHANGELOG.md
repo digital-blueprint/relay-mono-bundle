@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+* Change notification error reports to run daily and list the ID, payment type,
+  backend type, and completion time of all unnotified completed payments after a
+  configurable grace period.
+* Replace the `notify_error.completed_begin` configuration option with
+  `notify_error.report_after`, which defaults to 15 minutes.
+
 ## v0.5.11
 
 * Use UTC for the datetimes stored in the database instead of depending on the server's default timezone.

@@ -58,7 +58,7 @@ dbp_relay_mono:
         max_concurrent_unauth_payments: null
         # Same as "max_concurrent_unauth_payments" but is limited per user IP address
         max_concurrent_unauth_payments_per_ip: null
-      # Configuration for reports about recently completed payments that have not been notified
+      # Configuration for reports about completed payments that have not been notified
       notify_error:
         # The mailer transport DSN to use for sending the email
         dsn:                  ~ # Required
@@ -70,8 +70,8 @@ dbp_relay_mono:
         subject:              ~ # Required
         # The Twig template path for the HTML version of the reporting email
         html_template:        emails/notify-error.html.twig
-        # The report includes all payments that have been completed in the last "completed_begin" interval (e.g., P1D for 1 day) but have not been notified yet
-        completed_begin:      P1D
+        # How long a completed payment may remain unnotified before it is included in the report (e.g., PT15M for 15 minutes)
+        report_after:         PT15M
       # Configuration for recurring email reporting about which payments happened recently.
       reporting:
         # The mailer transport DSN to use for sending the email
@@ -129,6 +129,7 @@ dbp_relay_mono:
         from: 'noreply@myuni.at'
         to: '%env(MONO_REPORTING_EMAIL_TO)%'
         subject: 'Fehler bei der Weitermeldung in CAMPUSonline'
+        report_after: 'PT15M'
       reporting:
         dsn: '%env(MAILER_TRANSPORT_DSN)%'
         from: 'noreply@myuni.at'

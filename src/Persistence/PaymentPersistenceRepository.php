@@ -112,16 +112,17 @@ class PaymentPersistenceRepository extends EntityRepository
     /**
      * @return PaymentPersistence[]
      */
-    public function findUnnotifiedByTypeCompletedSince(string $type, \DateTimeInterface $completedSince): array
+    public function findUnnotifiedByTypeCompletedBefore(string $type, \DateTimeInterface $completedBefore): array
     {
         $qb = $this->createQueryBuilder('p');
         $qb->where('p.type = :type')
             ->andWhere('p.paymentStatus = :paymentStatus')
-            ->andWhere('p.completedAt >= :completedSince')
+            ->andWhere('p.completedAt <= :completedBefore')
             ->andWhere($qb->expr()->isNull('p.notifiedAt'))
+            ->orderBy('p.completedAt', 'ASC')
             ->setParameter('type', $type)
             ->setParameter('paymentStatus', PaymentStatus::COMPLETED)
-            ->setParameter('completedSince', \DateTimeImmutable::createFromInterface($completedSince), self::DATETIME_TYPE);
+            ->setParameter('completedBefore', \DateTimeImmutable::createFromInterface($completedBefore), self::DATETIME_TYPE);
 
         $query = $qb->getQuery();
         $items = $query->getResult();

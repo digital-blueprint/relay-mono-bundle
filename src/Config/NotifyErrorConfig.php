@@ -6,8 +6,8 @@ namespace Dbp\Relay\MonoBundle\Config;
 
 class NotifyErrorConfig extends EmailConfig
 {
-    public function getCompletedBegin(): string
+    public function getReportAfter(): string
     {
-        return $this->config['completed_begin'];
+        return $this->config['report_after'];
     }
 }

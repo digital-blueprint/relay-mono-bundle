@@ -122,7 +122,7 @@ class PaymentPersistenceTest extends KernelTestCase
 
         $this->repo->countByTypeCreatedSince('some_type', new \DateTime());
         $this->repo->findByPaymentStatusTimeoutBefore(PaymentStatus::COMPLETED, new \DateTime());
-        $this->repo->findUnnotifiedByTypeCompletedSince('some_type', new \DateTime());
+        $this->repo->findUnnotifiedByTypeCompletedBefore('some_type', new \DateTime());
 
         $this->assertTrue(true);
     }
@@ -173,19 +173,54 @@ class PaymentPersistenceTest extends KernelTestCase
         $this->assertCount(1, $this->repo->findUnnotified());
     }
 
-    public function testFindUnnotifiedByTypeCompletedSince(): void
+    public function testFindUnnotifiedByTypeCompletedBefore(): void
     {
-        $this->assertCount(0, $this->repo->findUnnotifiedByTypeCompletedSince('some_type', new \DateTimeImmutable()));
+        $completedBefore = new \DateTimeImmutable('2024-03-15 14:15:00 UTC');
 
-        $time = new \DateTimeImmutable();
-        $payment = $this->getPayment('some-id');
-        $payment->setPaymentStatus(PaymentStatus::COMPLETED);
-        $payment->setCompletedAt($time);
-        $payment->setType('some_type');
-        $this->em->persist($payment);
+        $oldPayment = $this->getPayment('old-payment');
+        $oldPayment->setPaymentStatus(PaymentStatus::COMPLETED);
+        $oldPayment->setCompletedAt(new \DateTimeImmutable('2024-01-01 00:00:00 UTC'));
+        $oldPayment->setType('some_type');
+        $this->em->persist($oldPayment);
+
+        $boundaryPayment = $this->getPayment('boundary-payment');
+        $boundaryPayment->setPaymentStatus(PaymentStatus::COMPLETED);
+        $boundaryPayment->setCompletedAt($completedBefore);
+        $boundaryPayment->setType('some_type');
+        $this->em->persist($boundaryPayment);
+
+        $recentPayment = $this->getPayment('recent-payment');
+        $recentPayment->setPaymentStatus(PaymentStatus::COMPLETED);
+        $recentPayment->setCompletedAt($completedBefore->modify('+1 second'));
+        $recentPayment->setType('some_type');
+        $this->em->persist($recentPayment);
+
+        $notifiedPayment = $this->getPayment('notified-payment');
+        $notifiedPayment->setPaymentStatus(PaymentStatus::COMPLETED);
+        $notifiedPayment->setCompletedAt($completedBefore->modify('-1 hour'));
+        $notifiedPayment->setNotifiedAt($completedBefore);
+        $notifiedPayment->setType('some_type');
+        $this->em->persist($notifiedPayment);
+
+        $otherTypePayment = $this->getPayment('other-type-payment');
+        $otherTypePayment->setPaymentStatus(PaymentStatus::COMPLETED);
+        $otherTypePayment->setCompletedAt($completedBefore->modify('-1 hour'));
+        $otherTypePayment->setType('other_type');
+        $this->em->persist($otherTypePayment);
+
+        $failedPayment = $this->getPayment('failed-payment');
+        $failedPayment->setPaymentStatus(PaymentStatus::FAILED);
+        $failedPayment->setCompletedAt($completedBefore->modify('-1 hour'));
+        $failedPayment->setType('some_type');
+        $this->em->persist($failedPayment);
         $this->em->flush();
 
-        $this->assertCount(1, $this->repo->findUnnotifiedByTypeCompletedSince('some_type', $time));
+        $items = $this->repo->findUnnotifiedByTypeCompletedBefore('some_type', $completedBefore);
+
+        $this->assertSame(['old-payment', 'boundary-payment'], array_map(
+            static fn (PaymentPersistence $payment): string => $payment->getIdentifier(),
+            $items
+        ));
     }
 
     public function testFindByPaymentStatusTimeoutBefore(): void

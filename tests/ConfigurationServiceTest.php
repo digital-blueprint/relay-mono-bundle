@@ -49,6 +49,14 @@ class ConfigurationServiceTest extends TestCase
                         'max_concurrent_unauth_payments' => 4,
                         'max_concurrent_unauth_payments_per_ip' => 5,
                     ],
+                    'notify_error' => [
+                        'dsn' => 'null://null',
+                        'from' => 'sender@example.com',
+                        'to' => 'admin@example.com',
+                        'subject' => 'Payment Errors',
+                        'html_template' => 'emails/notify-error.html.twig',
+                        'report_after' => 'PT15M',
+                    ],
                     'payment_methods' => [
                         'quux' => [
                             'contract' => 'somecontract',
@@ -80,6 +88,9 @@ class ConfigurationServiceTest extends TestCase
         $this->assertCount(1, $paymentTypes);
         $this->assertSame(42, $paymentTypes[0]->getMaxConcurrentPayments());
         $this->assertSame('PT1234S', $paymentTypes[0]->getSessionTimeout());
+        $notifyErrorConfig = $paymentTypes[0]->getNotifyErrorConfig();
+        $this->assertNotNull($notifyErrorConfig);
+        $this->assertSame('PT15M', $notifyErrorConfig->getReportAfter());
 
         $methods = $service->getPaymentMethodsByType($paymentTypes[0]->getIdentifier());
         $this->assertCount(2, $methods);

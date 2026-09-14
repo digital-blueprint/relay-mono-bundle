@@ -1,10 +1,25 @@
 <html>
 <body>
+<h2>Unnotified completed payments</h2>
 <table>
+    <thead>
     <tr>
-        <th>Notify errors</th>
-        <td>{{ count|default(0) }}</td>
+        <th>Payment ID</th>
+        <th>Payment type</th>
+        <th>Backend type</th>
+        <th>Completed at</th>
     </tr>
+    </thead>
+    <tbody>
+    {% for item in items %}
+        <tr>
+            <td>{{ item.identifier }}</td>
+            <td>{{ item.type }}</td>
+            <td>{{ paymentType.backendType }}</td>
+            <td>{{ item.completedAt|date("Y-m-d H:i:s", "UTC") }} UTC</td>
+        </tr>
+    {% endfor %}
+    </tbody>
 </table>
 </body>
 </html>

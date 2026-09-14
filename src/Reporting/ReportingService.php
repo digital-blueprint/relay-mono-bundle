@@ -112,8 +112,8 @@ class ReportingService implements LoggerAwareInterface
 
         $type = $paymentType->getIdentifier();
         $now = $this->clock->now();
-        $completedSince = $now->sub(new \DateInterval($notifyErrorConfig->getCompletedBegin()));
-        $items = $repo->findUnnotifiedByTypeCompletedSince($type, $completedSince);
+        $completedBefore = $now->sub(new \DateInterval($notifyErrorConfig->getReportAfter()));
+        $items = $repo->findUnnotifiedByTypeCompletedBefore($type, $completedBefore);
         $count = count($items);
 
         if ($count === 0) {

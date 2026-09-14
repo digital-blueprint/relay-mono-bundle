@@ -195,7 +195,7 @@ class ReportingServiceTest extends KernelTestCase
                         'to' => 'admin@example.com',
                         'subject' => 'Payment Errors',
                         'html_template' => 'emails/notify-error.html.twig',
-                        'completed_begin' => 'P1D',
+                        'report_after' => 'PT15M',
                     ],
                 ],
             ],
@@ -203,15 +203,20 @@ class ReportingServiceTest extends KernelTestCase
 
         $clock = new MockClock('2024-03-15 14:30:00 UTC');
 
-        $payment1 = $this->createPaymentPersistence('payment-1', 'test-payment', $clock);
-        $payment1->setPaymentStatus(PaymentStatus::COMPLETED);
-        $payment1->setCompletedAt($clock->now()->modify('-2 hours'));
-        $this->em->persist($payment1);
+        $oldPayment = $this->createPaymentPersistence('old-payment', 'test-payment', $clock);
+        $oldPayment->setPaymentStatus(PaymentStatus::COMPLETED);
+        $oldPayment->setCompletedAt($clock->now()->modify('-2 days'));
+        $this->em->persist($oldPayment);
 
-        $payment2 = $this->createPaymentPersistence('payment-2', 'test-payment', $clock);
-        $payment2->setPaymentStatus(PaymentStatus::COMPLETED);
-        $payment2->setCompletedAt($clock->now()->modify('-1 hours'));
-        $this->em->persist($payment2);
+        $boundaryPayment = $this->createPaymentPersistence('boundary-payment', 'test-payment', $clock);
+        $boundaryPayment->setPaymentStatus(PaymentStatus::COMPLETED);
+        $boundaryPayment->setCompletedAt($clock->now()->modify('-15 minutes'));
+        $this->em->persist($boundaryPayment);
+
+        $recentPayment = $this->createPaymentPersistence('recent-payment', 'test-payment', $clock);
+        $recentPayment->setPaymentStatus(PaymentStatus::COMPLETED);
+        $recentPayment->setCompletedAt($clock->now()->modify('-14 minutes'));
+        $this->em->persist($recentPayment);
 
         $this->em->flush();
 
@@ -231,16 +236,35 @@ class ReportingServiceTest extends KernelTestCase
         $expectedHtml = <<<'HTML'
             <html>
             <body>
+            <h2>Unnotified completed payments</h2>
             <table>
+                <thead>
                 <tr>
-                    <th>Notify errors</th>
-                    <td>2</td>
+                    <th>Payment ID</th>
+                    <th>Payment type</th>
+                    <th>Backend type</th>
+                    <th>Completed at</th>
                 </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>old-payment</td>
+                        <td>test-payment</td>
+                        <td>test</td>
+                        <td>2024-03-13 14:30:00 UTC</td>
+                    </tr>
+                    <tr>
+                        <td>boundary-payment</td>
+                        <td>test-payment</td>
+                        <td>test</td>
+                        <td>2024-03-15 14:15:00 UTC</td>
+                    </tr>
+                </tbody>
             </table>
             </body>
             </html>
             HTML;
 
-        $this->assertSame($expectedHtml, $html);
+        $this->assertXmlStringEqualsXmlString($expectedHtml, $html);
     }
 }
