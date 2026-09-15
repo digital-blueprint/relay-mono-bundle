@@ -68,8 +68,8 @@ dbp_relay_mono:
         to:                   ~ # Required
         # The subject line for the reporting emails
         subject:              ~ # Required
-        # How long a completed payment may remain unnotified before it is included in the report (e.g., PT15M for 15 minutes)
-        report_after:         PT15M
+        # How long a completed payment may remain unnotified before it is included in the report (e.g., PT1H for 1 hour)
+        report_after:         PT1H
         # How often the notification error report is sent.
         cadence:              daily # One of "hourly"; "daily"; "weekly"
       # Configuration for recurring email reporting about payment activity and outcomes.
@@ -136,7 +136,7 @@ dbp_relay_mono:
         from: 'noreply@myuni.at'
         to: '%env(MONO_REPORTING_EMAIL_TO)%'
         subject: 'Fehler bei der Weitermeldung in CAMPUSonline'
-        report_after: 'PT15M'
+        report_after: 'PT1H'
         cadence: daily
       reporting:
         dsn: '%env(MAILER_TRANSPORT_DSN)%'

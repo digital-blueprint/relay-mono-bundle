@@ -14,7 +14,7 @@
   backend type, and completion time of all unnotified completed payments after a
   configurable grace period.
 * Replace the `notify_error.completed_begin` configuration option with
-  `notify_error.report_after`, which defaults to 15 minutes.
+  `notify_error.report_after`, which defaults to 1 hour.
 
 ## v0.5.11
 
