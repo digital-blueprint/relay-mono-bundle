@@ -451,11 +451,10 @@ class PaymentService implements LoggerAwareInterface
         $timeoutAt = $now->add(new \DateInterval($paymentType->getSessionTimeout()));
         $paymentPersistence->setTimeoutAt($timeoutAt);
 
-        $paymentPersistence->setStartedAt($now);
-
         $paymentServiceProvider = $this->paymentServiceProviderServiceRegistry->getByPaymentMethod($paymentMethod);
         try {
             $startResponse = $paymentServiceProvider->start($paymentMethod->getPspContract(), $paymentMethod->getPspMethod(), $paymentPersistence);
+            $paymentPersistence->setStartedAt($now);
             if ($paymentPersistence->getPaymentStatus() === PaymentStatus::PREPARED) {
                 $paymentPersistence->setPaymentStatus(PaymentStatus::PENDING);
             }
