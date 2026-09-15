@@ -189,7 +189,7 @@ class ReportingServiceTest extends KernelTestCase
                     </tr>
                 </table>
 
-                <h3>Current outcomes of payment sessions prepared during the reporting period</h3>
+                <h3 style="margin-top: 1.5em;">Current outcomes of payment sessions prepared during the reporting period</h3>
                 <table>
                     <tr>
                         <th>Completed and reported to backend</th>
@@ -200,7 +200,7 @@ class ReportingServiceTest extends KernelTestCase
                         <td>0</td>
                     </tr>
                     <tr>
-                        <th>Failed</th>
+                        <th>Reported as failed by payment provider</th>
                         <td>0</td>
                     </tr>
                     <tr>
