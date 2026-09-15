@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## v0.5.12
+
 * Remove the unused `started` payment status. Failed payment start attempts now
   remain `prepared` and can be retried.
 * Add hourly, daily, and weekly payment reporting cadences and clarify reports by
