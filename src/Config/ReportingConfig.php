@@ -6,8 +6,12 @@ namespace Dbp\Relay\MonoBundle\Config;
 
 class ReportingConfig extends EmailConfig
 {
-    public function getCreatedBegin(): string
+    public const CADENCE_HOURLY = 'hourly';
+    public const CADENCE_DAILY = 'daily';
+    public const CADENCE_WEEKLY = 'weekly';
+
+    public function getCadence(): string
     {
-        return $this->config['created_begin'];
+        return $this->config['cadence'];
     }
 }

@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+* Add hourly, daily, and weekly payment reporting cadences and clarify reports by
+  separating activity in the last completed UTC period from current outcomes.
+* Replace the `reporting.created_begin` configuration option with
+  `reporting.cadence`, which defaults to `weekly`.
+* Make the payment and notification error report templates implementation
+  details instead of configurable templates.
+* Add `notify_error.cadence` with hourly, daily, and weekly options and a daily
+  default.
 * Change notification error reports to run daily and list the ID, payment type,
   backend type, and completion time of all unnotified completed payments after a
   configurable grace period.

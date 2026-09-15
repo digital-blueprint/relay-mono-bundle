@@ -7,7 +7,7 @@ namespace Dbp\Relay\MonoBundle\Reporting;
 use Dbp\Relay\CoreBundle\Cron\CronJobInterface;
 use Dbp\Relay\CoreBundle\Cron\CronOptions;
 
-class ReportingCronJob implements CronJobInterface
+class NotifyErrorCronJob implements CronJobInterface
 {
     public function __construct(
         private ReportingService $reportingService,
@@ -29,6 +29,6 @@ class ReportingCronJob implements CronJobInterface
 
     public function run(CronOptions $options): void
     {
-        $this->reportingService->sendAllReporting(cadence: $this->cadence);
+        $this->reportingService->sendAllNotifyErrors($this->cadence);
     }
 }

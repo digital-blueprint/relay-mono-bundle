@@ -54,8 +54,8 @@ class ConfigurationServiceTest extends TestCase
                         'from' => 'sender@example.com',
                         'to' => 'admin@example.com',
                         'subject' => 'Payment Errors',
-                        'html_template' => 'emails/notify-error.html.twig',
                         'report_after' => 'PT15M',
+                        'cadence' => 'daily',
                     ],
                     'payment_methods' => [
                         'quux' => [
@@ -91,6 +91,7 @@ class ConfigurationServiceTest extends TestCase
         $notifyErrorConfig = $paymentTypes[0]->getNotifyErrorConfig();
         $this->assertNotNull($notifyErrorConfig);
         $this->assertSame('PT15M', $notifyErrorConfig->getReportAfter());
+        $this->assertSame('daily', $notifyErrorConfig->getCadence());
 
         $methods = $service->getPaymentMethodsByType($paymentTypes[0]->getIdentifier());
         $this->assertCount(2, $methods);

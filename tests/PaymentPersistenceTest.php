@@ -120,7 +120,11 @@ class PaymentPersistenceTest extends KernelTestCase
         $this->em->persist($payment);
         $this->em->flush();
 
-        $this->repo->countByTypeCreatedSince('some_type', new \DateTime());
+        $this->repo->countByTypeCreatedBetween('some_type', new \DateTime(), new \DateTime());
+        $this->repo->countByTypeStartedBetween('some_type', new \DateTime(), new \DateTime());
+        $this->repo->countByTypeCompletedBetween('some_type', new \DateTime(), new \DateTime());
+        $this->repo->countByTypeNotifiedBetween('some_type', new \DateTime(), new \DateTime());
+        $this->repo->countNotifiedCompletedByTypeCreatedBetween('some_type', new \DateTime(), new \DateTime());
         $this->repo->findByPaymentStatusTimeoutBefore(PaymentStatus::COMPLETED, new \DateTime());
         $this->repo->findUnnotifiedByTypeCompletedBefore('some_type', new \DateTime());
 
@@ -236,18 +240,23 @@ class PaymentPersistenceTest extends KernelTestCase
         $this->assertCount(1, $this->repo->findByPaymentStatusTimeoutBefore(PaymentStatus::COMPLETED, new \DateTimeImmutable()));
     }
 
-    public function testCountByTypeCreatedSince(): void
+    public function testCountByTypeCreatedBetween(): void
     {
-        $this->assertCount(0, $this->repo->countByTypeCreatedSince('some_type', new \DateTimeImmutable()));
+        $now = new \DateTimeImmutable();
+        $this->assertCount(0, $this->repo->countByTypeCreatedBetween('some_type', $now, $now->modify('+1 hour')));
 
         $payment = $this->getPayment('some-id');
         $payment->setPaymentStatus(PaymentStatus::COMPLETED);
-        $payment->setCreatedAt((new \DateTimeImmutable())->modify('+10 minutes'));
+        $payment->setCreatedAt($now->modify('+10 minutes'));
         $payment->setType('some_type');
         $this->em->persist($payment);
         $this->em->flush();
 
-        $this->assertSame([PaymentStatus::COMPLETED => 1], $this->repo->countByTypeCreatedSince('some_type', new \DateTimeImmutable()));
+        $this->assertSame(
+            [PaymentStatus::COMPLETED => 1],
+            $this->repo->countByTypeCreatedBetween('some_type', $now, $now->modify('+1 hour'))
+        );
+        $this->assertSame([], $this->repo->countByTypeCreatedBetween('some_type', $now->modify('+10 minutes +1 second'), $now->modify('+1 hour')));
     }
 
     public function testPaymentWas(): void

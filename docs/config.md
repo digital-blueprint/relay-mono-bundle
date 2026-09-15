@@ -68,11 +68,11 @@ dbp_relay_mono:
         to:                   ~ # Required
         # The subject line for the reporting emails
         subject:              ~ # Required
-        # The Twig template path for the HTML version of the reporting email
-        html_template:        emails/notify-error.html.twig
         # How long a completed payment may remain unnotified before it is included in the report (e.g., PT15M for 15 minutes)
         report_after:         PT15M
-      # Configuration for recurring email reporting about which payments happened recently.
+        # How often the notification error report is sent.
+        cadence:              daily # One of "hourly"; "daily"; "weekly"
+      # Configuration for recurring email reporting about payment activity and outcomes.
       reporting:
         # The mailer transport DSN to use for sending the email
         dsn:                  ~ # Required
@@ -82,10 +82,8 @@ dbp_relay_mono:
         to:                   ~ # Required
         # The subject line for the reporting emails
         subject:              ~ # Required
-        # The Twig template path for the HTML version of the reporting email
-        html_template:        emails/reporting.html.twig
-        # The report includes all payments that have been created in the last "created_begin" interval (e.g., P1D for 1 day).
-        created_begin:        P1D
+        # How often the report is sent and which completed UTC period it covers.
+        cadence:             weekly # One of "hourly"; "daily"; "weekly"
   # Configuration for when a payment is pruned from the database (after the session has expired). By default, none are pruned.
   cleanup:
     # Default retention period for payment statuses not explicitly configured. In ISO duration format. Null means no cleanup.
@@ -98,6 +96,15 @@ dbp_relay_mono:
         # How long to retain the payment after expiration. In ISO duration format. Null means no cleanup.
         retention_duration:   null
 ```
+
+## Reporting Email
+
+The `cadence` selects both when the report is sent and which completed UTC period
+it covers:
+
+* `hourly` runs at the start of every hour and covers the previous UTC hour;
+* `daily` runs at midnight and covers the previous UTC day; and
+* `weekly` runs at midnight on Monday and covers the previous Monday-to-Monday UTC week.
 
 ## Example Configuration
 
@@ -130,11 +137,13 @@ dbp_relay_mono:
         to: '%env(MONO_REPORTING_EMAIL_TO)%'
         subject: 'Fehler bei der Weitermeldung in CAMPUSonline'
         report_after: 'PT15M'
+        cadence: daily
       reporting:
         dsn: '%env(MAILER_TRANSPORT_DSN)%'
         from: 'noreply@myuni.at'
         to: '%env(MONO_REPORTING_EMAIL_TO)%'
         subject: 'Zusammenfassung der elektronischen Studienbeitragszahlungen'
+        cadence: weekly
 ```
 
 ## Builtin Translations

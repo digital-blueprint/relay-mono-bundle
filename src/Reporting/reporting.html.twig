@@ -1,0 +1,57 @@
+<html>
+<body>
+    <h2>Payment report: {{ paymentType.identifier }}</h2>
+    <p>
+        Reporting period: {{ periodStart|date("d.m.Y H:i:s", "UTC") }} UTC
+        to {{ periodEnd|date("d.m.Y H:i:s", "UTC") }} UTC
+    </p>
+
+    <h3>Activity during the reporting period</h3>
+    <table>
+        <tr>
+            <th>Payment sessions prepared</th>
+            <td>{{ activity.created }}</td>
+        </tr>
+        <tr>
+            <th>Payments started</th>
+            <td>{{ activity.started }}</td>
+        </tr>
+        <tr>
+            <th>Payments completed</th>
+            <td>{{ activity.completed }}</td>
+        </tr>
+        <tr>
+            <th>Completed payments reported to backend</th>
+            <td>{{ activity.notified }}</td>
+        </tr>
+    </table>
+
+    <h3>Current outcomes of payment sessions prepared during the reporting period</h3>
+    <table>
+        <tr>
+            <th>Completed and reported to backend</th>
+            <td>{{ completedAndNotified }}</td>
+        </tr>
+        <tr>
+            <th>Completed, awaiting backend reporting</th>
+            <td>{{ completedNotNotified }}</td>
+        </tr>
+        <tr>
+            <th>Failed</th>
+            <td>{{ outcomes.failed|default(0) }}</td>
+        </tr>
+        <tr>
+            <th>Started, no provider result received</th>
+            <td>{{ outcomes.started|default(0) }}</td>
+        </tr>
+        <tr>
+            <th>Pending, awaiting final result</th>
+            <td>{{ outcomes.pending|default(0) }}</td>
+        </tr>
+        <tr>
+            <th>Prepared but not yet started</th>
+            <td>{{ outcomes.prepared|default(0) }}</td>
+        </tr>
+    </table>
+</body>
+</html>

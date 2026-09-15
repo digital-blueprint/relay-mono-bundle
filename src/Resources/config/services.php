@@ -6,10 +6,11 @@ namespace Dbp\Relay\MonoBundle\Resources\config;
 
 use Dbp\Relay\MonoBundle\BackendServiceProvider\BackendServiceRegistry;
 use Dbp\Relay\MonoBundle\Config\ConfigurationService;
+use Dbp\Relay\MonoBundle\Config\ReportingConfig;
 use Dbp\Relay\MonoBundle\Cron\CleanupCronJob;
 use Dbp\Relay\MonoBundle\Cron\NotifyCronJob;
-use Dbp\Relay\MonoBundle\Cron\NotifyErrorCronJob;
 use Dbp\Relay\MonoBundle\PaymentServiceProvider\PaymentServiceProviderServiceRegistry;
+use Dbp\Relay\MonoBundle\Reporting\NotifyErrorCronJob;
 use Dbp\Relay\MonoBundle\Reporting\ReportingCommand;
 use Dbp\Relay\MonoBundle\Reporting\ReportingCronJob;
 use Dbp\Relay\MonoBundle\Reporting\ReportingService;
@@ -32,13 +33,47 @@ return static function (ContainerConfigurator $configurator) {
         ->autowire()
         ->autoconfigure();
 
-    $services->set(NotifyErrorCronJob::class)
+    $services->set(ReportingCronJob::class.'.hourly', ReportingCronJob::class)
         ->autowire()
-        ->autoconfigure();
+        ->autoconfigure()
+        ->arg('$name', 'Mono hourly payment reporting')
+        ->arg('$interval', '0 * * * *')
+        ->arg('$cadence', ReportingConfig::CADENCE_HOURLY);
 
-    $services->set(ReportingCronJob::class)
+    $services->set(ReportingCronJob::class.'.daily', ReportingCronJob::class)
         ->autowire()
-        ->autoconfigure();
+        ->autoconfigure()
+        ->arg('$name', 'Mono daily payment reporting')
+        ->arg('$interval', '0 0 * * *')
+        ->arg('$cadence', ReportingConfig::CADENCE_DAILY);
+
+    $services->set(ReportingCronJob::class.'.weekly', ReportingCronJob::class)
+        ->autowire()
+        ->autoconfigure()
+        ->arg('$name', 'Mono weekly payment reporting')
+        ->arg('$interval', '0 0 * * 1')
+        ->arg('$cadence', ReportingConfig::CADENCE_WEEKLY);
+
+    $services->set(NotifyErrorCronJob::class.'.hourly', NotifyErrorCronJob::class)
+        ->autowire()
+        ->autoconfigure()
+        ->arg('$name', 'Mono hourly payment notify error reporting')
+        ->arg('$interval', '0 * * * *')
+        ->arg('$cadence', ReportingConfig::CADENCE_HOURLY);
+
+    $services->set(NotifyErrorCronJob::class.'.daily', NotifyErrorCronJob::class)
+        ->autowire()
+        ->autoconfigure()
+        ->arg('$name', 'Mono daily payment notify error reporting')
+        ->arg('$interval', '0 0 * * *')
+        ->arg('$cadence', ReportingConfig::CADENCE_DAILY);
+
+    $services->set(NotifyErrorCronJob::class.'.weekly', NotifyErrorCronJob::class)
+        ->autowire()
+        ->autoconfigure()
+        ->arg('$name', 'Mono weekly payment notify error reporting')
+        ->arg('$interval', '0 0 * * 1')
+        ->arg('$cadence', ReportingConfig::CADENCE_WEEKLY);
 
     $services->set(ReportingCommand::class)
         ->autowire()

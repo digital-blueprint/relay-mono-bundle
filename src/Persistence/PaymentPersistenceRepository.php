@@ -148,17 +148,19 @@ class PaymentPersistenceRepository extends EntityRepository
     }
 
     /**
-     * @return int[]
+     * @return array<string, int>
      */
-    public function countByTypeCreatedSince(string $type, \DateTimeInterface $createdSince): array
+    public function countByTypeCreatedBetween(string $type, \DateTimeInterface $createdFrom, \DateTimeInterface $createdTo): array
     {
         $qb = $this->createQueryBuilder('p');
         $qb->select('p.paymentStatus', 'count(p.identifier)')
             ->where('p.type = :type')
-            ->andWhere('p.createdAt >= :createdSince')
+            ->andWhere('p.createdAt >= :createdFrom')
+            ->andWhere('p.createdAt < :createdTo')
             ->groupBy('p.paymentStatus')
             ->setParameter('type', $type)
-            ->setParameter('createdSince', \DateTimeImmutable::createFromInterface($createdSince), self::DATETIME_TYPE);
+            ->setParameter('createdFrom', \DateTimeImmutable::createFromInterface($createdFrom), self::DATETIME_TYPE)
+            ->setParameter('createdTo', \DateTimeImmutable::createFromInterface($createdTo), self::DATETIME_TYPE);
 
         $query = $qb->getQuery();
         $rows = $query->execute();
@@ -169,5 +171,51 @@ class PaymentPersistenceRepository extends EntityRepository
         }
 
         return $count;
+    }
+
+    public function countByTypeStartedBetween(string $type, \DateTimeInterface $startedFrom, \DateTimeInterface $startedTo): int
+    {
+        return $this->countByTypeDateBetween($type, 'startedAt', $startedFrom, $startedTo);
+    }
+
+    public function countByTypeCompletedBetween(string $type, \DateTimeInterface $completedFrom, \DateTimeInterface $completedTo): int
+    {
+        return $this->countByTypeDateBetween($type, 'completedAt', $completedFrom, $completedTo);
+    }
+
+    public function countByTypeNotifiedBetween(string $type, \DateTimeInterface $notifiedFrom, \DateTimeInterface $notifiedTo): int
+    {
+        return $this->countByTypeDateBetween($type, 'notifiedAt', $notifiedFrom, $notifiedTo);
+    }
+
+    public function countNotifiedCompletedByTypeCreatedBetween(string $type, \DateTimeInterface $createdFrom, \DateTimeInterface $createdTo): int
+    {
+        $qb = $this->createQueryBuilder('p');
+        $qb->select('count(p.identifier)')
+            ->where('p.type = :type')
+            ->andWhere('p.createdAt >= :createdFrom')
+            ->andWhere('p.createdAt < :createdTo')
+            ->andWhere('p.paymentStatus = :paymentStatus')
+            ->andWhere('p.notifiedAt IS NOT NULL')
+            ->setParameter('type', $type)
+            ->setParameter('createdFrom', \DateTimeImmutable::createFromInterface($createdFrom), self::DATETIME_TYPE)
+            ->setParameter('createdTo', \DateTimeImmutable::createFromInterface($createdTo), self::DATETIME_TYPE)
+            ->setParameter('paymentStatus', PaymentStatus::COMPLETED);
+
+        return (int) $qb->getQuery()->getSingleScalarResult();
+    }
+
+    private function countByTypeDateBetween(string $type, string $field, \DateTimeInterface $from, \DateTimeInterface $to): int
+    {
+        $qb = $this->createQueryBuilder('p');
+        $qb->select('count(p.identifier)')
+            ->where('p.type = :type')
+            ->andWhere("p.$field >= :from")
+            ->andWhere("p.$field < :to")
+            ->setParameter('type', $type)
+            ->setParameter('from', \DateTimeImmutable::createFromInterface($from), self::DATETIME_TYPE)
+            ->setParameter('to', \DateTimeImmutable::createFromInterface($to), self::DATETIME_TYPE);
+
+        return (int) $qb->getQuery()->getSingleScalarResult();
     }
 }

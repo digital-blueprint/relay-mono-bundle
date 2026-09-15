@@ -38,9 +38,4 @@ class EmailConfig
     {
         return $this->config['subject'];
     }
-
-    public function getHtmlTemplate(): string
-    {
-        return $this->config['html_template'];
-    }
 }
