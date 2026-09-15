@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## v0.5.13
+
+* reports: some improvements and clarifications
+
 ## v0.5.12
 
 * Remove the unused `started` payment status. Failed payment start attempts now
