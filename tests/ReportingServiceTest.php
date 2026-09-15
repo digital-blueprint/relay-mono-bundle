@@ -204,10 +204,6 @@ class ReportingServiceTest extends KernelTestCase
                         <td>0</td>
                     </tr>
                     <tr>
-                        <th>Started, no provider result received</th>
-                        <td>0</td>
-                    </tr>
-                    <tr>
                         <th>Pending, awaiting final result</th>
                         <td>0</td>
                     </tr>

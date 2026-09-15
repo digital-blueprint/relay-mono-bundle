@@ -14,7 +14,7 @@ dbp_relay_mono:
       backend_type:         ~ # Required
       # If starting the payment process requires the client to be authenticated
       auth_required:        false
-      # Time after which a created or started payment can no longer be continued. In ISO duration format.
+      # Time after which a payment session can no longer be continued. In ISO duration format.
       session_timeout:      PT3600S
       # An URL to which to redirect the user to after the process is finished. This overrides any return URL passed by the payment initiator and is not affected by "return_url_expression"
       return_url_override:  null
@@ -92,7 +92,7 @@ dbp_relay_mono:
     statuses:
       # Prototype
       -
-        payment_status:       ~ # One of "prepared"; "started"; "pending"; "failed"; "completed", Required
+        payment_status:       ~ # One of "prepared"; "pending"; "failed"; "completed", Required
         # How long to retain the payment after expiration. In ISO duration format. Null means no cleanup.
         retention_duration:   null
 ```

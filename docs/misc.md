@@ -20,8 +20,7 @@ php bin/console dbp:relay:core:migrate
 
 ```mermaid
 graph TB
-    prepared -->|Start Payment| started
-    started -->|Payment Processing| pending
+    prepared -->|Start Payment| pending
     pending -->|Payment Approved| completed
     pending -->|Payment Failed| failed
 ```

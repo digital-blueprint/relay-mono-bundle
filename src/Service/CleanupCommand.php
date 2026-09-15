@@ -50,7 +50,6 @@ class CleanupCommand extends Command
 
         $paymentStatuses = [
             PaymentStatus::PREPARED,
-            PaymentStatus::STARTED,
             PaymentStatus::PENDING,
             PaymentStatus::COMPLETED,
             PaymentStatus::FAILED,

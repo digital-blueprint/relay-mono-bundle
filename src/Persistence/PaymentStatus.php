@@ -7,19 +7,14 @@ namespace Dbp\Relay\MonoBundle\Persistence;
 class PaymentStatus
 {
     /**
-     * After the payment is first created. In this state it is filled/updated with information
-     * from the request and the backend service.
+     * Before the payment is successfully started with the payment service provider. In this state
+     * it is filled/updated with information from the request and the backend service. A start attempt
+     * that does not set another status remains prepared and may be retried.
      */
     public const PREPARED = 'prepared';
 
     /**
-     * After the payment is filled out and submitted to the payment service provider.
-     */
-    public const STARTED = 'started';
-
-    /**
-     * After the payment has started, in case we get some information back from the service provider,
-     * but the final state of the payment isn't known yet.
+     * After the payment has started, but the final state of the payment isn't known yet.
      */
     public const PENDING = 'pending';
 
@@ -30,7 +25,7 @@ class PaymentStatus
     public const FAILED = 'failed';
 
     /**
-     * After started/pending once we get back that the payment is finished.
+     * After pending once we get back that the payment is finished.
      * After this the status no longer changes.
      */
     public const COMPLETED = 'completed';

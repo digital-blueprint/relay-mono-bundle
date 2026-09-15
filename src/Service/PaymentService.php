@@ -406,7 +406,7 @@ class PaymentService implements LoggerAwareInterface
         }
 
         $status = $paymentPersistence->getPaymentStatus();
-        if (!in_array($status, [PaymentStatus::PREPARED, PaymentStatus::STARTED], true)) {
+        if ($status !== PaymentStatus::PREPARED) {
             throw new ApiError(Response::HTTP_BAD_REQUEST, "Can't (re)start payment with status: ".$status);
         }
 
@@ -447,8 +447,6 @@ class PaymentService implements LoggerAwareInterface
             throw new \RuntimeException('No payment method found!');
         }
 
-        $paymentPersistence->setPaymentStatus(PaymentStatus::STARTED);
-
         $now = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
         $timeoutAt = $now->add(new \DateInterval($paymentType->getSessionTimeout()));
         $paymentPersistence->setTimeoutAt($timeoutAt);
@@ -458,6 +456,9 @@ class PaymentService implements LoggerAwareInterface
         $paymentServiceProvider = $this->paymentServiceProviderServiceRegistry->getByPaymentMethod($paymentMethod);
         try {
             $startResponse = $paymentServiceProvider->start($paymentMethod->getPspContract(), $paymentMethod->getPspMethod(), $paymentPersistence);
+            if ($paymentPersistence->getPaymentStatus() === PaymentStatus::PREPARED) {
+                $paymentPersistence->setPaymentStatus(PaymentStatus::PENDING);
+            }
         } finally {
             try {
                 $this->em->persist($paymentPersistence);
@@ -668,7 +669,6 @@ class PaymentService implements LoggerAwareInterface
         $now = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
         $paymentStatuses = [
             PaymentStatus::PREPARED,
-            PaymentStatus::STARTED,
             PaymentStatus::PENDING,
             PaymentStatus::COMPLETED,
             PaymentStatus::FAILED,

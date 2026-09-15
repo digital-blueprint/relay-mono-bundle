@@ -24,6 +24,8 @@ interface PaymentServiceProviderServiceInterface
 
     /**
      * Gets called with a filled out payment entry to start a payment with the PSP.
+     * Implementations may update the payment status before returning successfully. If the status
+     * remains prepared, it is changed to pending by the payment service.
      */
     public function start(string $pspContract, string $pspMethod, PaymentPersistence $paymentPersistence): StartResponseInterface;
 

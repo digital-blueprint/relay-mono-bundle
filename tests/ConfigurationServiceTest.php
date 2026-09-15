@@ -24,7 +24,7 @@ class ConfigurationServiceTest extends TestCase
                 'default_retention_duration' => null,
                 'statuses' => [
                     [
-                        'payment_status' => 'started',
+                        'payment_status' => 'pending',
                         'retention_duration' => 'P1D',
                     ],
                 ],
@@ -81,7 +81,7 @@ class ConfigurationServiceTest extends TestCase
 
         $service->checkConfig();
 
-        $this->assertSame('P1D', $service->getCleanupTimeout('started'));
+        $this->assertSame('P1D', $service->getCleanupTimeout('pending'));
         $this->assertNull($service->getCleanupTimeout('nope'));
 
         $paymentTypes = $service->getPaymentTypes();
