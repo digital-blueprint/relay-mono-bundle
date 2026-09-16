@@ -88,6 +88,8 @@ class ReportingService implements LoggerAwareInterface
 
         $outcomes = $repo->countByTypeCreatedBetween($type, $periodStart, $periodEnd);
         $completedAndNotified = $repo->countNotifiedCompletedByTypeCreatedBetween($type, $periodStart, $periodEnd);
+        $preparedTotal = $outcomes['prepared'] ?? 0;
+        $preparedTimedOut = $repo->countTimedOutPreparedByTypeCreatedBetween($type, $periodStart, $periodEnd, $now);
 
         $context = [
             'paymentType' => $paymentType,
@@ -102,6 +104,8 @@ class ReportingService implements LoggerAwareInterface
             'outcomes' => $outcomes,
             'completedAndNotified' => $completedAndNotified,
             'completedNotNotified' => ($outcomes['completed'] ?? 0) - $completedAndNotified,
+            'preparedTimedOut' => $preparedTimedOut,
+            'preparedAwaitingStart' => max(0, $preparedTotal - $preparedTimedOut),
         ];
 
         return $this->buildEmail($reportingConfig, $context, self::REPORTING_TEMPLATE, $overrideEmail);

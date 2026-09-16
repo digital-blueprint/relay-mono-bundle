@@ -188,6 +188,28 @@ class PaymentPersistenceRepository extends EntityRepository
         return $this->countByTypeDateBetween($type, 'notifiedAt', $notifiedFrom, $notifiedTo);
     }
 
+    /**
+     * Counts sessions created in the period that were prepared, never started and have timed out
+     * (i.e. their timeout has passed while still in the prepared state).
+     */
+    public function countTimedOutPreparedByTypeCreatedBetween(string $type, \DateTimeInterface $createdFrom, \DateTimeInterface $createdTo, \DateTimeInterface $now): int
+    {
+        $qb = $this->createQueryBuilder('p');
+        $qb->select('count(p.identifier)')
+            ->where('p.type = :type')
+            ->andWhere('p.createdAt >= :createdFrom')
+            ->andWhere('p.createdAt < :createdTo')
+            ->andWhere('p.paymentStatus = :paymentStatus')
+            ->andWhere('p.timeoutAt < :now')
+            ->setParameter('type', $type)
+            ->setParameter('createdFrom', \DateTimeImmutable::createFromInterface($createdFrom), self::DATETIME_TYPE)
+            ->setParameter('createdTo', \DateTimeImmutable::createFromInterface($createdTo), self::DATETIME_TYPE)
+            ->setParameter('paymentStatus', PaymentStatus::PREPARED)
+            ->setParameter('now', \DateTimeImmutable::createFromInterface($now), self::DATETIME_TYPE);
+
+        return (int) $qb->getQuery()->getSingleScalarResult();
+    }
+
     public function countNotifiedCompletedByTypeCreatedBetween(string $type, \DateTimeInterface $createdFrom, \DateTimeInterface $createdTo): int
     {
         $qb = $this->createQueryBuilder('p');

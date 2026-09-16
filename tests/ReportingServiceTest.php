@@ -126,7 +126,14 @@ class ReportingServiceTest extends KernelTestCase
         $payment2 = $this->createPaymentPersistence('payment-2', 'test-payment', $clock);
         $payment2->setPaymentStatus(PaymentStatus::PREPARED);
         $payment2->setCreatedAt(new \DateTimeImmutable('2024-03-14 23:30:00 UTC'));
+        $payment2->setTimeoutAt(new \DateTimeImmutable('2024-03-15 00:30:00 UTC'));
         $this->em->persist($payment2);
+
+        $payment5 = $this->createPaymentPersistence('payment-5', 'test-payment', $clock);
+        $payment5->setPaymentStatus(PaymentStatus::PREPARED);
+        $payment5->setCreatedAt(new \DateTimeImmutable('2024-03-14 23:50:00 UTC'));
+        $payment5->setTimeoutAt(new \DateTimeImmutable('2024-03-15 20:00:00 UTC'));
+        $this->em->persist($payment5);
 
         $payment3 = $this->createPaymentPersistence('payment-3', 'test-payment', $clock);
         $payment3->setPaymentStatus(PaymentStatus::PENDING);
@@ -173,7 +180,7 @@ class ReportingServiceTest extends KernelTestCase
                 <table>
                     <tr>
                         <th>Payment sessions prepared</th>
-                        <td>2</td>
+                        <td>3</td>
                     </tr>
                     <tr>
                         <th>Payments started</th>
@@ -208,7 +215,11 @@ class ReportingServiceTest extends KernelTestCase
                         <td>0</td>
                     </tr>
                     <tr>
-                        <th>Prepared but not yet started</th>
+                        <th>Prepared, awaiting start</th>
+                        <td>1</td>
+                    </tr>
+                    <tr>
+                        <th>Prepared, never started (timed out)</th>
                         <td>1</td>
                     </tr>
                 </table>

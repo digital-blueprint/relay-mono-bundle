@@ -45,8 +45,12 @@
             <td>{{ outcomes.pending|default(0) }}</td>
         </tr>
         <tr>
-            <th>Prepared but not yet started</th>
-            <td>{{ outcomes.prepared|default(0) }}</td>
+            <th>Prepared, awaiting start</th>
+            <td>{{ preparedAwaitingStart }}</td>
+        </tr>
+        <tr>
+            <th>Prepared, never started (timed out)</th>
+            <td>{{ preparedTimedOut }}</td>
         </tr>
     </table>
 </body>
