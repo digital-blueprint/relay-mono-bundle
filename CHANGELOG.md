@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+## v0.5.14
+
+* reports: split prepared in timed-out and active prepared sessions
+* Reset startedAt for prepared sessions, left-over of the 0.5.12 where "started"
+  status was removed. Only makes a change for reports and does not affect the
+  actual payment session.
+
 ## v0.5.13
 
 * reports: some improvements and clarifications
