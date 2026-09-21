@@ -987,23 +987,23 @@
         },
         {
             "name": "dbp/relay-core-bundle",
-            "version": "v0.1.248",
+            "version": "v0.1.249",
             "source": {
                 "type": "git",
                 "url": "https://github.com/digital-blueprint/relay-core-bundle.git",
-                "reference": "77366fae491abb8e273cff232308467d977e46c4"
+                "reference": "9a7d1f05506ee1b7279067ae88e1f8f58936810a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/digital-blueprint/relay-core-bundle/zipball/77366fae491abb8e273cff232308467d977e46c4",
-                "reference": "77366fae491abb8e273cff232308467d977e46c4",
+                "url": "https://api.github.com/repos/digital-blueprint/relay-core-bundle/zipball/9a7d1f05506ee1b7279067ae88e1f8f58936810a",
+                "reference": "9a7d1f05506ee1b7279067ae88e1f8f58936810a",
                 "shasum": ""
             },
             "require": {
-                "api-platform/metadata": "^4.1",
-                "api-platform/openapi": "^4.1",
-                "api-platform/state": "^4.1",
-                "api-platform/symfony": "^4.1",
+                "api-platform/metadata": "^4.2",
+                "api-platform/openapi": "^4.2",
+                "api-platform/state": "^4.2",
+                "api-platform/symfony": "^4.2",
                 "doctrine/dbal": "^4.2",
                 "doctrine/migrations": "^3.9",
                 "doctrine/orm": "^3.3",
@@ -1095,9 +1095,9 @@
             "description": "The core bundle of the Relay API gateway",
             "support": {
                 "issues": "https://github.com/digital-blueprint/relay-core-bundle/issues",
-                "source": "https://github.com/digital-blueprint/relay-core-bundle/tree/v0.1.248"
+                "source": "https://github.com/digital-blueprint/relay-core-bundle/tree/v0.1.249"
             },
-            "time": "2026-08-04T09:18:02+00:00"
+            "time": "2026-09-17T14:05:24+00:00"
         },
         {
             "name": "doctrine/collections",
