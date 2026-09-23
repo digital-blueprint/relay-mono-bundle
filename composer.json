@@ -6,9 +6,9 @@
     "require": {
         "php": ">=8.2",
         "ext-json": "*",
-        "api-platform/metadata": "^4.1",
-        "api-platform/state": "^4.1",
-        "api-platform/openapi": "^4.1",
+        "api-platform/metadata": "^4.2 || ^5.0",
+        "api-platform/state": "^4.2 || ^5.0",
+        "api-platform/openapi": "^4.2 || ^5.0",
         "dbp/relay-core-bundle": "^0.1.230",
         "doctrine/dbal": "^3.8 || ^4.0",
         "doctrine/doctrine-bundle": "^2.12",
@@ -33,7 +33,7 @@
         "twig/twig": "^3.8"
     },
     "require-dev": {
-        "api-platform/symfony": "^4.1",
+        "api-platform/symfony": "^4.2 || ^5.0",
         "captainhook/captainhook": "^5.21",
         "friendsofphp/php-cs-fixer": "^3.50",
         "phpstan/phpstan": "^2.0.0",
