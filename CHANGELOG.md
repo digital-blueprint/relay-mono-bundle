@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## v0.5.15
+
+* Add support for api-platform 5.0
+
 ## v0.5.14
 
 * reports: split prepared in timed-out and active prepared sessions
