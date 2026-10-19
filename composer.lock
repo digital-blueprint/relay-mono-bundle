@@ -399,16 +399,16 @@
         },
         {
             "name": "api-platform/metadata",
-            "version": "v5.0.3",
+            "version": "v5.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/api-platform/metadata.git",
-                "reference": "2d7078dac818aac576b1d81f1d6966b42c6e62ed"
+                "reference": "170341d957a02fc5302055feb543c92f4df74a89"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/api-platform/metadata/zipball/2d7078dac818aac576b1d81f1d6966b42c6e62ed",
-                "reference": "2d7078dac818aac576b1d81f1d6966b42c6e62ed",
+                "url": "https://api.github.com/repos/api-platform/metadata/zipball/170341d957a02fc5302055feb543c92f4df74a89",
+                "reference": "170341d957a02fc5302055feb543c92f4df74a89",
                 "shasum": ""
             },
             "require": {
@@ -491,13 +491,13 @@
                 "swagger"
             ],
             "support": {
-                "source": "https://github.com/api-platform/metadata/tree/v5.0.3"
+                "source": "https://github.com/api-platform/metadata/tree/v5.0.4"
             },
-            "time": "2026-10-09T14:12:03+00:00"
+            "time": "2026-10-16T08:43:59+00:00"
         },
         {
             "name": "api-platform/openapi",
-            "version": "v5.0.3",
+            "version": "v5.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/api-platform/openapi.git",
@@ -582,7 +582,7 @@
                 "swagger"
             ],
             "support": {
-                "source": "https://github.com/api-platform/openapi/tree/v5.0.3"
+                "source": "https://github.com/api-platform/openapi/tree/v5.0.4"
             },
             "time": "2026-10-09T14:34:35+00:00"
         },
@@ -682,16 +682,16 @@
         },
         {
             "name": "api-platform/state",
-            "version": "v5.0.3",
+            "version": "v5.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/api-platform/state.git",
-                "reference": "af8f567d4fc07b5af0842129d9fb4b82ef81814d"
+                "reference": "82abb42fa3ea4fb186ac2b54a59eec77a33723d9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/api-platform/state/zipball/af8f567d4fc07b5af0842129d9fb4b82ef81814d",
-                "reference": "af8f567d4fc07b5af0842129d9fb4b82ef81814d",
+                "url": "https://api.github.com/repos/api-platform/state/zipball/82abb42fa3ea4fb186ac2b54a59eec77a33723d9",
+                "reference": "82abb42fa3ea4fb186ac2b54a59eec77a33723d9",
                 "shasum": ""
             },
             "require": {
@@ -775,9 +775,9 @@
                 "swagger"
             ],
             "support": {
-                "source": "https://github.com/api-platform/state/tree/v5.0.3"
+                "source": "https://github.com/api-platform/state/tree/v5.0.4"
             },
-            "time": "2026-10-05T08:21:29+00:00"
+            "time": "2026-10-13T14:13:50+00:00"
         },
         {
             "name": "api-platform/symfony",
