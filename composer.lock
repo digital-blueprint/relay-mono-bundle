@@ -404,7 +404,7 @@
         },
         {
             "name": "api-platform/metadata",
-            "version": "v5.0.6",
+            "version": "v5.0.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/api-platform/metadata.git",
@@ -496,14 +496,14 @@
                 "swagger"
             ],
             "support": {
-                "source": "https://github.com/api-platform/metadata/tree/v5.0.6"
+                "source": "https://github.com/api-platform/metadata/tree/v5.0.7"
             },
             "time": "2026-11-06T08:25:24+00:00",
-            "published-time": "2026-11-06T12:30:38+00:00"
+            "published-time": "2026-11-13T14:12:07+00:00"
         },
         {
             "name": "api-platform/openapi",
-            "version": "v5.0.6",
+            "version": "v5.0.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/api-platform/openapi.git",
@@ -588,10 +588,10 @@
                 "swagger"
             ],
             "support": {
-                "source": "https://github.com/api-platform/openapi/tree/v5.0.6"
+                "source": "https://github.com/api-platform/openapi/tree/v5.0.7"
             },
             "time": "2026-11-06T08:24:38+00:00",
-            "published-time": "2026-11-06T12:29:29+00:00"
+            "published-time": "2026-11-13T14:11:04+00:00"
         },
         {
             "name": "api-platform/serializer",
@@ -690,16 +690,16 @@
         },
         {
             "name": "api-platform/state",
-            "version": "v5.0.6",
+            "version": "v5.0.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/api-platform/state.git",
-                "reference": "41bb96f8c7c481f2147c9a9aadb8c46028fc4718"
+                "reference": "8489e4550a6d03f58da5b1200f4373370a0f86fb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/api-platform/state/zipball/41bb96f8c7c481f2147c9a9aadb8c46028fc4718",
-                "reference": "41bb96f8c7c481f2147c9a9aadb8c46028fc4718",
+                "url": "https://api.github.com/repos/api-platform/state/zipball/8489e4550a6d03f58da5b1200f4373370a0f86fb",
+                "reference": "8489e4550a6d03f58da5b1200f4373370a0f86fb",
                 "shasum": ""
             },
             "require": {
@@ -783,10 +783,10 @@
                 "swagger"
             ],
             "support": {
-                "source": "https://github.com/api-platform/state/tree/v5.0.6"
+                "source": "https://github.com/api-platform/state/tree/v5.0.7"
             },
-            "time": "2026-11-06T08:25:17+00:00",
-            "published-time": "2026-11-06T12:33:54+00:00"
+            "time": "2026-11-13T11:25:15+00:00",
+            "published-time": "2026-11-13T14:12:11+00:00"
         },
         {
             "name": "api-platform/symfony",
@@ -9470,16 +9470,16 @@
     "packages-dev": [
         {
             "name": "captainhook/captainhook",
-            "version": "5.29.2",
+            "version": "5.29.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/captainhook-git/captainhook.git",
-                "reference": "805d44b0de8ed143f4acfb8c6bcb788cdbc42963"
+                "reference": "a0221590e67b81be481ef91a0ff67ffb58bb7667"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/captainhook-git/captainhook/zipball/805d44b0de8ed143f4acfb8c6bcb788cdbc42963",
-                "reference": "805d44b0de8ed143f4acfb8c6bcb788cdbc42963",
+                "url": "https://api.github.com/repos/captainhook-git/captainhook/zipball/a0221590e67b81be481ef91a0ff67ffb58bb7667",
+                "reference": "a0221590e67b81be481ef91a0ff67ffb58bb7667",
                 "shasum": ""
             },
             "require": {
@@ -9542,7 +9542,7 @@
             ],
             "support": {
                 "issues": "https://github.com/captainhook-git/captainhook/issues",
-                "source": "https://github.com/captainhook-git/captainhook/tree/5.29.2"
+                "source": "https://github.com/captainhook-git/captainhook/tree/5.29.3"
             },
             "funding": [
                 {
@@ -9550,8 +9550,8 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-03-25T19:32:25+00:00",
-            "published-time": "2026-03-25T19:36:36+00:00"
+            "time": "2026-11-12T19:51:56+00:00",
+            "published-time": "2026-11-12T19:52:59+00:00"
         },
         {
             "name": "captainhook/secrets",
@@ -10975,16 +10975,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "11.5.57",
+            "version": "11.5.58",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "36b75bf56a8535623f5b3e24b27ea1823759da1a"
+                "reference": "c14b3145a2fcfa5dd9b25ee999ce2ba5933adf6f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/36b75bf56a8535623f5b3e24b27ea1823759da1a",
-                "reference": "36b75bf56a8535623f5b3e24b27ea1823759da1a",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/c14b3145a2fcfa5dd9b25ee999ce2ba5933adf6f",
+                "reference": "c14b3145a2fcfa5dd9b25ee999ce2ba5933adf6f",
                 "shasum": ""
             },
             "require": {
@@ -11057,7 +11057,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/11.5.57"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/11.5.58"
             },
             "funding": [
                 {
@@ -11065,8 +11065,8 @@
                     "type": "other"
                 }
             ],
-            "time": "2026-10-05T05:47:54+00:00",
-            "published-time": "2026-10-05T05:48:42+00:00"
+            "time": "2026-11-13T11:08:08+00:00",
+            "published-time": "2026-11-13T11:09:01+00:00"
         },
         {
             "name": "react/cache",
